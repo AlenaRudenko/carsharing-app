@@ -1,0 +1,13 @@
+.sidebar {
+  width: 64px;
+  height: 100vh;
+  box-sizing: border-box;
+  background-color: #111518;
+  position: absolute;
+  left: 0px;
+  top: 0;
+  @media (max-width: 520px) {
+    position: absolute;
+    left: -64px;
+  }
+}

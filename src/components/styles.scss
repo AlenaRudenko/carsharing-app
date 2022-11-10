@@ -1,0 +1,14 @@
+$color__green: #0ec261;
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  h1 {
+    font-weight: 700;
+    font-size: 30px;
+    color: $color__green;
+    line-height: 35px;
+  }
+}
