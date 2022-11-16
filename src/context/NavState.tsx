@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 export interface NewContextInterface {
   isOpen: Boolean;
-  toggleNavbar: () => void;
+  toggleNavbarFunc: () => void;
 }
 
-export const NewContext = React.createContext({
+export const NewContext = React.createContext<NewContextInterface>({
   isOpen: true,
-  toggleNavbar: () => {},
+  toggleNavbarFunc: () => {},
 });
-export const NavState = ({ children }) => {
+export const NavState = ({ children }: any) => {
   const [isOpen, toggleNavbar] = useState(false);
   const toggleNavbarFunc = () => {
     toggleNavbar(!isOpen);

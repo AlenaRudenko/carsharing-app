@@ -1,20 +1,20 @@
 import { useContext } from "react";
-import { NavState, NewContext } from "../../context/NavState";
+import {
+  NavState,
+  NewContext,
+  NewContextInterface,
+} from "../../context/NavState";
+import { Button } from "./Button";
 import "./styles.css";
-interface IProps {
-  isOpen: boolean;
-  toggleNavbarFunc: () => void;
-}
 
 export const NavPageComponent = () => {
+  const { isOpen, toggleNavbarFunc } =
+    useContext<NewContextInterface>(NewContext);
   return (
-    <div className="sidebar">
-      <NavState>
-        <NewContext.Consumer>
-          {(value) => <button>HELLO</button>}
-        </NewContext.Consumer>
-        <button>HELLO</button>
-      </NavState>
-    </div>
+    <NavState>
+      <div className="sidebar">
+        <NewContext.Consumer>{(value) => <Button />}</NewContext.Consumer>
+      </div>{" "}
+    </NavState>
   );
 };
