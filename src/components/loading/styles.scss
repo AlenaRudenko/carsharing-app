@@ -1,0 +1,92 @@
+// .dots__flashing {
+//   position: relative;
+//   width: 10px;
+//   height: 10px;
+//   border-radius: 5px;
+//   background-color: #9880ff;
+//   color: #9880ff;
+//   animation: dotFlashing 1s infinite linear alternate;
+//   animation-delay: 0.5s;
+// }
+
+// .dots__flashing::before,
+// .dots__flashing::after {
+//   content: "";
+//   display: inline-block;
+//   position: absolute;
+//   top: 0;
+// }
+
+// .dots__flashing::before {
+//   left: -15px;
+//   width: 10px;
+//   height: 10px;
+//   border-radius: 5px;
+//   background-color: #9880ff;
+//   color: #9880ff;
+//   animation: dotFlashing 1s infinite alternate;
+//   animation-delay: 0s;
+// }
+
+// .dots__flashing::after {
+//   left: 15px;
+//   width: 10px;
+//   height: 10px;
+//   border-radius: 5px;
+//   background-color: #9880ff;
+//   color: #9880ff;
+//   animation: dotFlashing 1s infinite alternate;
+//   animation-delay: 1s;
+// }
+
+@mixin dots($size) {
+  width: $size;
+  height: $size;
+}
+
+.dots__flashing {
+  position: relative;
+  @include dots(20px);
+  border-radius: 10px;
+  background-color: #0ec261;
+  color: #0ec261;
+  animation: dotFlashing 1s infinite linear alternate;
+  animation-delay: 0.8s;
+}
+.dots__flashing::before,
+.dots__flashing::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.dots__flashing::before {
+  left: -30px;
+  @include dots(20px);
+  border-radius: 10px;
+  background-color: #0ec261;
+  color: #0ec261;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 0s;
+}
+.dots__flashing::after {
+  left: 30px;
+  @include dots(20px);
+  border-radius: 10px;
+  background-color: #0ec261;
+  color: #0ec261;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 1s;
+}
+@keyframes dotFlashing {
+  0% {
+    background-color: #0ec261;
+  }
+  50% {
+    background-color: #92ffc5;
+  }
+  100% {
+    background-color: #92ffc5;
+  }
+}

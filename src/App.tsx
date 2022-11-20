@@ -1,12 +1,16 @@
 import "./App.css";
-import { MainPageComponent } from "./pages/main-page/MainPageComponent";
-import { NavPageComponent } from "./pages/nav-page/NavPageComponent";
+import { NavState } from "./context/NavState";
+import { MainContent } from "./pages/main-page/MainContent";
+
+import { Navigation } from "./pages/nav-page/Navigation";
 
 export const App = () => {
   return (
     <div className='main--container'>
-      <NavPageComponent />
-      <MainPageComponent />
+      <NavState>
+        <Navigation />
+        <MainContent />
+      </NavState>
     </div>
   );
 };

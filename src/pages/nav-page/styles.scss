@@ -3,11 +3,27 @@
   height: 100vh;
   box-sizing: border-box;
   background-color: #111518;
+  z-index: 3;
+}
+.menu {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
   position: absolute;
-  left: 0px;
-  top: 0;
-  @media (max-width: 520px) {
-    position: absolute;
-    left: -64px;
+  transition: 0.3s;
+  z-index: 2;
+  &--open {
+    width: 100%;
   }
+  &--close {
+    width: 0;
+  }
+}
+.menu__list {
+  width: 50%;
+  background-color: #111518;
+}
+.menu__transparent {
+  width: 50%;
+  background-color: rgba(21, 27, 31, 0.81);
 }

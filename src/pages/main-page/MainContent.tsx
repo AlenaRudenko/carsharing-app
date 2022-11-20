@@ -1,11 +1,20 @@
 import React from "react";
 import { Header } from "../../components/Header";
-import "./styles.css";
+import { Menu } from "../nav-page/Menu";
+import { CarContent } from "./CarContent";
+import "./styles.scss";
 
-export class MainPageComponent extends React.Component {
+export class MainContent extends React.Component {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      isClicked: false,
+    };
+  }
   render() {
     return (
       <div className='mainpage'>
+        <Menu />
         <div className='mainpage--container'>
           <Header />
           <div className='mainpage--content'>
@@ -20,9 +29,7 @@ export class MainPageComponent extends React.Component {
             <span>8 (495) 234-22-44</span>
           </div>
         </div>
-        <div className='slider'>
-          <span>hello</span>
-        </div>
+        <CarContent />
       </div>
     );
   }

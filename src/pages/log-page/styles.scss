@@ -1,0 +1,16 @@
+.logpage__container {
+  height: 100vh;
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  background-color: red;
+  transition: 0.3s;
+  z-index: 2;
+  &--close {
+    width: 0;
+  }
+  &--open {
+    width: 100%;
+  }
+}

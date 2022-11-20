@@ -12,3 +12,39 @@ $color__green: #0ec261;
     line-height: 35px;
   }
 }
+.carCards__container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.carCards__item {
+  width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+  }
+  animation: fadeIn 1.7s ease 0s 1 normal forwards;
+}
+.carCards__img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 100%;
+  }
+}
+.carCards__wrapper {
+  overflow: hidden;
+  padding: 50px;
+}
