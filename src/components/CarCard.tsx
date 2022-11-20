@@ -6,12 +6,6 @@ interface IProps {
   cars: ICar[];
 }
 export const CarCard = (props: IProps) => {
-  const data = [
-    { model: "RIO", brand: "KIA" },
-    { model: "i7", brand: "BMW" },
-    { model: "Cerato", brand: "KIA" },
-    { model: "Largus", brand: "LADA" },
-  ];
   const [currentIndex, setCurrentIndex] = useState(0);
   useEffect(() => {
     const timer = setInterval(() => {
@@ -28,16 +22,7 @@ export const CarCard = (props: IProps) => {
       clearInterval(timer);
     };
   }, [props.cars]);
-  const nextSlide = () => {
-    setCurrentIndex(
-      currentIndex === props.cars.length - 1 ? 0 : currentIndex + 1
-    );
-  };
-  const prevSlide = () => {
-    setCurrentIndex(
-      currentIndex === 0 ? props.cars.length - 1 : currentIndex - 1
-    );
-  };
+
   return (
     <div className='carCards__container'>
       <div className='carCards__wrapper'>

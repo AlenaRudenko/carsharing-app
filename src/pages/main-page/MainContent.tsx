@@ -5,12 +5,14 @@ import { CarContent } from "./CarContent";
 import "./styles.scss";
 
 export class MainContent extends React.Component {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      isClicked: false,
-    };
-  }
+  state = {
+    isClicked: false,
+  };
+  ClickHandler = () => {
+    this.setState({ isClicked: !this.state.isClicked });
+    console.log(this.state.isClicked);
+  };
+
   render() {
     return (
       <div className='mainpage'>
@@ -21,7 +23,7 @@ export class MainContent extends React.Component {
             <span>Каршеринг</span>
             <span>Need for Drive</span>
             <span>Поминутная аренда авто</span>
-            <button>Забронировать</button>
+            <button onClick={this.ClickHandler}>Забронировать</button>
           </div>
 
           <div className='mainpage--footer'>

@@ -7,7 +7,7 @@ import "./styles.scss";
 
 export const CarContent = memo(() => {
   const [cars, setCars] = useState<ICar[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     Api.getCars().then((response) => {
       setCars(response.data);
