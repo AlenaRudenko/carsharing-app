@@ -1,0 +1,46 @@
+@import "./../../default-variables";
+
+%titlestyle {
+  font-weight: 700;
+  font-size: 70px;
+  line-height: 66px;
+  margin-bottom: 4px;
+  user-select: none;
+}
+.mainpage--container {
+  box-sizing: border-box;
+  padding: 20px;
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.mainpage--content {
+  display: flex;
+  flex-direction: column;
+  :first-child {
+    @extend %titlestyle;
+  }
+  :nth-child(2) {
+    color: $pimary-color;
+    @extend %titlestyle;
+  }
+  :nth-child(3) {
+    font-size: 26px;
+    font-weight: 300;
+    color: $grey-color;
+    margin-bottom: 60px;
+    user-select: none;
+  }
+}
+.mainpage--footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  :first-child {
+    color: $grey-color;
+  }
+}

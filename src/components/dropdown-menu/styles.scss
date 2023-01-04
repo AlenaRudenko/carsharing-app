@@ -1,0 +1,37 @@
+.dropdown {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+
+  span {
+    font-weight: 700;
+  }
+}
+.dropdown__current {
+  margin-right: 2px;
+  text-align: end;
+  width: 90px;
+}
+.dropdown__content {
+  position: absolute;
+  cursor: pointer;
+  top: 100%;
+  right: 15px;
+  li {
+    text-align: end;
+    margin-top: 2px;
+    list-style-type: none;
+  }
+  li:hover {
+    font-weight: 700;
+  }
+  &--open {
+    opacity: 1;
+    z-index: 100;
+  }
+  &--close {
+    opacity: 0;
+    z-index: -10;
+  }
+  transition: linear 0.2s;
+}

@@ -2,13 +2,18 @@ import "./App.css";
 import { NavState } from "./context/NavState";
 import { MainContent } from "./pages/main-page/MainContent";
 
-import { Navigation } from "./pages/nav-page/Navigation";
+import { Route, Routes } from "react-router-dom";
+import { Order } from "./pages/order-page/Order";
 
 export const App = () => {
+  const paths = [
+    { path: "/", element: <MainContent /> },
+    { path: "/order", element: <Order /> },
+  ];
+
   return (
     <div className='main--container'>
       <NavState>
-        <Navigation />
         <MainContent />
       </NavState>
     </div>

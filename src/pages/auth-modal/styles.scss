@@ -1,0 +1,47 @@
+@import "./../../default-variables.scss";
+
+.authModal__container {
+  display: flex;
+  height: 100%;
+}
+.authModal__contentContainer {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+}
+//fully block of AppInputs
+.log_page_inputs {
+  height: 50%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+//Link to registration page
+.logpage__regcontainer {
+  flex-direction: column;
+  height: 20%;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  font-size: 15px;
+  :last-child {
+    margin-top: 7px;
+    text-decoration: none;
+    color: $grey-color;
+    cursor: pointer;
+  }
+  :last-child:hover {
+    color: $pimary-color;
+  }
+}
+
+//regpage container
+.regpage__container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

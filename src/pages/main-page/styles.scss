@@ -13,64 +13,7 @@ $color__grey: #999;
   display: flex;
   width: 100%;
   height: 100vh;
-  .mainpage--container {
-    box-sizing: border-box;
-    padding: 20px;
-    width: 50%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .mainpage--content {
-    display: flex;
-    flex-direction: column;
-    :first-child {
-      @extend %titlestyle;
-    }
-    :nth-child(2) {
-      color: $color__green;
-      @extend %titlestyle;
-    }
-    :nth-child(3) {
-      font-size: 26px;
-      font-weight: 300;
-      color: $color__grey;
-      margin-bottom: 60px;
-      user-select: none;
-    }
-    button {
-      padding: 20px 30px;
-      width: 250px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      background-color: $color__green;
-      border-style: none;
-      outline-style: none;
-      color: white;
-      font-size: 18px;
-      font-weight: 400;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #039f67;
-    }
-  }
-  .mainpage--footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-  .mainpage--footer {
-    :first-child {
-      color: $color__grey;
-    }
-  }
+
   .slider {
     display: flex;
     align-items: center;

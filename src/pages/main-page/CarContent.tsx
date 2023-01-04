@@ -11,9 +11,7 @@ export const CarContent = memo(() => {
   useEffect(() => {
     Api.getCars().then((response) => {
       setCars(response.data);
-      console.log(response.data);
     });
-    console.log("render");
   }, []);
 
   return (

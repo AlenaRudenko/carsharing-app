@@ -1,0 +1,100 @@
+@import "./../../default-variables"; //transparent grey block fullscreen
+.base-modal {
+  height: 100vh;
+  font-family: "Roboto";
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(21, 27, 31, 0.81);
+  transition: 0.2s;
+  z-index: 1000;
+  &--backdrop {
+    width: 100%;
+    opacity: 1;
+  }
+  &--hidden {
+    opacity: 0;
+    width: 0;
+  }
+}
+// white block in the centre of logpage
+.base-modal__main {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: white;
+  width: 290px;
+  z-index: 14;
+  border-radius: 10px;
+  padding: 10px;
+  &--small {
+    height: 100px;
+  }
+  &--medium {
+    height: 300px;
+  }
+  &--large {
+    height: 400px;
+  }
+}
+.base-modal__header {
+  width: 100%;
+  height: 10%;
+  position: relative;
+  &--down {
+    margin-top: 7px;
+  }
+}
+//Block for title
+.base-modal__topic {
+  height: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+.base-modal__leftButton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  margin: 10px 0 0 10px;
+}
+//Block for close Icon
+.base-modal__btn-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  margin: 10px 10px 0 0;
+}
+//fully block of content
+.base-modal__content {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+// //Link to registration page
+// .base-modal__footer {
+//   flex-direction: column;
+//   height: 20%;
+//   display: flex;
+//   width: 100%;
+//   align-items: center;
+//   font-size: 15px;
+//   :last-child {
+//     margin-top: 7px;
+//     text-decoration: none;
+//     color: $grey-color;
+//     cursor: pointer;
+//   }
+//   :last-child:hover {
+//     color: $pimary-color;
+//   }
+// }
