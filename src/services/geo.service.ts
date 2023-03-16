@@ -1,5 +1,6 @@
 import axios from "axios";
-
+import { LocalStore } from "./localStorage.service";
+import { Component } from "react";
 class GeoService {
   token = "de92eb9f77a647dcb8974b4f382ab0da7891e0db";
   private instance = axios.create({
@@ -20,3 +21,4 @@ class GeoService {
 }
 
 export const Geo = new GeoService();
+

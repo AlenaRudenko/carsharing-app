@@ -42,15 +42,18 @@ export const DropdownMenu = () => {
     };
     navigator.geolocation.getCurrentPosition(onChange);
   }, []);
-  useEffect(() => {
-    if (location.lat && location.lon) {
-      Geo.postLocation(location)
-        .then((response) =>
-          handleCurrentGeoLocation(response.data.suggestions[0].data.city)
-        )
-        .catch((error) => console.log("БЛЯТЬ", error));
-    }
-  }, [location]);
+  // useEffect(() => {
+  //   if (location.lat && location.lon) {
+  //     Geo.postLocation(location)
+  //       .then((response) => {
+  //         handleCurrentGeoLocation(response.data.suggestions[0].data.city);
+  //         LocalStore.setCity(response.data.suggestions[0].data.city)
+  //       }
+
+  //       )
+  //       .catch((error) => console.log("БЛЯТЬ", error));
+  //   }
+  // }, [location]);
   useEffect(() => {
     Api.getCities().then((response) => {
       setCities((cities) => [...cities, ...response.data]);
@@ -58,8 +61,8 @@ export const DropdownMenu = () => {
     });
   }, []);
   return (
-    <div className='dropdown'>
-      <div className='dropdown__current'>
+    <div className="dropdown">
+      <div className="dropdown__current">
         <span
           onMouseOver={() => {
             setIsVisible(true);
@@ -72,7 +75,7 @@ export const DropdownMenu = () => {
           {currentGeoLocation}
         </span>
       </div>
-      <div className='dropdown__icon' style={{ userSelect: "none" }}>
+      <div className="dropdown__icon" style={{ userSelect: "none" }}>
         <AppIcon size={15} icon={"MapPin"} color={COLORS.PRIMARY} />
       </div>
       <div
