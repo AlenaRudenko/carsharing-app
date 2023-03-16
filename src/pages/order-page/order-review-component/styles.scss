@@ -1,0 +1,18 @@
+//main container
+.orderReview__container {
+  width: 50%;
+  height: 95%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+}
+// container with content
+.orderReview__content {
+  height: 70%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

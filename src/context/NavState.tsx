@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { ICity } from "../interfaces/city";
+import { LocalStore } from "./../services/localStorage.service";
+import { Dispatch } from "../store/store";
+import { useDispatch } from "react-redux";
 
 export interface IContext {
   isOpen: boolean;
@@ -25,11 +28,15 @@ export const NavState = ({ children }: IProps) => {
   const [currentGeoLocation, setCurrentGeoLocation] = useState("");
   const [cities, setCities] = useState<ICity[]>([]);
   const [isOpen, toggleIsOpen] = useState(false);
+
   const toggleIsOpenFunc = () => {
     toggleIsOpen(!isOpen);
   };
   const handleCurrentGeoLocation = (location: string) => {
-    setCurrentGeoLocation(location);
+    const LocalStoreCity = LocalStore.getCurrentCity();
+    if (LocalStoreCity) {
+      setCurrentGeoLocation(LocalStoreCity);
+    } else setCurrentGeoLocation(location);
   };
   const handleSetCities = (newCities: ICity[]) => {
     setCities((cities) => [...cities, ...newCities]);

@@ -5,7 +5,7 @@ import { RootModel } from "../store";
 export const user = createModel<RootModel>()({
   state: null as IUser | null,
   reducers: {
-    setUser(state, payload: IUser) {
+    setUser: (state, payload: IUser) => {
       return payload;
     },
     removeUser(state) {

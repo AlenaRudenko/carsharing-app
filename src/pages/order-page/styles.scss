@@ -1,0 +1,33 @@
+@import "./../../default-variables.scss";
+//main container
+.order__container {
+  width: 90%;
+  margin: 0 auto;
+  height: 100vh;
+}
+
+//breadcrumbs
+.order__navigation {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+  border-bottom: 0.2px solid $grey-color;
+}
+
+//conteiner with media content
+.order__content {
+  height: 70%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+//container with routes
+.order__routes {
+  width: 50%;
+  height: 90%;
+}

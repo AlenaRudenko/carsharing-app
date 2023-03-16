@@ -1,7 +1,4 @@
-import axios from "axios";
 import React from "react";
-import { AppButton } from "../../components/app-button/AppButton";
-import { Header } from "../../components/Header";
 import { AuthModal } from "../auth-modal/AuthModal";
 import { Menu } from "../nav-page/Menu";
 import { Navigation } from "../nav-page/Navigation";
@@ -14,6 +11,9 @@ import { GeoModal } from "../../components/geo-modal/GeoModal";
 import { Start } from "../start-page/Start";
 import { Order } from "../order-page/Order";
 import { Route, Routes } from "react-router";
+import { LocalStore } from "../../services/localStorage.service";
+import { connect } from "react-redux";
+import { RootState } from "../../store/store";
 
 interface IState {
   isAuthVisible: boolean;
@@ -22,9 +22,9 @@ interface IState {
   isGeoVisible: boolean;
   isTitleChanged: boolean;
 }
-interface IProps {}
+type StateProps = ReturnType<typeof mapState>;
 
-export class MainContent extends React.Component<IProps, IState> {
+export class MainContentContainer extends React.Component<StateProps, IState> {
   context!: React.ContextType<typeof NavContext>;
   state = {
     isAuthVisible: false,
@@ -43,7 +43,6 @@ export class MainContent extends React.Component<IProps, IState> {
   };
   toggleIsRegVisible = () => {
     this.setState({ isRegVisible: !this.state.isRegVisible });
-    console.log("dddddddddd");
   };
   handleGeoModalTitle = () => {
     this.setState({ isTitleChanged: !this.state.isTitleChanged });
@@ -58,7 +57,7 @@ export class MainContent extends React.Component<IProps, IState> {
         />
       ),
     },
-    { path: "/order", element: <Order /> },
+    { path: "/order/*", element: <Order /> },
   ];
   componentDidMount() {
     Api.getCities().then((response) =>
@@ -68,14 +67,9 @@ export class MainContent extends React.Component<IProps, IState> {
 
   render() {
     let location = this.context;
-    const {
-      isTitleChanged,
-      isGeoVisible,
-      isAuthVisible,
-      cities,
-      isRegVisible,
-    } = this.state;
-    const {} = this.props;
+    const { isTitleChanged, isGeoVisible, isAuthVisible, isRegVisible } =
+      this.state;
+    const { user } = this.props;
     const {
       toggleAuthVisible,
       toggleIsRegVisible,
@@ -85,34 +79,41 @@ export class MainContent extends React.Component<IProps, IState> {
     } = this;
     return (
       <>
-        <Modal
-          isVisible={location.currentGeoLocation && isGeoVisible ? true : false}
-          title={
-            isTitleChanged
-              ? "Выберите из списка"
-              : `Ваш город ${location.currentGeoLocation}?`
-          }
-        >
-          <GeoModal {...{ toggleIsGeoVisible, handleGeoModalTitle }} />
-        </Modal>
-        <Modal
-          size={"large"}
-          title={isRegVisible ? "Регистрация" : "Войти"}
-          onClickBtnClose={toggleAuthVisible}
-          isVisible={isAuthVisible}
-          leftButton={isRegVisible ? "ArrowLeft" : undefined}
-          onClickLeftButton={toggleIsRegVisible}
-        >
-          <AuthModal
-            {...{ isRegVisible, toggleIsRegVisible, toggleAuthVisible }}
-          />
-        </Modal>
+        {!LocalStore.getCurrentCity() && (
+          <Modal
+            isVisible={
+              location.currentGeoLocation && isGeoVisible ? true : false
+            }
+            title={
+              isTitleChanged
+                ? "Выберите из списка"
+                : `Ваш город ${location.currentGeoLocation}?`
+            }
+          >
+            <GeoModal {...{ toggleIsGeoVisible, handleGeoModalTitle }} />
+          </Modal>
+        )}
+        {!user && isAuthVisible && (
+          <Modal
+            size={"large"}
+            title={isRegVisible ? "Регистрация" : "Войти"}
+            onClickBtnClose={toggleAuthVisible}
+            isVisible={isAuthVisible}
+            leftButton={isRegVisible ? "ArrowLeft" : undefined}
+            onClickLeftButton={toggleIsRegVisible}
+          >
+            <AuthModal
+              {...{ isRegVisible, toggleIsRegVisible, toggleAuthVisible }}
+            />
+          </Modal>
+        )}
+
         <Navigation />
         <div className='mainpage'>
           <Menu />
           <Routes>
             {paths.map((path) => (
-              <Route path={path.path} element={path.element} />
+              <Route key={path.path} path={path.path} element={path.element} />
             ))}
           </Routes>
         </div>
@@ -120,4 +121,8 @@ export class MainContent extends React.Component<IProps, IState> {
     );
   }
 }
-MainContent.contextType = NavContext;
+MainContentContainer.contextType = NavContext;
+const mapState = (state: RootState) => ({
+  user: state.user,
+});
+export const MainContent = connect(mapState)(MainContentContainer);

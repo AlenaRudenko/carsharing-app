@@ -11,6 +11,12 @@ class AuthClazz {
   getRefreshToken() {
     return localStorage.getItem("refreshToken");
   }
+  removeTokens() {
+    localStorage.clear();
+  }
+  setCurrentCity(city: string) {
+    localStorage.setItem("currentCity", city);
+  }
 }
 
 export const AuthService = new AuthClazz();

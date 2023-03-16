@@ -9,17 +9,18 @@ import { Api } from "../../services/api.service";
 import { AuthService } from "../../services/auth.service";
 import { connect } from "react-redux";
 import { Dispatch, RootState } from "../../store/store";
-import { IUser } from "../../interfaces/user";
 
 interface IProps {
   toggleIsRegVisible: () => void;
   isRegVisible: boolean;
   toggleAuthVisible: () => void;
 }
+
 interface IState {
   email: string;
   password: string;
 }
+
 type DispatchProps = ReturnType<typeof mapDispatch>;
 type StateProps = ReturnType<typeof mapState>;
 type Props = DispatchProps & IProps & StateProps;
@@ -29,6 +30,7 @@ class AuthModalComponent extends React.Component<Props, IState> {
     email: "",
     password: "",
   };
+
   handleUserNameChange = (email: string) => {
     this.setState({ email });
   };
@@ -36,9 +38,11 @@ class AuthModalComponent extends React.Component<Props, IState> {
   handleUserPasswordChange = (password: string) => {
     this.setState({ password });
   };
+
   handleRegistrationPage = () => {
     this.props.toggleIsRegVisible();
   };
+
   handleAuthLogin = () => {
     Api.login(this.state.email, this.state.password).then((response) => {
       AuthService.setToken(response.data.tokens);

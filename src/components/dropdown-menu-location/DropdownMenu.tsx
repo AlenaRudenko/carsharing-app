@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { AppIcon } from "../app-icon/AppIcon";
-import { COLORS } from "./../../constants/colors";
+import { COLORS } from "../../constants/colors";
 import "./styles.scss";
-import { Geo } from "./../../services/geo.service";
+import { Geo } from "../../services/geo.service";
 import { NavContext } from "../../context/NavState";
 import { useContext } from "react";
 import { ICity } from "../../interfaces/city";
 import { Api } from "../../services/api.service";
+import { LocalStore } from "../../services/localStorage.service";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "../../store/store";
 
 interface IState {
   location: ILocation;
@@ -16,18 +19,16 @@ interface ILocation {
   longitude: null | number;
 }
 export const DropdownMenu = () => {
-  const [currentCity, setCity] = useState("Саранск");
   const { currentGeoLocation, handleCurrentGeoLocation, handleSetCities } =
     useContext(NavContext);
+  const dispatch = useDispatch<Dispatch>();
   const [location, setCurrentLocation] = useState({
     lat: 0,
     lon: 0,
   });
   const [isVisible, setIsVisible] = useState(false);
   const [cities, setCities] = useState<ICity[]>([]);
-  const handleChangeCity = (city: string) => {
-    setCity(city);
-  };
+
   const handleSetIsVisible = () => {
     setIsVisible(!isVisible);
   };
@@ -92,8 +93,10 @@ export const DropdownMenu = () => {
             .map((city) => (
               <li
                 onClick={() => {
+                  LocalStore.setCurrentCity(city.name);
                   handleCurrentGeoLocation(city.name);
                   handleSetIsVisible();
+                  dispatch.order.setCityId(city.id);
                 }}
               >
                 {city.name}

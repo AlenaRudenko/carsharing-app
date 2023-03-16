@@ -1,0 +1,23 @@
+// main container
+.orderLocation__container {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-direction: column;
+}
+// yandex map
+.orderLocation__map {
+  width: 90%;
+  height: 350px;
+}
+//addresses input
+.orderLocation__input {
+  width: 70%;
+  margin-bottom: 20px;
+  border-bottom: 0.3px solid gray;
+  input {
+    width: 100%;
+  }
+}

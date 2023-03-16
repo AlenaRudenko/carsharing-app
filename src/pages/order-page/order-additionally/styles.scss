@@ -1,0 +1,35 @@
+@import "./../../../default-variables";
+
+.orderAdd__container {
+  width: 50%;
+}
+.colors__block {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  span {
+    margin-bottom: 10px;
+  }
+}
+
+.currentCar__reviewColorsContainer {
+  width: 200px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.currentCar__reviewColors {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  box-shadow: -1px -1px 16px 1px rgba(142, 142, 142, 0.25);
+}
+.currentCar__reviewColors--selected {
+  border: 2px solid $pimary-color;
+}
+.orderAdd__tariffs {
+  display: flex;
+  flex-direction: column;
+}

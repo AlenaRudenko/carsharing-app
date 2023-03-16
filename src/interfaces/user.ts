@@ -11,6 +11,6 @@ export interface IUser {
   createdAt: string;
   /** @format date-time */
   updatedAt: string;
-  role: Role;
+  role?: Role;
   roleId: string;
 }

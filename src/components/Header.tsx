@@ -1,14 +1,14 @@
-import { ICity } from "../interfaces/city";
-import { DropdownMenu } from "./dropdown-menu/DropdownMenu";
+import { DropdownMenu } from "./dropdown-menu-location/DropdownMenu";
 import "./styles.scss";
 interface IProps {
   color?: string;
-  cities: ICity[];
+  size?: string;
+  padding?: string;
 }
-export const Header = ({ color, cities }: IProps) => {
+export const Header = ({ color, size, padding }: IProps) => {
   return (
-    <div className='header' style={{ color: color }}>
-      <h1>Need for Drive</h1>
+    <div className='header' style={{ color, padding }}>
+      <h1 style={{ fontSize: size }}>Need for Drive</h1>
       <DropdownMenu />
     </div>
   );

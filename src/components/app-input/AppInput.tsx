@@ -10,6 +10,7 @@ import { AppIcon } from "../app-icon/AppIcon";
 import "./styles.scss";
 
 interface IProps {
+  id?: string;
   iconColor?: string;
   placeholder?: string;
   value: string;
@@ -26,6 +27,7 @@ interface IProps {
 type TIconProps = ComponentProps<typeof AppIcon>;
 
 export const AppInput = ({
+  id,
   onChangeText,
   value,
   iconColor,
@@ -63,6 +65,7 @@ export const AppInput = ({
             <AppIcon size={18} color={currentColor} icon={leftIcon} />
           )}
           <input
+            id={id}
             type={isVisible ? "text" : typeField}
             className='input__form'
             value={value}

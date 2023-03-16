@@ -1,0 +1,22 @@
+@import "./../../default-variables";
+
+.navigationItem__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    color: $grey-color;
+    cursor: pointer;
+    font-size: small;
+  }
+  &:not(:first-child) {
+    padding: 0 20px;
+  }
+  &:first-child {
+    padding-right: 20px;
+  }
+  span:hover {
+    color: green;
+  }
+}

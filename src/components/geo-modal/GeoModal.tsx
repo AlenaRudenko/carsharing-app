@@ -6,6 +6,10 @@ import { useState } from "react";
 import { NavContext } from "../../context/NavState";
 import { useContext } from "react";
 import { TEvent } from "../../interfaces/event";
+import { LocalStore } from "../../services/localStorage.service";
+import { Dispatch } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { ICity } from "../../interfaces/city";
 
 interface IProps {
   toggleIsGeoVisible: () => void;
@@ -16,18 +20,14 @@ export const GeoModal = ({
   toggleIsGeoVisible,
   handleGeoModalTitle,
 }: IProps) => {
-  const [isDisabled, setIsDisabled] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [currentCity, setCurrentCity] = useState("");
-  const { cities, handleCurrentGeoLocation } = useContext(NavContext);
+  const { cities, handleCurrentGeoLocation, currentGeoLocation } =
+    useContext(NavContext);
+
+  const dispatch = useDispatch<Dispatch>();
   const handleCurrentCity = (e: TEvent) => {
     setCurrentCity(e.target.value);
-    handleIsDisabled();
-  };
-  const handleIsDisabled = () => {
-    return cities.find((city) => city.name === currentCity)
-      ? setIsDisabled(!isDisabled)
-      : isDisabled;
   };
   return (
     <div className='geoModal__content'>
@@ -41,16 +41,23 @@ export const GeoModal = ({
           />
           <datalist id='cities'>
             {cities.map((city) => (
-              <option value={city.name} />
+              <option
+                value={city.name}
+                onClick={() => {
+                  setCurrentCity(city.name);
+                  dispatch.order.setCityId(city.id);
+                }}
+              />
             ))}
           </datalist>
           <div className='geoModal__choiseButton'>
             <AppButton
-              isDisabled={isDisabled}
+              isDisabled={!cities.some((el) => el.name === currentCity)}
               size={"small"}
               text={"Выбрать"}
               onClick={() => {
                 toggleIsGeoVisible();
+                LocalStore.setCurrentCity(currentCity);
                 handleCurrentGeoLocation(currentCity);
               }}
             />
@@ -72,7 +79,14 @@ export const GeoModal = ({
           <div className='geoModal__button'>
             <AppButton
               text={"Да, верно"}
-              onClick={toggleIsGeoVisible}
+              onClick={() => {
+                const cityId = cities.find(
+                  (city) => city.name === currentGeoLocation
+                );
+                toggleIsGeoVisible();
+                LocalStore.setCurrentCity(currentGeoLocation);
+                dispatch.order.setCityId(cityId?.id || "");
+              }}
               size={"regular"}
             />
           </div>
