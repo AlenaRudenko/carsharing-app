@@ -6,6 +6,7 @@ import jwt_decode from "jwt-decode";
 import { AuthService } from "./services/auth.service";
 import { Api } from "./services/api.service";
 import { Geo } from "./services/geo.service";
+import { LocalStore } from "./services/localStorage.service";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch, RootState } from "./store/store";
 import { IUser } from "./interfaces/user";
@@ -21,6 +22,7 @@ export const App = () => {
     lat: 0,
     lon: 0,
   });
+  const [city, setCity] = useState("");
   const dispatch = useDispatch<Dispatch>();
   const user = useSelector((state: RootState) => state.user);
   useEffect(() => {
@@ -42,16 +44,17 @@ export const App = () => {
   }, []);
   useEffect(() => {
     if (coordinates.lat && coordinates.lon) {
-      Geo.postLocation(coordinates).then((response) =>
-        console.log("ЕБАЦАВывв")
-      );
+      Geo.postLocation(coordinates).then((response) => {
+        LocalStore.setCurrentCity(response.data.suggestions[0].data.city);
+        setCity(response.data.suggestions[0].data.city);
+      });
     }
   });
 
   return (
     <div className="main--container">
       <NavState>
-        <MainContent />
+        <MainContent localCity={city} />
       </NavState>
     </div>
   );

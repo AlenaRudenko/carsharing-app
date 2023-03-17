@@ -14,7 +14,7 @@ import { Route, Routes } from "react-router";
 import { LocalStore } from "../../services/localStorage.service";
 import { Geo } from "../../services/geo.service";
 import { connect } from "react-redux";
-import { RootState } from "../../store/store";
+import { RootState, Dispatch } from "../../store/store";
 
 interface IState {
   isAuthVisible: boolean;
@@ -23,15 +23,15 @@ interface IState {
   isRegVisible: boolean;
   isGeoVisible: boolean;
   isTitleChanged: boolean;
-  coords: ICoords;
 }
-interface ICoords {
-  lat: number;
-  lon: number;
+interface OwnProps {
+  localCity: string;
 }
 type StateProps = ReturnType<typeof mapState>;
+type DispatchProps = ReturnType<typeof mapDispatch>;
+type Props = StateProps & DispatchProps & OwnProps;
 
-export class MainContentContainer extends React.Component<StateProps, IState> {
+export class MainContentContainer extends React.Component<Props, IState> {
   context!: React.ContextType<typeof NavContext>;
   state = {
     isAuthVisible: false,
@@ -40,9 +40,8 @@ export class MainContentContainer extends React.Component<StateProps, IState> {
     isRegVisible: false,
     isGeoVisible: true,
     isTitleChanged: false,
-    coords: { lat: 0, lon: 0 },
   };
-
+  locald = LocalStore.getCurrentCity();
   toggleIsGeoVisible = () => {
     this.setState({ isGeoVisible: !this.state.isGeoVisible });
   };
@@ -56,15 +55,9 @@ export class MainContentContainer extends React.Component<StateProps, IState> {
   handleGeoModalTitle = () => {
     this.setState({ isTitleChanged: !this.state.isTitleChanged });
   };
-  handleGeoCoords(params: any) {
-    this.setState((prevState) => ({
-      coords: {
-        ...prevState.coords,
-        lat: params.coords.latitude,
-        lon: params.coords.longitude,
-      },
-    }));
-  }
+  handleCityId = (city: ICity) => {
+    this.props.setCityId(city.id);
+  };
   paths = [
     {
       path: "/",
@@ -81,18 +74,7 @@ export class MainContentContainer extends React.Component<StateProps, IState> {
     Api.getCities().then((response) =>
       this.setState({ cities: response.data })
     );
-    this.setState({ localStoreCity: LocalStore.getCurrentCity() || "" });
-    if (this.state.localStoreCity) {
-      this.toggleIsGeoVisible();
-    }
-    navigator.geolocation.getCurrentPosition(this.handleGeoCoords);
-  }
-  componentShouldUpdate() {
-    if (this.state.coords.lat) {
-      Geo.postLocation(this.state.coords).then((response) =>
-        console.log("НУ НЕУЖЕЛИ")
-      );
-    }
+    this.setState({ localStoreCity: LocalStore.getCurrentCity() || "k" });
   }
 
   render() {
@@ -105,23 +87,22 @@ export class MainContentContainer extends React.Component<StateProps, IState> {
       isRegVisible,
       cities,
     } = this.state;
-    const { user } = this.props;
+    const { user, localCity } = this.props;
     const {
       toggleAuthVisible,
       toggleIsRegVisible,
       toggleIsGeoVisible,
       handleGeoModalTitle,
+      handleCityId,
       paths,
     } = this;
     return (
       <>
-        {!localStoreCity && (
+        {localStoreCity && (
           <Modal
             isVisible={isGeoVisible ? true : false}
             title={
-              isTitleChanged
-                ? "Выберите из списка"
-                : `Ваш город ${localStoreCity}?`
+              isTitleChanged ? "Выберите из списка" : `Ваш город ${localCity}?`
             }
           >
             <GeoModal
@@ -130,6 +111,7 @@ export class MainContentContainer extends React.Component<StateProps, IState> {
                 localStoreCity,
                 toggleIsGeoVisible,
                 handleGeoModalTitle,
+                handleCityId,
               }}
             />
           </Modal>
@@ -144,7 +126,11 @@ export class MainContentContainer extends React.Component<StateProps, IState> {
             onClickLeftButton={toggleIsRegVisible}
           >
             <AuthModal
-              {...{ isRegVisible, toggleIsRegVisible, toggleAuthVisible }}
+              {...{
+                isRegVisible,
+                toggleIsRegVisible,
+                toggleAuthVisible,
+              }}
             />
           </Modal>
         )}
@@ -166,4 +152,7 @@ MainContentContainer.contextType = NavContext;
 const mapState = (state: RootState) => ({
   user: state.user,
 });
-export const MainContent = connect(mapState)(MainContentContainer);
+const mapDispatch = (dispatch: Dispatch) => ({
+  setCityId: (id: string) => dispatch.order.setCityId(id),
+});
+export const MainContent = connect(mapState, mapDispatch)(MainContentContainer);

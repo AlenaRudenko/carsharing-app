@@ -2,7 +2,7 @@ import { AppButton } from "../app-button/AppButton";
 import "./styles.scss";
 import "./../../constants/colors";
 import { COLORS } from "./../../constants/colors";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavContext } from "../../context/NavState";
 import { useContext } from "react";
 import { TEvent } from "../../interfaces/event";
@@ -16,6 +16,7 @@ interface IProps {
   handleGeoModalTitle: () => void;
   cities: ICity[];
   localStoreCity: string;
+  handleCityId: (city: ICity) => void;
 }
 
 export const GeoModal = ({
@@ -23,13 +24,22 @@ export const GeoModal = ({
   handleGeoModalTitle,
   cities,
   localStoreCity,
+  handleCityId,
 }: IProps) => {
   const [isActive, setIsActive] = useState(false);
   const [currentCity, setCurrentCity] = useState("");
-
+  const [city, setCity] = useState<ICity>({} as ICity);
   const dispatch = useDispatch<Dispatch>();
   const handleCurrentCity = (e: TEvent) => {
     setCurrentCity(e.target.value);
+  };
+  const cityH = cities.find((city) => city.name === currentCity);
+  
+  const handleCity = () => {
+    if (cityH) {
+      setCity(cityH);
+      handleCityId(cityH);
+    }
   };
   return (
     <div className="geoModal__content">
@@ -44,6 +54,7 @@ export const GeoModal = ({
           <datalist id="cities">
             {cities.map((city) => (
               <option
+                key={city.name}
                 value={city.name}
                 onClick={() => {
                   setCurrentCity(city.name);
@@ -60,6 +71,7 @@ export const GeoModal = ({
               onClick={() => {
                 LocalStore.setCurrentCity(currentCity);
                 toggleIsGeoVisible();
+                handleCity();
               }}
             />
           </div>
@@ -81,11 +93,10 @@ export const GeoModal = ({
             <AppButton
               text={"Да, верно"}
               onClick={() => {
-                const cityId = cities.find(
-                  (city) => city.name === localStoreCity
-                );
                 toggleIsGeoVisible();
+                setCurrentCity(localStoreCity);
                 LocalStore.setCurrentCity(localStoreCity);
+                handleCity();
               }}
               size={"regular"}
             />
