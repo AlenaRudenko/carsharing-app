@@ -1,14 +1,15 @@
 import { DropdownMenu } from "./dropdown-menu-location/DropdownMenu";
 import { LocalStore } from "../services/localStorage.service";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { RootState, Dispatch } from "../store/store";
 import "./styles.scss";
 interface IProps {
   color?: string;
   size?: string;
   padding?: string;
   testCity?: string;
-  handleLocalStoreCity?: (city: string | undefined) => void;
+  handleLocalStoreCity?: (city: string) => void;
 }
 export const Header = ({
   color,
@@ -17,12 +18,26 @@ export const Header = ({
   testCity,
   handleLocalStoreCity,
 }: IProps) => {
+  const [city, setCity] = useState("");
+  const dispatch = useDispatch<Dispatch>();
+  const cityId = useSelector((state: RootState) => state.order.cityId);
+  const localCity = LocalStore.getCurrentCity();
+  useEffect(() => {
+    if (!testCity) {
+      setCity(localCity!);
+    } else {
+      setCity("Саранск");
+    }
+  });
+  const hangler = () => {};
   return (
     <div className="header" style={{ color, padding }}>
       <h1 style={{ fontSize: size }}>Need for Drive</h1>
       <DropdownMenu
-        testCity={testCity}
-        handleLocalStoreCity={handleLocalStoreCity}
+        testCity={testCity ? testCity : localCity!}
+        handleLocalStoreCity={
+          handleLocalStoreCity ? handleLocalStoreCity : hangler
+        }
       />
     </div>
   );

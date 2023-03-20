@@ -1,11 +1,15 @@
+@import "./../../default-variables";
+
 .tooltip__container {
   position: absolute;
-  background-color: red;
-  width: 200px;
-  height: 100px;
+  width: 320px;
+  height: 60px;
   display: flex;
   align-items: center;
-  text-align: center;
-  top: 100%;
-  left: 0;
+  justify-content: center;
+  top: 120%;
+  left: 0%;
+  background: rgba(227, 89, 89, 0.7);
+  border-radius: 4px;
+  color: white;
 }

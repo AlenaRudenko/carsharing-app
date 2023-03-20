@@ -9,7 +9,7 @@ import { Modal } from "../../components/modals/Modal";
 import { NavContext } from "../../context/NavState";
 import { GeoModal } from "../../components/geo-modal/GeoModal";
 import { Start } from "../start-page/Start";
-import { Order } from "../order-page/Order";
+import { OrderContainer } from "../order-page/Order";
 import { Route, Routes } from "react-router";
 import { LocalStore } from "../../services/localStorage.service";
 import { Geo } from "../../services/geo.service";
@@ -155,7 +155,11 @@ export class MainContentContainer extends React.Component<Props, IState> {
                 />
               }
             />
-            <Route key={"/order/*"} path={"/order/*"} element={<Order />} />
+            <Route
+              key={"/order/*"}
+              path={"/order/*"}
+              element={<OrderContainer />}
+            />
           </Routes>
         </div>
       </>

@@ -27,6 +27,7 @@ export const RegistrationModal = ({
   const [login, setLogin] = useState<IState["login"]>("");
   const [email, setEmail] = useState<IState["email"]>("");
   const [password, setPassword] = useState<IState["password"]>("");
+  const [status, setStatus] = useState("");
   const [confirmPassword, setConfirmPassword] =
     useState<IState["confirmPassword"]>("");
 
@@ -56,6 +57,14 @@ export const RegistrationModal = ({
     //   })
     //   .catch((error) => console.log("BLYAT", error));
   };
+  const onMouseOverListener = (e: any) => {
+    e.stopPropagation();
+    if (!isLogin && login) {
+      const timer = setTimeout(() => {
+        console.log("нихуясе");
+      }, 1);
+    }
+  };
   const isEmail = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g).test(email);
   const isLogin = new RegExp(/^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/g).test(login);
   const isPassword = new RegExp(
@@ -64,17 +73,23 @@ export const RegistrationModal = ({
   return (
     <div className="regpage__container">
       <div className="regpage__form">
-        <Tooltip />
-        <AppInput
-          key={"login"}
-          hasError={!isLogin}
-          errorMessage={"неверный логин"}
-          leftIcon={"UserPlus"}
-          value={login}
-          label={"login"}
-          onChange={handleLogin}
-          placeholder={"введите логин"}
-        />
+        <Tooltip text={} />
+        <div
+          className="listener "
+          onPointerLeave={(e) => onMouseOverListener(e)}
+        >
+          <AppInput
+            key={"login"}
+            hasError={!isLogin}
+            errorMessage={"неверный логин"}
+            leftIcon={"UserPlus"}
+            value={login}
+            label={"login"}
+            onChange={handleLogin}
+            placeholder={"введите логин"}
+          />
+        </div>
+
         <AppInput
           key={"email"}
           errorMessage={"неверный Email"}

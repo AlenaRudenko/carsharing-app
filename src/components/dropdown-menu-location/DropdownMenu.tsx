@@ -13,7 +13,7 @@ import { Dispatch, RootState } from "../../store/store";
 
 interface IProps {
   testCity: string | undefined;
-  handleLocalStoreCity: (city: string | undefined) => void | undefined;
+  handleLocalStoreCity: (city: string) => void;
 }
 
 export const DropdownMenu = ({ testCity, handleLocalStoreCity }: IProps) => {
