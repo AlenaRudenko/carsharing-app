@@ -8,58 +8,34 @@ import { useContext } from "react";
 import { ICity } from "../../interfaces/city";
 import { Api } from "../../services/api.service";
 import { LocalStore } from "../../services/localStorage.service";
-import { useDispatch } from "react-redux";
-import { Dispatch } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { Dispatch, RootState } from "../../store/store";
 
-interface IState {
-  location: ILocation;
+interface IProps {
+  testCity: string | undefined;
+  handleLocalStoreCity: (city: string | undefined) => void | undefined;
 }
-interface ILocation {
-  latitude: null | number;
-  longitude: null | number;
-}
-export const DropdownMenu = () => {
-  const { currentGeoLocation, handleCurrentGeoLocation, handleSetCities } =
-    useContext(NavContext);
+
+export const DropdownMenu = ({ testCity, handleLocalStoreCity }: IProps) => {
   const dispatch = useDispatch<Dispatch>();
-  const [location, setCurrentLocation] = useState({
-    lat: 0,
-    lon: 0,
-  });
   const [isVisible, setIsVisible] = useState(false);
   const [cities, setCities] = useState<ICity[]>([]);
 
   const handleSetIsVisible = () => {
     setIsVisible(!isVisible);
   };
-
-  useEffect(() => {
-    const onChange = (params: any) => {
-      setCurrentLocation({
-        lat: params.coords.latitude,
-        lon: params.coords.longitude,
-      });
-    };
-    navigator.geolocation.getCurrentPosition(onChange);
-  }, []);
-  // useEffect(() => {
-  //   if (location.lat && location.lon) {
-  //     Geo.postLocation(location)
-  //       .then((response) => {
-  //         handleCurrentGeoLocation(response.data.suggestions[0].data.city);
-  //         LocalStore.setCity(response.data.suggestions[0].data.city)
-  //       }
-
-  //       )
-  //       .catch((error) => console.log("БЛЯТЬ", error));
-  //   }
-  // }, [location]);
+  const handleSetCurrentLocation = (city: ICity) => {
+    LocalStore.setCurrentCity(city.name);
+    handleSetIsVisible();
+    dispatch.order.setCityId(city.id);
+    handleLocalStoreCity(city!.name);
+  };
   useEffect(() => {
     Api.getCities().then((response) => {
       setCities((cities) => [...cities, ...response.data]);
-      handleSetCities(response.data);
     });
   }, []);
+
   return (
     <div className="dropdown">
       <div className="dropdown__current">
@@ -72,7 +48,7 @@ export const DropdownMenu = () => {
           }}
           style={{ color: COLORS.BLACK, cursor: "pointer" }}
         >
-          {currentGeoLocation}
+          {testCity}
         </span>
       </div>
       <div className="dropdown__icon" style={{ userSelect: "none" }}>
@@ -91,15 +67,12 @@ export const DropdownMenu = () => {
       >
         <ul>
           {cities
-            .filter((city) => city.name !== currentGeoLocation)
+            .filter((city) => city.name !== "")
             .sort((a, b) => (a.name > b.name ? 1 : -1))
             .map((city) => (
               <li
                 onClick={() => {
-                  LocalStore.setCurrentCity(city.name);
-                  handleCurrentGeoLocation(city.name);
-                  handleSetIsVisible();
-                  dispatch.order.setCityId(city.id);
+                  handleSetCurrentLocation(city);
                 }}
               >
                 {city.name}

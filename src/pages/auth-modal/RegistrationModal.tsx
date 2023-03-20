@@ -7,12 +7,13 @@ import { AuthService } from "../../services/auth.service";
 import { Dispatch } from "./../../store/store";
 import { useDispatch } from "react-redux";
 import "./styles.scss";
+import { Tooltip } from "../../components/tooltip/Tooltip";
 
 interface IState {
   login: string;
   email: string;
   password: string;
-  checkPassword: string;
+  confirmPassword: string;
 }
 interface IProps {
   handleRegistrationPage: () => void;
@@ -26,67 +27,84 @@ export const RegistrationModal = ({
   const [login, setLogin] = useState<IState["login"]>("");
   const [email, setEmail] = useState<IState["email"]>("");
   const [password, setPassword] = useState<IState["password"]>("");
-  const [checkPassword, setCheckPassword] =
-    useState<IState["checkPassword"]>("");
+  const [confirmPassword, setConfirmPassword] =
+    useState<IState["confirmPassword"]>("");
 
   const dispatch = useDispatch<Dispatch>();
-  const handleNewUserLogin = (e: TEvent) => {
+  //обработчик ввода логина
+  const handleLogin = (e: TEvent) => {
     setLogin(e.target.value);
   };
-  const handleNewUserEmail = (e: TEvent) => {
+  //обработчик ввода email
+  const handleEmail = (e: TEvent) => {
     setEmail(e.target.value);
   };
-  const handleNewUserPassword = (e: TEvent) => {
+  //обработчик ввода пароля
+  const handlePassword = (e: TEvent) => {
     setPassword(e.target.value);
   };
-
-  const handleCheckUserPassword = (e: TEvent) => {
-    setCheckPassword(e.target.value);
+  //обработчик повторного ввода пароля
+  const handleConfirmPassword = (e: TEvent) => {
+    setConfirmPassword(e.target.value);
   };
   const handleRegistrationData = () => {
-    Api.register({ fname: login, email, password })
-      .then((response) => {
-        AuthService.setToken(response.data.tokens);
-        Api.setToken(response.data.tokens.accessToken);
-        dispatch.user.setUser(response.data.user);
-      })
-      .catch((error) => console.log("BLYAT", error));
+    // Api.register({ fname: login, email, password })
+    //   .then((response) => {
+    //     AuthService.setToken(response.data.tokens);
+    //     Api.setToken(response.data.tokens.accessToken);
+    //     dispatch.user.setUser(response.data.user);
+    //   })
+    //   .catch((error) => console.log("BLYAT", error));
   };
   const isEmail = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g).test(email);
+  const isLogin = new RegExp(/^[a-zA-Z][a-zA-Z0-9-_\.]{1,20}$/g).test(login);
+  const isPassword = new RegExp(
+    /(?=^.{6,10}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/g
+  ).test(password);
   return (
-    <div className='regpage__container'>
-      <div className='regpage__form'>
+    <div className="regpage__container">
+      <div className="regpage__form">
+        <Tooltip />
         <AppInput
+          key={"login"}
+          hasError={!isLogin}
+          errorMessage={"неверный логин"}
           leftIcon={"UserPlus"}
           value={login}
           label={"login"}
-          onChange={handleNewUserLogin}
+          onChange={handleLogin}
           placeholder={"введите логин"}
         />
         <AppInput
+          key={"email"}
+          errorMessage={"неверный Email"}
           hasError={!isEmail}
           leftIcon={"Mail"}
           value={email}
           label={"email"}
-          onChange={handleNewUserEmail}
+          onChange={handleEmail}
           placeholder={"введите email"}
         />
         <AppInput
+          key={"password"}
+          hasError={!isPassword}
+          errorMessage={"Пароль не соответствует требованиям безопасности"}
           leftIcon={"Lock"}
           value={password}
           typeField={"password"}
           label={"password"}
-          onChange={handleNewUserPassword}
+          onChange={handlePassword}
           placeholder={"придумайте пароль"}
         />
         <AppInput
-          hasError={password !== checkPassword}
-          errorMessage={"Неверный пароль"}
+          key={"confirmPassword"}
+          hasError={password !== confirmPassword}
+          errorMessage={"пароли не совпадают"}
           leftIcon={"Lock"}
           typeField={"password"}
-          value={checkPassword}
-          label={"check password"}
-          onChange={handleCheckUserPassword}
+          value={confirmPassword}
+          label={"confirm password"}
+          onChange={handleConfirmPassword}
           placeholder={"повторите пароль"}
         />
       </div>
@@ -98,10 +116,10 @@ export const RegistrationModal = ({
         }}
       >
         <AppButton
-          backgroundColor='blue'
+          backgroundColor="blue"
           isDisabled={false}
           marginTop={20}
-          text='Зарегистрироваться'
+          text="Зарегистрироваться"
         />
       </div>
     </div>

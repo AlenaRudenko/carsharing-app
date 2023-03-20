@@ -10,17 +10,26 @@ import { NavLink, useNavigate } from "react-router-dom";
 interface IProps {
   cities: ICity[];
   toggleAuthVisible: () => void;
+  testCity: string;
+  handleLocalStoreCity: (city: string | undefined) => void;
 }
 
-export const Start = ({ cities, toggleAuthVisible }: IProps) => {
+export const Start = ({
+  cities,
+  toggleAuthVisible,
+  testCity,
+  handleLocalStoreCity,
+}: IProps) => {
   const user = useSelector((state: RootState) => state.user);
-
   const navigate = useNavigate();
   return (
     <>
-      <div className='mainpage--container'>
-        <Header />
-        <div className='mainpage--content'>
+      <div className="mainpage--container">
+        <Header
+          testCity={testCity}
+          handleLocalStoreCity={handleLocalStoreCity}
+        />
+        <div className="mainpage--content">
           <span>Каршеринг</span>
           <span>Need for Drive</span>
           <span>Поминутная аренда авто</span>
@@ -29,12 +38,12 @@ export const Start = ({ cities, toggleAuthVisible }: IProps) => {
             onClick={
               user ? () => navigate("/order/order-location") : toggleAuthVisible
             }
-            text='Забронировать'
-            size='large'
+            text="Забронировать"
+            size="large"
           />
         </div>
 
-        <div className='mainpage--footer'>
+        <div className="mainpage--footer">
           <span>© 2022 «Need for Drive»</span>
           <span>8 (495) 234-22-44</span>
         </div>

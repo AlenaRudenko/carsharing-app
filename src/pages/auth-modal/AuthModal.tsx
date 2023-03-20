@@ -30,15 +30,15 @@ class AuthModalComponent extends React.Component<Props, IState> {
     email: "",
     password: "",
   };
-
+  //обработчик имени юзера
   handleUserNameChange = (email: string) => {
     this.setState({ email });
   };
-
+  //обработчик пароля юзера
   handleUserPasswordChange = (password: string) => {
     this.setState({ password });
   };
-
+  //переключение на страницу регистрации и обратно на аутентификацию
   handleRegistrationPage = () => {
     this.props.toggleIsRegVisible();
   };
@@ -62,37 +62,40 @@ class AuthModalComponent extends React.Component<Props, IState> {
     } = this;
 
     return (
-      <div className='authModal__container'>
+      <div className="authModal__container">
         {isRegVisible ? (
           <RegistrationModal
             {...{ handleRegistrationPage, toggleAuthVisible }}
           />
         ) : (
-          <div className='authModal__contentContainer'>
-            <div className='authModal__inputs'>
+          <div className="authModal__contentContainer">
+ 
+            <div className="authModal__inputs">
               <AppInput
+                key={"newEmail"}
                 iconColor={email ? COLORS.PRIMARY : COLORS.GREY}
-                placeholder='введите Email'
+                placeholder="введите Email"
                 typeField={"email"}
-                label='Email'
+                label="Email"
                 value={email}
                 onChangeText={handleUserNameChange}
                 leftIcon={"User"}
               />
               <AppInput
+                key={"newPassword"}
                 iconColor={password ? COLORS.PRIMARY : COLORS.GREY}
-                placeholder='введите пароль'
-                label='Password'
+                placeholder="введите пароль"
+                label="Password"
                 value={password}
                 onChangeText={handleUserPasswordChange}
                 leftIcon={"Lock"}
-                typeField='password'
+                typeField="password"
               />
               <div onClick={handleAuthLogin}>
                 <AppButton text={"Войти"} />
               </div>
             </div>
-            <div className='logpage__regcontainer'>
+            <div className="logpage__regcontainer">
               <span>Впервые на сайте? </span>
               <span onClick={handleRegistrationPage}>Зарегистрироваться</span>
             </div>

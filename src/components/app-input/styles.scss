@@ -1,6 +1,8 @@
 @import "./../../default-variables";
 
 .input__field {
+  width: 260px;
+  height: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;

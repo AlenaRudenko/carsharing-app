@@ -23,6 +23,7 @@ interface IState {
   isRegVisible: boolean;
   isGeoVisible: boolean;
   isTitleChanged: boolean;
+  status: string;
 }
 interface OwnProps {
   localCity: string;
@@ -32,53 +33,56 @@ type DispatchProps = ReturnType<typeof mapDispatch>;
 type Props = StateProps & DispatchProps & OwnProps;
 
 export class MainContentContainer extends React.Component<Props, IState> {
-  context!: React.ContextType<typeof NavContext>;
   state = {
     isAuthVisible: false,
-    localStoreCity: "",
+    localStoreCity: "" as string,
     cities: [],
     isRegVisible: false,
     isGeoVisible: true,
     isTitleChanged: false,
+    status: "",
   };
-  locald = LocalStore.getCurrentCity();
+  //переключение модального окна выбора города вначале
   toggleIsGeoVisible = () => {
     this.setState({ isGeoVisible: !this.state.isGeoVisible });
   };
-  toggleAuthVisible = () => {
+  //вмонтирование модального окна аутентификации и при нажатии на крест закрытие
+  toggleIsAuthVisible = () => {
     this.setState({ isAuthVisible: !this.state.isAuthVisible });
     this.setState({ isRegVisible: false });
   };
+  //монтирование модального окна регистрации
   toggleIsRegVisible = () => {
     this.setState({ isRegVisible: !this.state.isRegVisible });
   };
+  //смена заголовка модального окна выбора города
   handleGeoModalTitle = () => {
     this.setState({ isTitleChanged: !this.state.isTitleChanged });
   };
+  //обработчик записи в rematch id города и смены названия города(нужен для child)
   handleCityId = (city: ICity) => {
     this.props.setCityId(city.id);
+    this.setState((prevState) => ({
+      ...prevState,
+      localStoreCity: city.name,
+    }));
   };
-  paths = [
-    {
-      path: "/",
-      element: (
-        <Start
-          cities={this.state.cities}
-          toggleAuthVisible={this.toggleAuthVisible}
-        />
-      ),
-    },
-    { path: "/order/*", element: <Order /> },
-  ];
+  //обработчик для child в dropdownmenu для синхронизации города
+  handleLocalStoreCity = (city: string | undefined) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      localStoreCity: city!,
+    }));
+  };
+
   componentDidMount() {
     Api.getCities().then((response) =>
       this.setState({ cities: response.data })
     );
-    this.setState({ localStoreCity: LocalStore.getCurrentCity() || "k" });
+    this.setState({ localStoreCity: LocalStore.getCurrentCity() || " " });
   }
 
   render() {
-    let location = this.context;
     const {
       localStoreCity,
       isTitleChanged,
@@ -89,12 +93,12 @@ export class MainContentContainer extends React.Component<Props, IState> {
     } = this.state;
     const { user, localCity } = this.props;
     const {
-      toggleAuthVisible,
+      toggleIsAuthVisible,
       toggleIsRegVisible,
       toggleIsGeoVisible,
       handleGeoModalTitle,
       handleCityId,
-      paths,
+      handleLocalStoreCity,
     } = this;
     return (
       <>
@@ -120,7 +124,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
           <Modal
             size={"large"}
             title={isRegVisible ? "Регистрация" : "Войти"}
-            onClickBtnClose={toggleAuthVisible}
+            onClickBtnClose={toggleIsAuthVisible}
             isVisible={isAuthVisible}
             leftButton={isRegVisible ? "ArrowLeft" : undefined}
             onClickLeftButton={toggleIsRegVisible}
@@ -129,7 +133,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
               {...{
                 isRegVisible,
                 toggleIsRegVisible,
-                toggleAuthVisible,
+                toggleIsAuthVisible,
               }}
             />
           </Modal>
@@ -139,16 +143,26 @@ export class MainContentContainer extends React.Component<Props, IState> {
         <div className="mainpage">
           <Menu />
           <Routes>
-            {paths.map((path) => (
-              <Route key={path.path} path={path.path} element={path.element} />
-            ))}
+            <Route
+              key={"/"}
+              path={"/"}
+              element={
+                <Start
+                  handleLocalStoreCity={handleLocalStoreCity}
+                  testCity={localStoreCity}
+                  cities={cities}
+                  toggleAuthVisible={toggleIsAuthVisible}
+                />
+              }
+            />
+            <Route key={"/order/*"} path={"/order/*"} element={<Order />} />
           </Routes>
         </div>
       </>
     );
   }
 }
-MainContentContainer.contextType = NavContext;
+
 const mapState = (state: RootState) => ({
   user: state.user,
 });
