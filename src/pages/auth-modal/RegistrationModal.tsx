@@ -52,6 +52,7 @@ export const RegistrationModal = ({
     setIsDisabled(false);
     setConfirmPassword(e.target.value);
   };
+  //проверка уже созданного юзера
   const handleSubmitForms = (message: string) => {
     if (message === "USER_ALREADY_EXIST") {
       setIsDisabled(true);

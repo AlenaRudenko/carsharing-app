@@ -23,7 +23,8 @@ interface IState {
   isRegVisible: boolean;
   isGeoVisible: boolean;
   isTitleChanged: boolean;
-  status: string;
+  isOpenMenu: boolean;
+  isOpenProfile: boolean;
 }
 interface OwnProps {
   localCity: string;
@@ -40,7 +41,8 @@ export class MainContentContainer extends React.Component<Props, IState> {
     isRegVisible: false,
     isGeoVisible: true,
     isTitleChanged: false,
-    status: "",
+    isOpenMenu: false,
+    isOpenProfile: false,
   };
   //переключение модального окна выбора города вначале
   toggleIsGeoVisible = () => {
@@ -58,6 +60,43 @@ export class MainContentContainer extends React.Component<Props, IState> {
   //смена заголовка модального окна выбора города
   handleGeoModalTitle = () => {
     this.setState({ isTitleChanged: !this.state.isTitleChanged });
+  };
+  //обработчик открытия меню
+  toggleIsOpenMenu = () => {
+    if (!this.state.isOpenMenu && this.state.isOpenProfile) {
+      this.setState({ isOpenProfile: false });
+      this.setState({ isOpenMenu: !this.state.isOpenMenu });
+    } else {
+      if (this.state.isOpenMenu && !this.state.isOpenProfile) {
+        this.setState({ isOpenMenu: !this.state.isOpenMenu });
+      } else {
+        this.setState({ isOpenMenu: !this.state.isOpenMenu });
+      }
+    }
+  };
+
+  //обработчик открытия профиля
+  toggleIsOpenProfile = () => {
+    if (this.state.isOpenMenu && !this.state.isOpenProfile && this.props.user) {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
+          isOpenMenu: false,
+        };
+      });
+      this.setState({ isOpenProfile: !this.state.isOpenProfile });
+    } else {
+      if (!this.state.isOpenMenu && this.state.isOpenProfile && this.props.user) {
+        this.setState({ isOpenProfile: !this.state.isOpenProfile });
+      } else {
+        if(!this.state.isOpenMenu && !this.state.isOpenProfile && user) {
+          this.setState({ isOpenProfile: !this.state.isOpenProfile });
+        }else {
+          
+        }
+        
+      }
+    }
   };
   //обработчик записи в rematch id города и смены названия города(нужен для child)
   handleCityId = (city: ICity) => {
@@ -90,6 +129,8 @@ export class MainContentContainer extends React.Component<Props, IState> {
       isAuthVisible,
       isRegVisible,
       cities,
+      isOpenMenu,
+      isOpenProfile,
     } = this.state;
     const { user, localCity } = this.props;
     const {
@@ -99,6 +140,8 @@ export class MainContentContainer extends React.Component<Props, IState> {
       handleGeoModalTitle,
       handleCityId,
       handleLocalStoreCity,
+      toggleIsOpenMenu,
+      toggleIsOpenProfile,
     } = this;
     return (
       <>
@@ -139,9 +182,14 @@ export class MainContentContainer extends React.Component<Props, IState> {
           </Modal>
         )}
 
-        <Navigation />
+        <Navigation
+          isOpenProfile={isOpenProfile}
+          isOpenMenu={isOpenMenu}
+          toggleIsOpenMenu={toggleIsOpenMenu}
+          toggleIsOpenProfile={toggleIsOpenProfile}
+        />
         <div className="mainpage">
-          <Menu />
+          <Menu isOpenProfile={isOpenProfile} isOpenMenu={isOpenMenu} />
           <Routes>
             <Route
               key={"/"}

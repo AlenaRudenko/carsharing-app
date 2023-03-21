@@ -1,3 +1,4 @@
+@import "./../../default-variables";
 .sidebar {
   width: 64px;
   height: 100vh;
@@ -12,18 +13,45 @@
   position: absolute;
   transition: 0.3s;
   z-index: 2;
-  &--open {
-    width: 100%;
+  width: 100%;
+  visibility: visible;
+  opacity: 1;
+  transition: visible 0.5s, opacity 0.5s ease-in-out;
+  &--hidden {
+    opacity: 0;
+    visibility: hidden;
+    transition: visibility 0.5s, opacity 0.5s ease-in-out;
   }
-  &--close {
-    width: 0;
-  }
+}
+.test1 {
+  color: red;
 }
 .menu__list {
   width: 50%;
   background-color: #111518;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ul {
+    list-style: none;
+  }
 }
+.li {
+  font-size: 40px;
+  cursor: pointer;
+  color: white;
+  &--active {
+    color: $pimary-color;
+  }
+  &:hover {
+    color: $pimary-color;
+  }
+}
+
 .menu__transparent {
   width: 50%;
   background-color: rgba(21, 27, 31, 0.81);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -1,0 +1,9 @@
+@import "./../../../default-variables";
+
+.description__container {
+  text-align: center;
+  width: 80%;
+  color: $pimary-color;
+  font-size: 35px;
+  text-shadow: 1px -1px 30px black;
+}

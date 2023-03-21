@@ -1,11 +1,12 @@
 import Hamburger from "hamburger-react";
-import { useContext } from "react";
 
-import { NavContext } from "../context/NavState";
+interface IProps {
+  toggleIsOpenMenu: () => void;
+  isOpenMenu: boolean;
+}
 
-export const NavButton = () => {
-  const { isOpen, toggleIsOpenFunc } = useContext(NavContext);
+export const NavButton = ({ toggleIsOpenMenu, isOpenMenu }: IProps) => {
   return (
-    <Hamburger toggled={isOpen} toggle={toggleIsOpenFunc} color={"white"} />
+    <Hamburger toggled={isOpenMenu} toggle={toggleIsOpenMenu} color={"white"} />
   );
 };
