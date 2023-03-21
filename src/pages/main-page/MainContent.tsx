@@ -86,15 +86,24 @@ export class MainContentContainer extends React.Component<Props, IState> {
       });
       this.setState({ isOpenProfile: !this.state.isOpenProfile });
     } else {
-      if (!this.state.isOpenMenu && this.state.isOpenProfile && this.props.user) {
+      if (
+        !this.state.isOpenMenu &&
+        this.state.isOpenProfile &&
+        this.props.user
+      ) {
         this.setState({ isOpenProfile: !this.state.isOpenProfile });
       } else {
-        if(!this.state.isOpenMenu && !this.state.isOpenProfile && user) {
+        if (
+          !this.state.isOpenMenu &&
+          !this.state.isOpenProfile &&
+          this.props.user
+        ) {
           this.setState({ isOpenProfile: !this.state.isOpenProfile });
-        }else {
-          
+        } else {
+          this.setState({ isOpenProfile: false });
+          this.setState({ isOpenMenu: false });
+          this.toggleIsAuthVisible();
         }
-        
       }
     }
   };
