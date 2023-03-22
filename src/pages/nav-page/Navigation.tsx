@@ -1,6 +1,7 @@
-import { NavButton } from "../../components/NavButton";
-import { UserButton } from "../../components/user-button/UserButton";
+import { NavButton } from "./components/nav-button/NavButton";
+import { UserButton } from "./components/user-button/UserButton";
 import "./styles.scss";
+
 interface IProps {
   toggleIsOpenMenu: () => void;
   isOpenMenu: boolean;

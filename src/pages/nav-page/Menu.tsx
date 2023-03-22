@@ -1,4 +1,4 @@
-import { Description } from "./components/Description";
+import { Description } from "./components/description/Description";
 import { useState, useEffect } from "react";
 import "./styles.scss";
 import { MenuPage } from "./menu-page/MenuPage";
@@ -7,10 +7,16 @@ import { ProfilePage } from "./profile-page/ProfilePage";
 interface IProps {
   isOpenMenu: boolean;
   isOpenProfile: boolean;
+  handleUserLogOut: () => void;
 }
 
-export const Menu = ({ isOpenMenu, isOpenProfile }: IProps) => {
+export const Menu = ({
+  isOpenMenu,
+  isOpenProfile,
+  handleUserLogOut,
+}: IProps) => {
   const [id, setId] = useState(0);
+
   const menu = [
     {
       id: 1,
@@ -34,15 +40,19 @@ export const Menu = ({ isOpenMenu, isOpenProfile }: IProps) => {
       description: "Автомобиль проходит еженедельное ТО",
     },
   ];
+
+  //перемещение по меню
   const handleOnClickMenuItem = (id: number) => {
     setId(id);
   };
 
+  //очистка меню после закрытия
   useEffect(() => {
     if (!isOpenMenu || isOpenProfile) {
       setId(0);
     }
   });
+
   return (
     <div className={`menu menu${!isOpenMenu && !isOpenProfile && "--hidden"}`}>
       <div className="menu__list">
@@ -53,14 +63,13 @@ export const Menu = ({ isOpenMenu, isOpenProfile }: IProps) => {
             handleOnClickMenuItem={handleOnClickMenuItem}
           />
         )}
-        {isOpenProfile && <ProfilePage />}
+        {isOpenProfile && <ProfilePage handleUserLogOut={handleUserLogOut} />}
       </div>
       <div className="menu__transparent">
-        {menu
-          .filter((item) => item.id === id)
-          .map((value) => (
-            <Description text={value.description} />
-          ))}
+        {isOpenMenu &&
+          menu
+            .filter((item) => item.id === id)
+            .map((value) => <Description text={value.description} />)}
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
-import { DropdownMenu } from "./dropdown-menu-location/DropdownMenu";
-import { LocalStore } from "../services/localStorage.service";
+import { DropdownMenu } from "../dropdown-menu-location/DropdownMenu";
+import { LocalStore } from "../../services/localStorage.service";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { RootState, Dispatch } from "../store/store";
+import { RootState, Dispatch } from "../../store/store";
 import "./styles.scss";
 interface IProps {
   color?: string;

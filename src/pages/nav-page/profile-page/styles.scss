@@ -1,0 +1,19 @@
+.profilePage__container {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  h2 {
+    text-transform: uppercase;
+  }
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  td,
+  th {
+    padding: 20px;
+  }
+}

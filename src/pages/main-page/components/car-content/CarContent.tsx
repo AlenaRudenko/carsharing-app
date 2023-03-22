@@ -1,9 +1,9 @@
 import { memo, useEffect, useState } from "react";
-import { CarCard } from "../../components/CarCard";
-import { DotsFlashing } from "../../components/loading/DotsFlashing";
-import { ICar } from "../../interfaces/car";
-import { Api } from "../../services/api.service";
-import "./styles.scss";
+import { CarCard } from "../car-card/CarCard";
+import { DotsFlashing } from "../../../../components/loading/DotsFlashing";
+import { ICar } from "../../../../interfaces/car";
+import { Api } from "../../../../services/api.service";
+import "./style.scss";
 
 export const CarContent = memo(() => {
   const [cars, setCars] = useState<ICar[]>([]);

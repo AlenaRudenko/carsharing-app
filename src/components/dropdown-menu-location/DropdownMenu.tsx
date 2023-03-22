@@ -3,8 +3,6 @@ import { AppIcon } from "../app-icon/AppIcon";
 import { COLORS } from "../../constants/colors";
 import "./styles.scss";
 import { Geo } from "../../services/geo.service";
-import { NavContext } from "../../context/NavState";
-import { useContext } from "react";
 import { ICity } from "../../interfaces/city";
 import { Api } from "../../services/api.service";
 import { LocalStore } from "../../services/localStorage.service";
@@ -67,16 +65,18 @@ export const DropdownMenu = ({ testCity, handleLocalStoreCity }: IProps) => {
       >
         <ul>
           {cities
-            .filter((city) => city.name !== "")
+
             .sort((a, b) => (a.name > b.name ? 1 : -1))
             .map((city) => (
-              <li
-                onClick={() => {
-                  handleSetCurrentLocation(city);
-                }}
-              >
-                {city.name}
-              </li>
+              <div key={city.name}>
+                <li
+                  onClick={() => {
+                    handleSetCurrentLocation(city);
+                  }}
+                >
+                  {city.name}
+                </li>
+              </div>
             ))}
         </ul>
       </div>

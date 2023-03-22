@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { ICar } from "../interfaces/car";
-import "./styles.scss";
+import { ICar } from "../../../../interfaces/car";
+import "./style.scss";
 interface IProps {
   cars: ICar[];
 }

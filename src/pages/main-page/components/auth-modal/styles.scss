@@ -1,4 +1,4 @@
-@import "./../../default-variables.scss";
+@import "../../../../default-variables.scss";
 
 .authModal__container {
   display: flex;
@@ -46,7 +46,19 @@
     color: $pimary-color;
   }
 }
-
+//нотифай если чтото неправильно ввел
+.logpage__notification {
+  width: 80%;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  span {
+    color: red;
+    font-size: 13px;
+  }
+}
 //regpage container
 .regpage__container {
   height: 100%;

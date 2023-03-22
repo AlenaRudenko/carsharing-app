@@ -3,7 +3,6 @@ import "./styles.scss";
 import "./../../constants/colors";
 import { COLORS } from "./../../constants/colors";
 import { useState, useEffect } from "react";
-import { NavContext } from "../../context/NavState";
 import { useContext } from "react";
 import { TEvent } from "../../interfaces/event";
 import { LocalStore } from "../../services/localStorage.service";

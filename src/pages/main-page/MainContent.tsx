@@ -1,14 +1,13 @@
 import React from "react";
-import { AuthModal } from "../auth-modal/AuthModal";
+import { AuthModal } from "./components/auth-modal/AuthModal";
 import { Menu } from "../nav-page/Menu";
 import { Navigation } from "../nav-page/Navigation";
 import { ICity } from "./../../interfaces/city";
 import { Api } from "./../../services/api.service";
 import "./styles.scss";
 import { Modal } from "../../components/modals/Modal";
-import { NavContext } from "../../context/NavState";
 import { GeoModal } from "../../components/geo-modal/GeoModal";
-import { Start } from "../start-page/Start";
+import { Start } from "./components/start-page/Start";
 import { OrderContainer } from "../order-page/Order";
 import { Route, Routes } from "react-router";
 import { LocalStore } from "../../services/localStorage.service";
@@ -26,9 +25,11 @@ interface IState {
   isOpenMenu: boolean;
   isOpenProfile: boolean;
 }
+
 interface OwnProps {
   localCity: string;
 }
+
 type StateProps = ReturnType<typeof mapState>;
 type DispatchProps = ReturnType<typeof mapDispatch>;
 type Props = StateProps & DispatchProps & OwnProps;
@@ -44,23 +45,28 @@ export class MainContentContainer extends React.Component<Props, IState> {
     isOpenMenu: false,
     isOpenProfile: false,
   };
+
   //переключение модального окна выбора города вначале
   toggleIsGeoVisible = () => {
     this.setState({ isGeoVisible: !this.state.isGeoVisible });
   };
+
   //вмонтирование модального окна аутентификации и при нажатии на крест закрытие
   toggleIsAuthVisible = () => {
     this.setState({ isAuthVisible: !this.state.isAuthVisible });
     this.setState({ isRegVisible: false });
   };
+
   //монтирование модального окна регистрации
   toggleIsRegVisible = () => {
     this.setState({ isRegVisible: !this.state.isRegVisible });
   };
+
   //смена заголовка модального окна выбора города
   handleGeoModalTitle = () => {
     this.setState({ isTitleChanged: !this.state.isTitleChanged });
   };
+
   //обработчик открытия меню
   toggleIsOpenMenu = () => {
     if (!this.state.isOpenMenu && this.state.isOpenProfile) {
@@ -107,6 +113,13 @@ export class MainContentContainer extends React.Component<Props, IState> {
       }
     }
   };
+
+  //обработчик выхода из профиля
+  handleUserLogOut = () => {
+    this.setState({ isOpenProfile: false });
+    this.setState({ isAuthVisible: !this.state.isAuthVisible });
+  };
+
   //обработчик записи в rematch id города и смены названия города(нужен для child)
   handleCityId = (city: ICity) => {
     this.props.setCityId(city.id);
@@ -115,6 +128,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
       localStoreCity: city.name,
     }));
   };
+
   //обработчик для child в dropdownmenu для синхронизации города
   handleLocalStoreCity = (city: string | undefined) => {
     this.setState((prevState) => ({
@@ -123,6 +137,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
     }));
   };
 
+  //получаем города и сетаем локальный город в модалку
   componentDidMount() {
     Api.getCities().then((response) =>
       this.setState({ cities: response.data })
@@ -151,6 +166,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
       handleLocalStoreCity,
       toggleIsOpenMenu,
       toggleIsOpenProfile,
+      handleUserLogOut,
     } = this;
     return (
       <>
@@ -198,7 +214,11 @@ export class MainContentContainer extends React.Component<Props, IState> {
           toggleIsOpenProfile={toggleIsOpenProfile}
         />
         <div className="mainpage">
-          <Menu isOpenProfile={isOpenProfile} isOpenMenu={isOpenMenu} />
+          <Menu
+            handleUserLogOut={handleUserLogOut}
+            isOpenProfile={isOpenProfile}
+            isOpenMenu={isOpenMenu}
+          />
           <Routes>
             <Route
               key={"/"}

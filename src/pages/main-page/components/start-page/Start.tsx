@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
-import { AppButton } from "../../components/app-button/AppButton";
-import { Header } from "../../components/Header";
-import { ICity } from "../../interfaces/city";
-import { CarContent } from "../main-page/CarContent";
+import { AppButton } from "../../../../components/app-button/AppButton";
+import { Header } from "../../../../components/header/Header";
+import { ICity } from "../../../../interfaces/city";
+import { CarContent } from "../car-content/CarContent";
 import "./styles.scss";
-import { RootState } from "../../store/store";
+import { RootState } from "../../../../store/store";
 import { NavLink, useNavigate } from "react-router-dom";
 
 interface IProps {
@@ -44,7 +44,7 @@ export const Start = ({
         </div>
 
         <div className="mainpage--footer">
-          <span>© 2022 «Need for Drive»</span>
+          <span>© 2023 «Need for Drive»</span>
           <span>8 (495) 234-22-44</span>
         </div>
       </div>

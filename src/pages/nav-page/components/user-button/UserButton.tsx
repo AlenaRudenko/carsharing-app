@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import { AppIcon } from "../app-icon/AppIcon";
+import { AppIcon } from "../../../../components/app-icon/AppIcon";
 import "./styles.scss";
-import { RootState } from "../../store/store";
+import { RootState } from "../../../../store/store";
 import { useEffect } from "react";
 
 interface IProps {
@@ -11,6 +11,7 @@ interface IProps {
 
 export const UserButton = ({ toggleIsOpenProfile, isOpenProfile }: IProps) => {
   const user = useSelector((state: RootState) => state.user);
+
   return (
     <div className="user__button" onClick={toggleIsOpenProfile}>
       <AppIcon icon={"User"} size={30} />

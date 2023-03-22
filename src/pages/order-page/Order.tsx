@@ -1,6 +1,6 @@
 import React from "react";
 import "./styles.scss";
-import { Header } from "../../components/Header";
+import { Header } from "../../components/header/Header";
 import { OrderNavigation } from "../../components/order-navigation/OrderNavigation";
 import { AppIcon } from "../../components/app-icon/AppIcon";
 import { COLORS } from "./../../constants/colors";
