@@ -20,7 +20,7 @@ export const ProfilePage = ({ handleUserLogOut }: IProps) => {
     dispatch.user.removeUser();
     AuthService.removeTokens();
     handleUserLogOut();
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   return (

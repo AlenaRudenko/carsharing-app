@@ -20,8 +20,7 @@ interface IProps {
 interface IState {
   email: string;
   password: string;
-  error: string;
-  isDisabled: boolean;
+  status:string
 }
 
 type DispatchProps = ReturnType<typeof mapDispatch>;
@@ -68,7 +67,7 @@ class AuthModalComponent extends React.Component<Props, IState> {
       })
       .catch((error) => this.handleError(error.response.data.message));
   };
-  
+
   //обработчик статуса ошибки
   handleError = (error: string) => {
     if (error === "USER NOT FOUND") {
