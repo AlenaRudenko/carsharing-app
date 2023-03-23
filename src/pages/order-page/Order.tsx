@@ -18,8 +18,8 @@ interface IState {
   status: string[];
 }
 interface IProps {
-  testCity: string;
-  handleLocalStoreCity: (city: string | undefined) => void;
+  testCity?: string;
+  handleLocalStoreCity?: (city: string | undefined) => void;
 }
 
 export const Order = ({ testCity, handleLocalStoreCity }: IProps) => {
