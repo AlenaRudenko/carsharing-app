@@ -13,13 +13,14 @@ export const OrderReview = ({ navPoint }: IProps) => {
   const carId = useSelector((state: RootState) => state.order.carId);
   const cityId = useSelector((state: RootState) => state.order.cityId);
   return (
-    <div className='orderReview__container'>
+    <div className="orderReview__container">
       <span>Ваш заказ:</span>
-      <div className='orderReview__content'>
+      <div className="orderReview__content">
         <span>sss</span>
       </div>
       <AppButton
-        text='Продолжить'
+        isDisabled={true}
+        text="Продолжить"
         onClick={() => {
           navigate(navPoint);
         }}

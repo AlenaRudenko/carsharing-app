@@ -8,7 +8,7 @@ import "./styles.scss";
 import { Modal } from "../../components/modals/Modal";
 import { GeoModal } from "../../components/geo-modal/GeoModal";
 import { Start } from "./components/start-page/Start";
-import { OrderContainer } from "../order-page/Order";
+import { Order } from "../order-page/Order";
 import { Route, Routes } from "react-router";
 import { LocalStore } from "../../services/localStorage.service";
 import { Geo } from "../../services/geo.service";
@@ -117,7 +117,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
   //обработчик выхода из профиля
   handleUserLogOut = () => {
     this.setState({ isOpenProfile: false });
-    this.setState({ isAuthVisible: !this.state.isAuthVisible });
+    this.setState({ isAuthVisible: false });
   };
 
   //обработчик записи в rematch id города и смены названия города(нужен для child)
@@ -232,11 +232,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
                 />
               }
             />
-            <Route
-              key={"/order/*"}
-              path={"/order/*"}
-              element={<OrderContainer />}
-            />
+            <Route key={"/order/*"} path={"/order/*"} element={<Order />} />
           </Routes>
         </div>
       </>
