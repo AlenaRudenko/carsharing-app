@@ -3,7 +3,7 @@ import { Header } from "../../components/header/Header";
 import { OrderNavigation } from "./components/order-navigation/OrderNavigation";
 import { AppIcon } from "../../components/app-icon/AppIcon";
 import { COLORS } from "./../../constants/colors";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { OrderLocation } from "./order-location/OrderLocation";
 import { OrderModel } from "./order-model/OrderModel";
 import { OrderAdditionally } from "./order-additionally/OrderAdditionally";
@@ -12,9 +12,19 @@ import { Route, Routes } from "react-router";
 import { OrderReview } from "./order-review-component/OrderReview";
 import { AuthService } from "./../../services/auth.service";
 import { useNavigate } from "react-router-dom";
+import { ICity } from "./../../interfaces/city";
 
-export const Order = () => {
+interface IState {
+  status: string[];
+}
+interface IProps {
+  testCity: string;
+  handleLocalStoreCity: (city: string | undefined) => void;
+}
+
+export const Order = ({ testCity, handleLocalStoreCity }: IProps) => {
   const navArray = ["Местоположение", "Модель", "Дополнительно", "Итого"];
+  const [status, setStatus] = useState<IState["status"]>(["order-location"]);
   const navigate = useNavigate();
   useEffect(() => {
     if (!AuthService.getAccessToken()) {
@@ -27,10 +37,16 @@ export const Order = () => {
     "order-additionally",
     "order-full",
   ];
-
+  const handleStatusOrder = () => {};
   return (
     <div className="order__container">
-      <Header padding="20px 0px 50px 0px" size="35px" />
+      <Header
+        key={"2"}
+        handleLocalStoreCity={handleLocalStoreCity}
+        testCity={testCity}
+        padding="20px 0px 50px 0px"
+        size="35px"
+      />
       <div className="order__navigation">
         {navArray.map((item, index) =>
           index < navArray.length - 1 ? (
@@ -38,13 +54,13 @@ export const Order = () => {
               <OrderNavigation
                 path={paths[index]}
                 navigationItem={item}
-                status={"s"}
+                status={status}
               />
               <AppIcon icon="ArrowRight" color={COLORS.GREY} size={14} />
             </>
           ) : (
             <OrderNavigation
-              status={"a"}
+              status={status}
               path={paths[index]}
               navigationItem={item}
             />
@@ -60,7 +76,10 @@ export const Order = () => {
             <Route path="order-full" element={<OrderFull />} />
           </Routes>
         </div>
-        <OrderReview navPoint=""></OrderReview>
+        <OrderReview
+          handleStatusOrder={handleStatusOrder}
+          navPoint="car"
+        ></OrderReview>
       </div>
     </div>
   );

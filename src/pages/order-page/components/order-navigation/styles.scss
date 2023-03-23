@@ -20,3 +20,13 @@
     color: green;
   }
 }
+
+.navigationItem__container--active span {
+  color: $pimary-color;
+}
+.navigationItem__container--unactive span {
+  cursor: default;
+  &:hover {
+    color: $grey-color;
+  }
+}
