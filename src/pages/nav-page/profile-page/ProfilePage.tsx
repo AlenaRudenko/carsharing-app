@@ -19,7 +19,6 @@ export const ProfilePage = ({ handleUserLogOut }: IProps) => {
 
   const handleOnClickLogOut = () => {
     dispatch.user.removeUser();
-
     AuthService.removeTokens();
     handleUserLogOut();
     navigate("/");

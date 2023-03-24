@@ -5,17 +5,18 @@ interface IProps {
   setCurrentAdress: (address: string) => void;
 }
 
-export const DropdownMenu = ({ addresses, setCurrentAdress }: IProps) => {
+export const DropdownMenuAddress = ({ addresses, setCurrentAdress }: IProps) => {
   const handleAddress = (address: string) => {
     setCurrentAdress(address);
   };
 
   return (
-    <datalist id='address'>
+    <datalist id="address">
       {addresses.map((address) => {
         return (
           <option
-            className='my-option'
+            key={address}
+            className="my-option"
             value={address}
             onClick={() => {
               handleAddress(address);

@@ -12,10 +12,8 @@ class AuthClazz {
     return localStorage.getItem("refreshToken");
   }
   removeTokens() {
-    localStorage.clear();
-  }
-  setCurrentCity(city: string) {
-    localStorage.setItem("currentCity", city);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
   }
 }
 

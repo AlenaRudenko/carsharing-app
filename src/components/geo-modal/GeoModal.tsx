@@ -14,7 +14,7 @@ interface IProps {
   toggleIsGeoVisible: () => void;
   handleGeoModalTitle: () => void;
   cities: ICity[];
-  localStoreCity: string;
+  localCity: string;
   handleCityId: (city: ICity) => void;
 }
 
@@ -22,18 +22,23 @@ export const GeoModal = ({
   toggleIsGeoVisible,
   handleGeoModalTitle,
   cities,
-  localStoreCity,
+  localCity,
   handleCityId,
 }: IProps) => {
   const [isActive, setIsActive] = useState(false);
   const [currentCity, setCurrentCity] = useState("");
   const [city, setCity] = useState<ICity>({} as ICity);
+
+  const cityH = cities.find((city) => city.name === currentCity);
+
   const dispatch = useDispatch<Dispatch>();
+
+  //поле ввода города
   const handleCurrentCity = (e: TEvent) => {
     setCurrentCity(e.target.value);
   };
-  const cityH = cities.find((city) => city.name === currentCity);
-  
+
+//обработчик города при наличии совпадения с городами из сервера
   const handleCity = () => {
     if (cityH) {
       setCity(cityH);
@@ -93,8 +98,8 @@ export const GeoModal = ({
               text={"Да, верно"}
               onClick={() => {
                 toggleIsGeoVisible();
-                setCurrentCity(localStoreCity);
-                LocalStore.setCurrentCity(localStoreCity);
+                setCurrentCity(localCity);
+                LocalStore.setCurrentCity(localCity);
                 handleCity();
               }}
               size={"regular"}

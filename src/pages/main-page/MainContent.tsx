@@ -17,7 +17,6 @@ import { RootState, Dispatch } from "../../store/store";
 
 interface IState {
   isAuthVisible: boolean;
-  localStoreCity: string;
   cities: ICity[];
   isRegVisible: boolean;
   isGeoVisible: boolean;
@@ -28,6 +27,13 @@ interface IState {
 
 interface OwnProps {
   localCity: string;
+  handleChangeCityName: (city: string) => void;
+  coordsLocation: ICoords;
+}
+
+interface ICoords {
+  lat: number;
+  lon: number;
 }
 
 type StateProps = ReturnType<typeof mapState>;
@@ -37,7 +43,6 @@ type Props = StateProps & DispatchProps & OwnProps;
 export class MainContentContainer extends React.Component<Props, IState> {
   state = {
     isAuthVisible: false,
-    localStoreCity: "" as string,
     cities: [],
     isRegVisible: false,
     isGeoVisible: true,
@@ -123,18 +128,12 @@ export class MainContentContainer extends React.Component<Props, IState> {
   //обработчик записи в rematch id города и смены названия города(нужен для child)
   handleCityId = (city: ICity) => {
     this.props.setCityId(city.id);
-    this.setState((prevState) => ({
-      ...prevState,
-      localStoreCity: city.name,
-    }));
+    this.props.handleChangeCityName(city.name);
   };
 
   //обработчик для child в dropdownmenu для синхронизации города
   handleLocalStoreCity = (city: string | undefined) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      localStoreCity: city!,
-    }));
+    this.props.handleChangeCityName(city!);
   };
 
   //получаем города и сетаем локальный город в модалку
@@ -142,12 +141,10 @@ export class MainContentContainer extends React.Component<Props, IState> {
     Api.getCities().then((response) =>
       this.setState({ cities: response.data })
     );
-    this.setState({ localStoreCity: LocalStore.getCurrentCity() || " " });
   }
 
   render() {
     const {
-      localStoreCity,
       isTitleChanged,
       isGeoVisible,
       isAuthVisible,
@@ -156,7 +153,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
       isOpenMenu,
       isOpenProfile,
     } = this.state;
-    const { user, localCity } = this.props;
+    const { user, localCity, coordsLocation } = this.props;
     const {
       toggleIsAuthVisible,
       toggleIsRegVisible,
@@ -170,7 +167,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
     } = this;
     return (
       <>
-        {localStoreCity && (
+        {!user && (
           <Modal
             isVisible={isGeoVisible ? true : false}
             title={
@@ -180,7 +177,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
             <GeoModal
               {...{
                 cities,
-                localStoreCity,
+                localCity,
                 toggleIsGeoVisible,
                 handleGeoModalTitle,
                 handleCityId,
@@ -226,13 +223,23 @@ export class MainContentContainer extends React.Component<Props, IState> {
               element={
                 <Start
                   handleLocalStoreCity={handleLocalStoreCity}
-                  testCity={localStoreCity}
+                  localCity={localCity}
                   cities={cities}
                   toggleAuthVisible={toggleIsAuthVisible}
                 />
               }
             />
-            <Route key={"/order/*"} path={"/order/*"} element={<Order />} />
+            <Route
+              key={"/order/*"}
+              path={"/order/*"}
+              element={
+                <Order
+                  handleLocalStoreCity={handleLocalStoreCity}
+                  localCity={localCity}
+                  coordsLocation={coordsLocation}
+                />
+              }
+            />
           </Routes>
         </div>
       </>

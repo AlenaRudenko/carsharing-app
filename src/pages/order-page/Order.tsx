@@ -13,17 +13,24 @@ import { OrderReview } from "./order-review-component/OrderReview";
 import { AuthService } from "./../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { ICity } from "./../../interfaces/city";
+import { Fragment } from "react";
 
 interface IState {
   status: string[];
 }
 interface IProps {
-  testCity?: string;
+  localCity: string;
   handleLocalStoreCity?: (city: string | undefined) => void;
+  coordsLocation: ICoords;
+}
+interface ICoords {
+  lat: number;
+  lon: number;
 }
 
-export const Order = ({ testCity, handleLocalStoreCity }: IProps) => {
+export const Order = ({ localCity, handleLocalStoreCity,coordsLocation }: IProps) => {
   const navArray = ["Местоположение", "Модель", "Дополнительно", "Итого"];
+
   const [status, setStatus] = useState<IState["status"]>(["order-location"]);
   const navigate = useNavigate();
   useEffect(() => {
@@ -43,34 +50,31 @@ export const Order = ({ testCity, handleLocalStoreCity }: IProps) => {
       <Header
         key={"2"}
         handleLocalStoreCity={handleLocalStoreCity}
-        testCity={testCity}
+        localCity={localCity}
         padding="20px 0px 50px 0px"
         size="35px"
       />
       <div className="order__navigation">
-        {navArray.map((item, index) =>
-          index < navArray.length - 1 ? (
-            <>
-              <OrderNavigation
-                path={paths[index]}
-                navigationItem={item}
-                status={status}
-              />
-              <AppIcon icon="ArrowRight" color={COLORS.GREY} size={14} />
-            </>
-          ) : (
+        {navArray.map((item, index) => (
+          <Fragment key={item}>
             <OrderNavigation
-              status={status}
               path={paths[index]}
               navigationItem={item}
+              status={status}
             />
-          )
-        )}
+            {index < navArray.length - 1 && (
+              <AppIcon icon="ArrowRight" color={COLORS.GREY} size={14} />
+            )}
+          </Fragment>
+        ))}
       </div>
       <div className="order__content">
         <div className="order__routes">
           <Routes>
-            <Route path="order-location" element={<OrderLocation />} />
+            <Route
+              path="order-location"
+              element={<OrderLocation localCity={localCity} coordsLocation={coordsLocation} />}
+            />
             <Route path="order-model" element={<OrderModel />} />
             <Route path="order-additionally" element={<OrderAdditionally />} />
             <Route path="order-full" element={<OrderFull />} />

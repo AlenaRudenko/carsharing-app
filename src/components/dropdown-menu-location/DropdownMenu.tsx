@@ -10,27 +10,33 @@ import { useDispatch, useSelector } from "react-redux";
 import { Dispatch, RootState } from "../../store/store";
 
 interface IProps {
-  testCity: string | undefined;
+  localCity: string | undefined;
   handleLocalStoreCity: (city: string) => void;
 }
 
-export const DropdownMenu = ({ testCity, handleLocalStoreCity }: IProps) => {
+export const DropdownMenu = ({ localCity, handleLocalStoreCity }: IProps) => {
   const dispatch = useDispatch<Dispatch>();
+
   const [isVisible, setIsVisible] = useState(false);
   const [cities, setCities] = useState<ICity[]>([]);
 
+  //смена видимости выплывающего списка
   const handleSetIsVisible = () => {
     setIsVisible(!isVisible);
   };
+
+  //сет города в rematch и родителю App
   const handleSetCurrentLocation = (city: ICity) => {
     LocalStore.setCurrentCity(city.name);
     handleSetIsVisible();
     dispatch.order.setCityId(city.id);
     handleLocalStoreCity(city!.name);
   };
+
   useEffect(() => {
     Api.getCities().then((response) => {
-      setCities((cities) => [...cities, ...response.data]);
+      setCities(response.data);
+      console.log("ЧПУНЯ СМОТРИ СЮДА", response.data);
     });
   }, []);
 
@@ -46,7 +52,7 @@ export const DropdownMenu = ({ testCity, handleLocalStoreCity }: IProps) => {
           }}
           style={{ color: COLORS.BLACK, cursor: "pointer" }}
         >
-          {testCity}
+          {localCity}
         </span>
       </div>
       <div className="dropdown__icon" style={{ userSelect: "none" }}>
@@ -64,11 +70,10 @@ export const DropdownMenu = ({ testCity, handleLocalStoreCity }: IProps) => {
         }`}
       >
         <ul>
-          {cities
-
+          {[...cities]
             .sort((a, b) => (a.name > b.name ? 1 : -1))
             .map((city) => (
-              <div key={city.name}>
+              <div key={city.id}>
                 <li
                   onClick={() => {
                     handleSetCurrentLocation(city);

@@ -10,14 +10,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 interface IProps {
   cities: ICity[];
   toggleAuthVisible: () => void;
-  testCity: string;
+  localCity: string;
   handleLocalStoreCity: (city: string | undefined) => void;
 }
 
 export const Start = ({
   cities,
   toggleAuthVisible,
-  testCity,
+  localCity,
   handleLocalStoreCity,
 }: IProps) => {
   const user = useSelector((state: RootState) => state.user);
@@ -26,7 +26,7 @@ export const Start = ({
     <>
       <div className="mainpage--container">
         <Header
-          testCity={testCity}
+          localCity={localCity}
           handleLocalStoreCity={handleLocalStoreCity}
         />
         <div className="mainpage--content">

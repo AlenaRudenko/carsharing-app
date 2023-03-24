@@ -1,9 +1,18 @@
 import { ChangeEvent, useState } from "react";
 import { YandexMap } from "../../../YandexMap/YandexMap";
 import "./styles.scss";
-import { DropdownMenu } from "./components/DropdownMenu";
+import { DropdownMenuAddress } from "./components/dropdown-menu/DropdownMenuAddress";
 
-export const OrderLocation = () => {
+interface IProps {
+  localCity: string;
+  coordsLocation: ICoords;
+}
+interface ICoords {
+  lat: number;
+  lon: number;
+}
+
+export const OrderLocation = ({ localCity, coordsLocation }: IProps) => {
   const [value, setValue] = useState("");
   const addresses = ["ул. Гагарина 88", "ул. Васенко 15", "ул. Ленина 55"];
   const [currentAddress, setCurrentAddress] = useState("");
@@ -18,23 +27,23 @@ export const OrderLocation = () => {
 
   return (
     <>
-      <div className='orderLocation__container'>
-        <div className='orderLocation__input'>
+      <div className="orderLocation__container">
+        <div className="orderLocation__input">
           <input
-            id='suggest'
-            list='address'
+            id="suggest"
+            list="address"
             onChange={handleInputChange}
             value={value}
           />
         </div>
 
-        <DropdownMenu
+        <DropdownMenuAddress
           setCurrentAdress={handleSetCurrentAddress}
           addresses={addresses}
         />
 
-        <div id='map' className='orderLocation__map'>
-          <YandexMap />
+        <div id="map" className="orderLocation__map">
+          <YandexMap coordsLocation={coordsLocation} localCity={localCity} />
         </div>
       </div>
     </>
