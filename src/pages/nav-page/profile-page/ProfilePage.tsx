@@ -4,7 +4,6 @@ import { RootState, Dispatch } from "../../../store/store";
 import { AppButton } from "../../../components/app-button/AppButton";
 import { AuthService } from "../../../services/auth.service";
 import { useNavigate } from "react-router-dom";
-import { LocalStore } from "../../../services/localStorage.service";
 
 interface IProps {
   handleUserLogOut: () => void;
@@ -17,6 +16,7 @@ export const ProfilePage = ({ handleUserLogOut }: IProps) => {
 
   const navigate = useNavigate();
 
+  //обработчик выхода юзера из аккаунта
   const handleOnClickLogOut = () => {
     dispatch.user.removeUser();
     AuthService.removeTokens();
@@ -25,7 +25,7 @@ export const ProfilePage = ({ handleUserLogOut }: IProps) => {
   };
 
   return (
-    <div className="profilePage__container">
+    <div className='profilePage__container'>
       <h2>Ваш профиль</h2>
       <table>
         <tbody>

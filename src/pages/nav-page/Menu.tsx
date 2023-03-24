@@ -10,12 +10,16 @@ interface IProps {
   handleUserLogOut: () => void;
 }
 
+interface IState {
+  id: number;
+}
+
 export const Menu = ({
   isOpenMenu,
   isOpenProfile,
   handleUserLogOut,
 }: IProps) => {
-  const [id, setId] = useState(0);
+  const [id, setId] = useState<IState["id"]>(0);
 
   const menu = [
     {
@@ -55,7 +59,7 @@ export const Menu = ({
 
   return (
     <div className={`menu menu${!isOpenMenu && !isOpenProfile && "--hidden"}`}>
-      <div className="menu__list">
+      <div className='menu__list'>
         {isOpenMenu && (
           <MenuPage
             menu={menu}
@@ -65,7 +69,7 @@ export const Menu = ({
         )}
         {isOpenProfile && <ProfilePage handleUserLogOut={handleUserLogOut} />}
       </div>
-      <div className="menu__transparent">
+      <div className='menu__transparent'>
         {isOpenMenu &&
           menu
             .filter((item) => item.id === id)

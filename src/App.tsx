@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import "./App.css";
 import { MainContent } from "./pages/main-page/MainContent";
 import jwt_decode from "jwt-decode";
@@ -6,10 +7,9 @@ import { AuthService } from "./services/auth.service";
 import { Api } from "./services/api.service";
 import { Geo } from "./services/geo.service";
 import { LocalStore } from "./services/localStorage.service";
-import { useDispatch, useSelector } from "react-redux";
-import { Dispatch, RootState } from "./store/store";
-import { IUser } from "./interfaces/user";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "./store/store";
+import { ICoords } from "./interfaces/coords";
 
 interface IToken {
   exp: number;
@@ -17,16 +17,26 @@ interface IToken {
   role: string;
   userId: string;
 }
+
+interface IState {
+  coordinates: ICoords;
+  city: string;
+  coordsLocation: ICoords;
+}
+
 export const App = () => {
-  const [coordinates, setCoordinates] = useState({
+  const [coordinates, setCoordinates] = useState<IState["coordinates"]>({
     lat: 0,
     lon: 0,
   });
-  const [city, setCity] = useState("");
-  const [coordsLocation, setCoordsLocation] = useState({ lat: 0, lon: 0 });
-  const dispatch = useDispatch<Dispatch>();
-  const user = useSelector((state: RootState) => state.user);
+  const [city, setCity] = useState<IState["city"]>("");
+  const [coordsLocation, setCoordsLocation] = useState<
+    IState["coordsLocation"]
+  >({ lat: 0, lon: 0 });
 
+  const dispatch = useDispatch<Dispatch>();
+
+  //хук токенов юзера
   useEffect(() => {
     const accessToken = AuthService.getAccessToken();
     if (accessToken) {
@@ -45,6 +55,7 @@ export const App = () => {
     navigator.geolocation.getCurrentPosition(onChange);
   }, []);
 
+  //хук сета координат для карты в заказах на основании города из стейта
   useEffect(() => {
     const onChangeCoords = () => {
       axios
@@ -63,6 +74,8 @@ export const App = () => {
     navigator.geolocation.getCurrentPosition(onChangeCoords);
     console.log("ffffffffffff", city);
   }, [city]);
+
+  //хук сета города при обновлении и инициализации проекта
   useEffect(() => {
     const localStore = LocalStore.getCurrentCity();
     if (localStore) {
@@ -77,12 +90,14 @@ export const App = () => {
       }
     }
   });
+
+  //обработчик сета города для всех child компонентов
   const handleChangeCityName = (city: string) => {
     setCity(city);
   };
 
   return (
-    <div className="main--container">
+    <div className='main--container'>
       <MainContent
         coordsLocation={coordsLocation}
         localCity={city}

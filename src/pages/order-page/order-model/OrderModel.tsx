@@ -5,18 +5,24 @@ import { ICar } from "../../../interfaces/car";
 import { batch, useDispatch, useSelector } from "react-redux";
 import { Dispatch, RootState } from "../../../store/store";
 
+interface IState {
+  cars: ICar[];
+}
+
 export const OrderModel = () => {
-  const [cars, setCars] = useState<ICar[]>([]);
+  const [cars, setCars] = useState<IState["cars"]>([]);
 
   const selectedCarId = useSelector((state: RootState) => state.order.carId);
 
   const dispatch = useDispatch<Dispatch>();
 
+  // получение машин и тарифов с сервера
   useEffect(() => {
     Api.getCars().then((response) => setCars(response.data));
     Api.getTariffs().then((response) => console.log(response.data));
   }, []);
 
+  //помещение в редакс id машины
   const handleCurrentCar = (car: ICar) => {
     batch(() => {
       dispatch.order.setCarId(car.id);

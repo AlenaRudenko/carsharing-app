@@ -1,24 +1,11 @@
 import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { Api } from "../services/api.service";
-import { ICity } from "../interfaces/city";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { ICoords } from "../interfaces/coords";
 
 interface IProps {
-  localCity: string;
   coordsLocation: ICoords;
 }
-interface ICoords {
-  lat: number;
-  lon: number;
-}
 
-export const YandexMap = ({ localCity, coordsLocation }: IProps) => {
-  useEffect(() => {
-    console.log("Я родился", coordsLocation);
-  }, [coordsLocation]);
+export const YandexMap = ({ coordsLocation }: IProps) => {
   return (
     <YMaps>
       <Map

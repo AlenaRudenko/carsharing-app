@@ -12,8 +12,10 @@ interface IState {
   login: string;
   email: string;
   password: string;
+  isDisabled: boolean;
   confirmPassword: string;
 }
+
 interface IProps {
   handleRegistrationPage: () => void;
   toggleAuthVisible: () => void;
@@ -26,7 +28,7 @@ export const RegistrationModal = ({
   const [login, setLogin] = useState<IState["login"]>("");
   const [email, setEmail] = useState<IState["email"]>("");
   const [password, setPassword] = useState<IState["password"]>("");
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isDisabled, setIsDisabled] = useState<IState["isDisabled"]>(false);
   const [confirmPassword, setConfirmPassword] =
     useState<IState["confirmPassword"]>("");
 
@@ -83,8 +85,8 @@ export const RegistrationModal = ({
   const isConfirmPassword = password === confirmPassword;
 
   return (
-    <div className="regpage__container">
-      <div className="regpage__form">
+    <div className='regpage__container'>
+      <div className='regpage__form'>
         <AppInput
           key={"login"}
           hasError={!isLogin}
@@ -130,7 +132,7 @@ export const RegistrationModal = ({
         />
       </div>
 
-      <div className="regpage__notification">
+      <div className='regpage__notification'>
         {isDisabled && <span>пользователь уже существует</span>}
       </div>
 
@@ -143,12 +145,12 @@ export const RegistrationModal = ({
       >
         <AppButton
           marginTop={10}
-          backgroundColor="blue"
+          backgroundColor='blue'
           isDisabled={
             isDisabled ||
             !(isEmail && isLogin && isPassword && isConfirmPassword)
           }
-          text="Зарегистрироваться"
+          text='Зарегистрироваться'
         />
       </div>
     </div>

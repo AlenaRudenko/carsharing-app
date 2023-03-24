@@ -8,6 +8,7 @@ import "./style.scss";
 export const CarContent = memo(() => {
   const [cars, setCars] = useState<ICar[]>([]);
 
+  //получение автомобилей с сервера
   useEffect(() => {
     Api.getCars().then((response) => {
       setCars(response.data);

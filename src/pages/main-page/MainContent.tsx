@@ -1,19 +1,18 @@
 import React from "react";
+import "./styles.scss";
 import { AuthModal } from "./components/auth-modal/AuthModal";
 import { Menu } from "../nav-page/Menu";
 import { Navigation } from "../nav-page/Navigation";
 import { ICity } from "./../../interfaces/city";
 import { Api } from "./../../services/api.service";
-import "./styles.scss";
 import { Modal } from "../../components/modals/Modal";
 import { GeoModal } from "../../components/geo-modal/GeoModal";
 import { Start } from "./components/start-page/Start";
 import { Order } from "../order-page/Order";
 import { Route, Routes } from "react-router";
-import { LocalStore } from "../../services/localStorage.service";
-import { Geo } from "../../services/geo.service";
 import { connect } from "react-redux";
 import { RootState, Dispatch } from "../../store/store";
+import { ICoords } from "../../interfaces/coords";
 
 interface IState {
   isAuthVisible: boolean;
@@ -29,11 +28,6 @@ interface OwnProps {
   localCity: string;
   handleChangeCityName: (city: string) => void;
   coordsLocation: ICoords;
-}
-
-interface ICoords {
-  lat: number;
-  lon: number;
 }
 
 type StateProps = ReturnType<typeof mapState>;
@@ -205,12 +199,11 @@ export class MainContentContainer extends React.Component<Props, IState> {
         )}
 
         <Navigation
-          isOpenProfile={isOpenProfile}
           isOpenMenu={isOpenMenu}
           toggleIsOpenMenu={toggleIsOpenMenu}
           toggleIsOpenProfile={toggleIsOpenProfile}
         />
-        <div className="mainpage">
+        <div className='mainpage'>
           <Menu
             handleUserLogOut={handleUserLogOut}
             isOpenProfile={isOpenProfile}
@@ -224,7 +217,6 @@ export class MainContentContainer extends React.Component<Props, IState> {
                 <Start
                   handleLocalStoreCity={handleLocalStoreCity}
                   localCity={localCity}
-                  cities={cities}
                   toggleAuthVisible={toggleIsAuthVisible}
                 />
               }

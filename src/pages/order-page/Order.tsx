@@ -12,23 +12,24 @@ import { Route, Routes } from "react-router";
 import { OrderReview } from "./order-review-component/OrderReview";
 import { AuthService } from "./../../services/auth.service";
 import { useNavigate } from "react-router-dom";
-import { ICity } from "./../../interfaces/city";
 import { Fragment } from "react";
+import { ICoords } from "../../interfaces/coords";
 
 interface IState {
   status: string[];
 }
+
 interface IProps {
   localCity: string;
   handleLocalStoreCity?: (city: string | undefined) => void;
   coordsLocation: ICoords;
 }
-interface ICoords {
-  lat: number;
-  lon: number;
-}
 
-export const Order = ({ localCity, handleLocalStoreCity,coordsLocation }: IProps) => {
+export const Order = ({
+  localCity,
+  handleLocalStoreCity,
+  coordsLocation,
+}: IProps) => {
   const navArray = ["Местоположение", "Модель", "Дополнительно", "Итого"];
 
   const [status, setStatus] = useState<IState["status"]>(["order-location"]);
@@ -46,15 +47,15 @@ export const Order = ({ localCity, handleLocalStoreCity,coordsLocation }: IProps
   ];
   const handleStatusOrder = () => {};
   return (
-    <div className="order__container">
+    <div className='order__container'>
       <Header
         key={"2"}
         handleLocalStoreCity={handleLocalStoreCity}
         localCity={localCity}
-        padding="20px 0px 50px 0px"
-        size="35px"
+        padding='20px 0px 50px 0px'
+        size='35px'
       />
-      <div className="order__navigation">
+      <div className='order__navigation'>
         {navArray.map((item, index) => (
           <Fragment key={item}>
             <OrderNavigation
@@ -63,26 +64,31 @@ export const Order = ({ localCity, handleLocalStoreCity,coordsLocation }: IProps
               status={status}
             />
             {index < navArray.length - 1 && (
-              <AppIcon icon="ArrowRight" color={COLORS.GREY} size={14} />
+              <AppIcon icon='ArrowRight' color={COLORS.GREY} size={14} />
             )}
           </Fragment>
         ))}
       </div>
-      <div className="order__content">
-        <div className="order__routes">
+      <div className='order__content'>
+        <div className='order__routes'>
           <Routes>
             <Route
-              path="order-location"
-              element={<OrderLocation localCity={localCity} coordsLocation={coordsLocation} />}
+              path='order-location'
+              element={
+                <OrderLocation
+                  localCity={localCity}
+                  coordsLocation={coordsLocation}
+                />
+              }
             />
-            <Route path="order-model" element={<OrderModel />} />
-            <Route path="order-additionally" element={<OrderAdditionally />} />
-            <Route path="order-full" element={<OrderFull />} />
+            <Route path='order-model' element={<OrderModel />} />
+            <Route path='order-additionally' element={<OrderAdditionally />} />
+            <Route path='order-full' element={<OrderFull />} />
           </Routes>
         </div>
         <OrderReview
           handleStatusOrder={handleStatusOrder}
-          navPoint="car"
+          navPoint='car'
         ></OrderReview>
       </div>
     </div>

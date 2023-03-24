@@ -9,6 +9,8 @@ interface IProps {
 
 export const OrderNavigation = ({ navigationItem, path, status }: IProps) => {
   const navigate = useNavigate();
+
+  //обработчик перемещения по меню сверху
   const handleOnClick = () => {
     if (status.includes(path)) {
       return navigate(path);

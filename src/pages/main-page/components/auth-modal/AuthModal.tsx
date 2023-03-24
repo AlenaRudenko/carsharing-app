@@ -1,17 +1,16 @@
 import React from "react";
-
+import "./styles.scss";
 import { AppButton } from "../../../../components/app-button/AppButton";
 import { AppInput } from "../../../../components/app-input/AppInput";
 import { COLORS } from "../../../../constants/colors";
 import { RegistrationModal } from "./RegistrationModal";
-import "./styles.scss";
 import { Api } from "../../../../services/api.service";
 import { AuthService } from "../../../../services/auth.service";
 import { connect } from "react-redux";
 import { Dispatch, RootState } from "../../../../store/store";
 import { DotsFlashing } from "../../../../components/loading/DotsFlashing";
 
-interface IProps {
+interface OwnProps {
   toggleIsRegVisible: () => void;
   isRegVisible: boolean;
   toggleAuthVisible: () => void;
@@ -20,12 +19,12 @@ interface IProps {
 interface IState {
   email: string;
   password: string;
-  status:string
+  status: string;
 }
 
 type DispatchProps = ReturnType<typeof mapDispatch>;
 type StateProps = ReturnType<typeof mapState>;
-type Props = DispatchProps & IProps & StateProps;
+type Props = DispatchProps & OwnProps & StateProps;
 
 class AuthModalComponent extends React.Component<Props, IState> {
   state = {
@@ -33,8 +32,7 @@ class AuthModalComponent extends React.Component<Props, IState> {
     password: "",
     status: "",
   };
-  isEmail = this.state.email === "Я";
-  isPassword = this.state.password === "Я";
+
   //обработчик имени юзера
   handleUserNameChange = (email: string) => {
     this.setState({ email });
@@ -55,6 +53,7 @@ class AuthModalComponent extends React.Component<Props, IState> {
       status: "",
     }));
   };
+
   //обработчик ввода логина и пароля и отправки данных на сервер
   handleAuthLogin = () => {
     this.setState((prevState) => ({ ...prevState, status: "waiting" }));
@@ -90,25 +89,23 @@ class AuthModalComponent extends React.Component<Props, IState> {
       handleUserPasswordChange,
       handleUserNameChange,
       handleAuthLogin,
-      isEmail,
-      isPassword,
     } = this;
 
     return (
-      <div className="authModal__container">
+      <div className='authModal__container'>
         {isRegVisible ? (
           <RegistrationModal
             {...{ handleRegistrationPage, toggleAuthVisible }}
           />
         ) : (
-          <div className="authModal__contentContainer">
-            <div className="authModal__inputs">
+          <div className='authModal__contentContainer'>
+            <div className='authModal__inputs'>
               <AppInput
                 key={"newEmail"}
                 iconColor={email ? COLORS.PRIMARY : COLORS.GREY}
-                placeholder="введите Email"
+                placeholder='введите Email'
                 typeField={"email"}
-                label="Email"
+                label='Email'
                 value={email}
                 onChangeText={handleUserNameChange}
                 leftIcon={"User"}
@@ -116,18 +113,18 @@ class AuthModalComponent extends React.Component<Props, IState> {
               <AppInput
                 key={"newPassword"}
                 iconColor={password ? COLORS.PRIMARY : COLORS.GREY}
-                placeholder="введите пароль"
-                label="Password"
+                placeholder='введите пароль'
+                label='Password'
                 value={password}
                 onChangeText={handleUserPasswordChange}
                 leftIcon={"Lock"}
-                typeField="password"
+                typeField='password'
               />
               <div onClick={handleAuthLogin}>
                 <AppButton isDisabled={!(password && email)} text={"Войти"} />
               </div>
             </div>
-            <div className="logpage__notification">
+            <div className='logpage__notification'>
               {status === "unknown" && (
                 <span>Такого пользователя не существует</span>
               )}
@@ -136,7 +133,7 @@ class AuthModalComponent extends React.Component<Props, IState> {
                 <span>Проверьте правильность ввода логина и/или пароля</span>
               )}
             </div>
-            <div className="logpage__regcontainer">
+            <div className='logpage__regcontainer'>
               <span>Впервые на сайте? </span>
               <span onClick={handleRegistrationPage}>Зарегистрироваться</span>
             </div>
@@ -149,7 +146,7 @@ class AuthModalComponent extends React.Component<Props, IState> {
 const mapDispatch = (dispatch: Dispatch) => ({
   setUser: dispatch.user.setUser,
 });
-const mapState = (state: RootState, ownProps: IProps) => ({
+const mapState = (state: RootState, ownProps: OwnProps) => ({
   toggleIsRegVisible: ownProps.toggleIsRegVisible,
   isRegVisible: ownProps.isRegVisible,
   toggleAuthVisible: ownProps.toggleAuthVisible,

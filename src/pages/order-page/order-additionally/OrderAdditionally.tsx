@@ -13,12 +13,14 @@ export const OrderAdditionally = () => {
   const [cars, setCars] = useState<ICar[]>([]);
   const [tariffs, setTariffs] = useState<ITariff[]>([]);
   const [currentColor, setCurrentColor] = useState<ICarVariant["id"]>("");
+
   const currentCarId = useSelector((state: RootState) => state.order.carId);
 
   useEffect(() => {
     Api.getCars().then((response) => setCars(response.data));
     Api.getTariffs().then((response) => setTariffs(response.data));
   }, []);
+
   const selectedCar = useMemo(() => {
     return cars.find((car) => car.id === currentCarId);
   }, [cars, currentCarId]);

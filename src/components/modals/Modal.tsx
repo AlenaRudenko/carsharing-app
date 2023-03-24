@@ -1,4 +1,4 @@
-import React, { useState, ComponentProps } from "react";
+import React, { ComponentProps } from "react";
 import { AppIcon } from "../app-icon/AppIcon";
 import "./styles.scss";
 
@@ -11,9 +11,7 @@ interface IProps {
   leftButton?: ComponentProps<typeof AppIcon>["icon"] | undefined;
   onClickLeftButton?: () => void;
 }
-interface IState {
-  isActive: boolean;
-}
+
 export const Modal = ({
   children,
   isVisible,

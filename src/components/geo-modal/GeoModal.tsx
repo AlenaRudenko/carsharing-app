@@ -2,13 +2,13 @@ import { AppButton } from "../app-button/AppButton";
 import "./styles.scss";
 import "./../../constants/colors";
 import { COLORS } from "./../../constants/colors";
-import { useState, useEffect } from "react";
-import { useContext } from "react";
+import { useState } from "react";
 import { TEvent } from "../../interfaces/event";
 import { LocalStore } from "../../services/localStorage.service";
 import { Dispatch } from "../../store/store";
 import { useDispatch } from "react-redux";
 import { ICity } from "../../interfaces/city";
+import { OneKkTwoTone } from "@mui/icons-material";
 
 interface IProps {
   toggleIsGeoVisible: () => void;
@@ -18,6 +18,10 @@ interface IProps {
   handleCityId: (city: ICity) => void;
 }
 
+interface IState {
+  isActive: boolean;
+  currentCity: string;
+}
 export const GeoModal = ({
   toggleIsGeoVisible,
   handleGeoModalTitle,
@@ -25,37 +29,33 @@ export const GeoModal = ({
   localCity,
   handleCityId,
 }: IProps) => {
-  const [isActive, setIsActive] = useState(false);
-  const [currentCity, setCurrentCity] = useState("");
-  const [city, setCity] = useState<ICity>({} as ICity);
+  const [isActive, setIsActive] = useState<IState["isActive"]>(false);
+  const [currentCity, setCurrentCity] = useState<IState["currentCity"]>("");
 
   const cityH = cities.find((city) => city.name === currentCity);
-
-  const dispatch = useDispatch<Dispatch>();
 
   //поле ввода города
   const handleCurrentCity = (e: TEvent) => {
     setCurrentCity(e.target.value);
   };
 
-//обработчик города при наличии совпадения с городами из сервера
+  //обработчик города при наличии совпадения с городами из сервера
   const handleCity = () => {
     if (cityH) {
-      setCity(cityH);
       handleCityId(cityH);
     }
   };
   return (
-    <div className="geoModal__content">
+    <div className='geoModal__content'>
       {isActive ? (
-        <div className="geoModal__choise">
+        <div className='geoModal__choise'>
           <input
-            className="geoModal__input"
-            list="cities"
+            className='geoModal__input'
+            list='cities'
             value={currentCity}
             onChange={handleCurrentCity}
           />
-          <datalist id="cities">
+          <datalist id='cities'>
             {cities.map((city) => (
               <option
                 key={city.name}
@@ -67,7 +67,7 @@ export const GeoModal = ({
               />
             ))}
           </datalist>
-          <div className="geoModal__choiseButton">
+          <div className='geoModal__choiseButton'>
             <AppButton
               isDisabled={!cities.some((el) => el.name === currentCity)}
               size={"small"}
@@ -82,7 +82,7 @@ export const GeoModal = ({
         </div>
       ) : (
         <>
-          <div className="geoModal__button">
+          <div className='geoModal__button'>
             <AppButton
               text={"Нет, выбрать другой"}
               backgroundColor={COLORS.GREY}
@@ -93,7 +93,7 @@ export const GeoModal = ({
               }}
             />
           </div>
-          <div className="geoModal__button">
+          <div className='geoModal__button'>
             <AppButton
               text={"Да, верно"}
               onClick={() => {

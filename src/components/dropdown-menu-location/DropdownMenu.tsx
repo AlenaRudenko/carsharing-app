@@ -2,23 +2,28 @@ import { useState, useEffect } from "react";
 import { AppIcon } from "../app-icon/AppIcon";
 import { COLORS } from "../../constants/colors";
 import "./styles.scss";
-import { Geo } from "../../services/geo.service";
 import { ICity } from "../../interfaces/city";
 import { Api } from "../../services/api.service";
 import { LocalStore } from "../../services/localStorage.service";
-import { useDispatch, useSelector } from "react-redux";
-import { Dispatch, RootState } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "../../store/store";
+import { isVisible } from "@testing-library/user-event/dist/utils";
 
 interface IProps {
   localCity: string | undefined;
   handleLocalStoreCity: (city: string) => void;
 }
 
+interface IState {
+  isVisible: boolean;
+  cities: ICity[];
+}
+
 export const DropdownMenu = ({ localCity, handleLocalStoreCity }: IProps) => {
   const dispatch = useDispatch<Dispatch>();
 
-  const [isVisible, setIsVisible] = useState(false);
-  const [cities, setCities] = useState<ICity[]>([]);
+  const [isVisible, setIsVisible] = useState<IState["isVisible"]>(false);
+  const [cities, setCities] = useState<IState["cities"]>([]);
 
   //смена видимости выплывающего списка
   const handleSetIsVisible = () => {
@@ -36,13 +41,12 @@ export const DropdownMenu = ({ localCity, handleLocalStoreCity }: IProps) => {
   useEffect(() => {
     Api.getCities().then((response) => {
       setCities(response.data);
-      console.log("ЧПУНЯ СМОТРИ СЮДА", response.data);
     });
   }, []);
 
   return (
-    <div className="dropdown">
-      <div className="dropdown__current">
+    <div className='dropdown'>
+      <div className='dropdown__current'>
         <span
           onMouseOver={() => {
             setIsVisible(true);
@@ -55,7 +59,7 @@ export const DropdownMenu = ({ localCity, handleLocalStoreCity }: IProps) => {
           {localCity}
         </span>
       </div>
-      <div className="dropdown__icon" style={{ userSelect: "none" }}>
+      <div className='dropdown__icon' style={{ userSelect: "none" }}>
         <AppIcon size={15} icon={"MapPin"} color={COLORS.PRIMARY} />
       </div>
       <div

@@ -5,23 +5,18 @@ import "./styles.scss";
 interface IProps {
   toggleIsOpenMenu: () => void;
   isOpenMenu: boolean;
-  isOpenProfile: boolean;
   toggleIsOpenProfile: () => void;
 }
 
 export const Navigation = ({
   toggleIsOpenMenu,
   isOpenMenu,
-  isOpenProfile,
   toggleIsOpenProfile,
 }: IProps) => {
   return (
-    <div className="sidebar">
+    <div className='sidebar'>
       <NavButton toggleIsOpenMenu={toggleIsOpenMenu} isOpenMenu={isOpenMenu} />
-      <UserButton
-        isOpenProfile={isOpenProfile}
-        toggleIsOpenProfile={toggleIsOpenProfile}
-      />
+      <UserButton toggleIsOpenProfile={toggleIsOpenProfile} />
     </div>
   );
 };

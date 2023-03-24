@@ -10,11 +10,18 @@ interface IProps {
   handleStatusOrder: () => void;
 }
 
+interface IState {
+  isDisabled: boolean;
+}
 export const OrderReview = ({ navPoint }: IProps) => {
   const [isDisabled, setIsDisabled] = useState(false);
-  const navigate = useNavigate();
+
   const carId = useSelector((state: RootState) => state.order.carId);
   const cityId = useSelector((state: RootState) => state.order.cityId);
+
+  const navigate = useNavigate();
+
+  //
   useEffect(() => {
     if (navPoint === "location" && cityId) {
       setIsDisabled(false);
@@ -23,14 +30,14 @@ export const OrderReview = ({ navPoint }: IProps) => {
     } else setIsDisabled(true);
   });
   return (
-    <div className="orderReview__container">
+    <div className='orderReview__container'>
       <span>Ваш заказ:</span>
-      <div className="orderReview__content">
+      <div className='orderReview__content'>
         <span>sss</span>
       </div>
       <AppButton
         isDisabled={isDisabled}
-        text="Продолжить"
+        text='Продолжить'
         onClick={() => {
           navigate(navPoint);
         }}
