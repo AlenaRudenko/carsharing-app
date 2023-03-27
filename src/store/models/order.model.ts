@@ -14,6 +14,7 @@ export const order = createModel<RootModel>()({
     cityId: "",
     variantId: "",
     tariffId: "",
+    addressId: "",
   },
   reducers: {
     setCarVariantId: (state, payload: ICarVariant["id"]) => {
@@ -38,6 +39,12 @@ export const order = createModel<RootModel>()({
       return {
         ...state,
         cityId: payload,
+      };
+    },
+    setAddressId(state, payload: IOrder["addressId"]) {
+      return {
+        ...state,
+        addressId: payload,
       };
     },
   },

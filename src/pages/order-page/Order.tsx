@@ -87,8 +87,9 @@ export const Order = ({
           </Routes>
         </div>
         <OrderReview
+          paths={paths}
           handleStatusOrder={handleStatusOrder}
-          navPoint='car'
+          navPoint='order-location'
         ></OrderReview>
       </div>
     </div>

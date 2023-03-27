@@ -1,1 +1,22 @@
 @import "../../../../../default-variables";
+
+//full container dropdown
+.dropDownAddress__container {
+  display: flex;
+  width: 70%;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+//addresses input
+.orderLocation__input {
+  width: 50%;
+
+  border-bottom: 0.3px solid gray;
+  input {
+    width: 100%;
+  }
+}
+.dropDown__button {
+  width: 20%;
+}

@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 
 interface IProps {
+  paths: string[];
   navPoint: string;
   handleStatusOrder: () => void;
 }
@@ -13,19 +14,21 @@ interface IProps {
 interface IState {
   isDisabled: boolean;
 }
-export const OrderReview = ({ navPoint }: IProps) => {
+export const OrderReview = ({ navPoint, paths }: IProps) => {
   const [isDisabled, setIsDisabled] = useState(false);
 
   const carId = useSelector((state: RootState) => state.order.carId);
   const cityId = useSelector((state: RootState) => state.order.cityId);
-
+  const addressId = useSelector((state: RootState) => state.order.addressId);
   const navigate = useNavigate();
 
   //
   useEffect(() => {
-    if (navPoint === "location" && cityId) {
+    if (navPoint === "order-location" && addressId) {
       setIsDisabled(false);
-    } else if (navPoint === "car" && carId) {
+    } else if (navPoint === "order-model" && carId) {
+      setIsDisabled(false);
+    } else if (navPoint === "order-additionally" && addressId) {
       setIsDisabled(false);
     } else setIsDisabled(true);
   });

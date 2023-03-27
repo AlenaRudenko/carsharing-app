@@ -3,6 +3,8 @@ import { YandexMap } from "../../../YandexMap/YandexMap";
 import "./styles.scss";
 import { DropdownMenuAddress } from "./components/dropdown-menu/DropdownMenuAddress";
 import { ICoords } from "../../../interfaces/coords";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "../../../store/store";
 
 interface IProps {
   localCity: string;
@@ -11,17 +13,26 @@ interface IProps {
 
 interface IState {
   value: string;
-  currentAddress: string;
+  currentAddress: IAddress;
+}
+
+interface IAddress {
+  name: string;
+  id: string;
 }
 export const OrderLocation = ({ localCity, coordsLocation }: IProps) => {
   const [value, setValue] = useState<IState["value"]>("");
-  const addresses = ["ул. Гагарина 88", "ул. Васенко 15", "ул. Ленина 55"];
-  const [currentAddress, setCurrentAddress] =
-    useState<IState["currentAddress"]>("");
+  const addresses = [
+    { name: "ул. Гагарина 88", id: "1" },
+    { name: "ул. Васенко 15", id: "2" },
+    { name: "ул. Ленина 55", id: "3" },
+  ];
 
-  // сет в стейт адреса
-  const handleSetCurrentAddress = (address: string) => {
-    setCurrentAddress(address);
+  const dispatch = useDispatch<Dispatch>();
+
+  // сет в стейт и в редакс адрес
+  const handleSetCurrentAddress = (address: IAddress) => {
+    dispatch.order.setAddressId(address.id);
   };
   //обработчик ввода адреса
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,17 +42,8 @@ export const OrderLocation = ({ localCity, coordsLocation }: IProps) => {
   return (
     <>
       <div className='orderLocation__container'>
-        <div className='orderLocation__input'>
-          <input
-            id='suggest'
-            list='address'
-            onChange={handleInputChange}
-            value={value}
-          />
-        </div>
-
         <DropdownMenuAddress
-          setCurrentAdress={handleSetCurrentAddress}
+          handleSetCurrentAddress={handleSetCurrentAddress}
           addresses={addresses}
         />
 

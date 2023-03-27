@@ -132,9 +132,10 @@ export class MainContentContainer extends React.Component<Props, IState> {
 
   //получаем города и сетаем локальный город в модалку
   componentDidMount() {
-    Api.getCities().then((response) =>
-      this.setState({ cities: response.data })
-    );
+    Api.getCities().then((response) => {
+      this.setState({ cities: response.data });
+      console.log(response.data);
+    });
   }
 
   render() {

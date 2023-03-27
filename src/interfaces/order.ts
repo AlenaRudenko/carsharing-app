@@ -5,6 +5,7 @@ import { ITariff } from "./tariffs";
 export interface IOrder {
   // ДОБАВИТЬ ГОРОД
   cityId: string;
+  addressId: string;
   id: string;
   status: string;
   /** @format date-time */

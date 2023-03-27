@@ -43,6 +43,7 @@ export const GeoModal = ({
   const handleCity = () => {
     if (cityH) {
       handleCityId(cityH);
+      console.log("DDDDDDDDDDDDDDDDDSSS", cityH);
     }
   };
   return (
@@ -62,7 +63,7 @@ export const GeoModal = ({
                 value={city.name}
                 onClick={() => {
                   setCurrentCity(city.name);
-                  LocalStore.setCurrentCity(city.name);
+                  // LocalStore.setCurrentCity(city.name);
                 }}
               />
             ))}
