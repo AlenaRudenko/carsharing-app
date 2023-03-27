@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
+import { RootState, Dispatch } from "../../../store/store";
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+
 import { Api } from "../../../services/api.service";
 import { ICar } from "../../../interfaces/car";
 import { ICarVariant } from "../../../interfaces/car-variant";
@@ -13,7 +15,7 @@ export const OrderAdditionally = () => {
   const [cars, setCars] = useState<ICar[]>([]);
   const [tariffs, setTariffs] = useState<ITariff[]>([]);
   const [currentColor, setCurrentColor] = useState<ICarVariant["id"]>("");
-
+  const dispatch = useDispatch<Dispatch>();
   const currentCarId = useSelector((state: RootState) => state.order.carId);
 
   useEffect(() => {
@@ -27,14 +29,16 @@ export const OrderAdditionally = () => {
 
   const handleCurrentVariant = (variant: ICarVariant["id"]) => {
     setCurrentColor(variant);
+    dispatch.order.setCarVariantId(variant);
+    
   };
 
   return (
     <>
-      <div className='orderAdd__container'>
-        <div className='colors__block'>
+      <div className="orderAdd__container">
+        <div className="colors__block">
           <span>Выберите цвет автомобиля</span>{" "}
-          <div className='currentCar__reviewColorsContainer'>
+          <div className="currentCar__reviewColorsContainer">
             {selectedCar?.variants.map((variant) => (
               <Colors
                 variantColor={variant.color}
@@ -45,7 +49,7 @@ export const OrderAdditionally = () => {
             ))}
           </div>
         </div>
-        <div className='orderAdd__tariffs'>
+        <div className="orderAdd__tariffs">
           {tariffs.map((tariff) => {
             return <span>{tariff.price}</span>;
           })}

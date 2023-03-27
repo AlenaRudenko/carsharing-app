@@ -26,7 +26,6 @@ export const DropdownMenuAddress = ({
     (address) => address.name === currentAddress
   );
   const handleAddress = () => {
-    console.log("PIZDA", addressCheck);
     if (addressCheck) {
       handleSetCurrentAddress(addressCheck!);
     }
