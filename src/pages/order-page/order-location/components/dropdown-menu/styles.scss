@@ -3,7 +3,7 @@
 //full container dropdown
 .dropDownAddress__container {
   display: flex;
-  width: 70%;
+  width: 85%;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
@@ -12,7 +12,7 @@
 .orderLocation__input {
   width: 50%;
 
-  border-bottom: 0.3px solid gray;
+  border-bottom: 0.3px solid rgba(191, 187, 187, 1);
   input {
     width: 100%;
   }

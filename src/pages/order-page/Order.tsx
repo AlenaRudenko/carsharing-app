@@ -110,7 +110,7 @@ export const Order = ({
           </Routes>
         </div>
         <OrderReview
-          address={address}
+        addresses={addresses}
           status={status}
           paths={paths}
           handleStatusOrder={handleStatusOrder}

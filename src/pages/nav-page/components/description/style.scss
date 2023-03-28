@@ -1,9 +1,18 @@
 @import "../../../../default-variables";
 
 .description__container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   text-align: center;
   width: 80%;
   color: $pimary-color;
   font-size: 35px;
   text-shadow: 1px -1px 30px black;
+  :last-child {
+    margin-top: 40px;
+    text-align: justify;
+    color: white;
+    font-size: 20px;
+  }
 }

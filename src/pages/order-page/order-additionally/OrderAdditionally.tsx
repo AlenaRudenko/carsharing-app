@@ -10,14 +10,20 @@ import "./styles.scss";
 import { Colors } from "./components/Colors";
 import { OrderReview } from "../order-review-component/OrderReview";
 import { ITariff } from "../../../interfaces/tariffs";
-
+import { Tariff } from "./components/tariff/Tariff";
 export const OrderAdditionally = () => {
   const [cars, setCars] = useState<ICar[]>([]);
   const [tariffs, setTariffs] = useState<ITariff[]>([]);
   const [currentColor, setCurrentColor] = useState<ICarVariant["id"]>("");
+  const [currentTariff, setCurrentTariff] = useState<ITariff["id"]>("");
   const dispatch = useDispatch<Dispatch>();
   const currentCarId = useSelector((state: RootState) => state.order.carId);
-
+  const currentVariantId = useSelector(
+    (state: RootState) => state.order.carVariantId
+  );
+  const currentTariffId = useSelector(
+    (state: RootState) => state.order.tariffId
+  );
   useEffect(() => {
     Api.getCars().then((response) => setCars(response.data));
     Api.getTariffs().then((response) => setTariffs(response.data));
@@ -30,29 +36,38 @@ export const OrderAdditionally = () => {
   const handleCurrentVariant = (variant: ICarVariant["id"]) => {
     setCurrentColor(variant);
     dispatch.order.setCarVariantId(variant);
-    
   };
-
+  const handleTariff = (tariff: ITariff["id"]) => {
+    setCurrentTariff(tariff);
+    dispatch.order.setTariffId(tariff);
+  };
   return (
     <>
       <div className="orderAdd__container">
+        <h3>Выберите цвет автомобиля</h3>
         <div className="colors__block">
-          <span>Выберите цвет автомобиля</span>{" "}
           <div className="currentCar__reviewColorsContainer">
             {selectedCar?.variants.map((variant) => (
               <Colors
                 variantColor={variant.color}
                 variant={variant.id}
-                currentColor={currentColor}
+                currentVariantId={currentVariantId}
                 handleCurrentVariant={handleCurrentVariant}
               />
             ))}
           </div>
         </div>
+        <h3>Выберите тариф</h3>
         <div className="orderAdd__tariffs">
-          {tariffs.map((tariff) => {
-            return <span>{tariff.price}</span>;
-          })}
+          {tariffs.map((tariff) => (
+            <Tariff
+              currentTariffId={currentTariffId}
+              id={tariff.id}
+              type={tariff.type}
+              price={tariff.price}
+              handleTariff={handleTariff}
+            />
+          ))}
         </div>
       </div>
     </>

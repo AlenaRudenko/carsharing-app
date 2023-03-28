@@ -19,7 +19,7 @@
   justify-content: center;
   flex-direction: column;
   border-radius: 10px;
-  border: 0.1px solid $grey-color;
+  border: 2px solid rgba(191, 187, 187, 0.2);
   margin: 5px;
 
   span {
@@ -27,7 +27,7 @@
   }
 }
 .car__item--active {
-  border: 0.5px solid $pimary-color;
+  border: 2px solid $pimary-color;
 }
 .car__color {
   width: 10px;
@@ -35,8 +35,8 @@
   border-radius: 10px;
 }
 .car__pic {
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   img {
     width: 100%;
   }

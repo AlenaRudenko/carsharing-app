@@ -1,11 +1,17 @@
+@import "./../../../default-variables.scss";
 //main container
 .orderReview__container {
-  width: 50%;
-  height: 95%;
+  width: 35%;
+  height: 100%;
+  margin: 30px;
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: space-between;
+  h2 {
+    font-size: 20px;
+    color: $pimary-color;
+  }
 }
 // container with content
 .orderReview__content {
@@ -13,35 +19,41 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
 }
-.orderReview__pickpoint {
-  font-size: 15px;
-  height: 20%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  :last-child {
-    margin-left: 10px;
-    font-weight: 700;
-  }
-}
+
 .orderReview__car {
   font-size: 15px;
-  height: 20%;
+  width: 100%;
+  height: 40%;
   display: flex;
   align-items: center;
+  text-align: center;
   justify-content: space-between;
   :nth-child(even) {
     margin-left: 10px;
     font-weight: 700;
   }
 }
-.orderReview__previewCarColor {
+
+.orderReview__carPic {
   width: 200px;
   height: 200px;
   img {
     width: 100%;
+    transform: scale(-1, 1);
   }
+}
+//пункт выдачи
+.orderReview__pickPoint {
+  width: 100%;
+  height: 10%;
+}
+.orderReview__additional {
+  height: 50%;
+  width: 100%;
+}
+.functional {
+  display: flex;
 }

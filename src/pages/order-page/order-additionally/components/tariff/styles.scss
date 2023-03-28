@@ -1,0 +1,44 @@
+@import "../../../../../default-variables.scss";
+
+.tariff__container {
+  width: 40%;
+  height: 90%;
+  border-radius: 10px;
+
+  border: 2px solid rgba(191, 187, 187, 0.2);
+
+  &--active {
+    border: 2px solid $pimary-color;
+    box-shadow: 9px 13px 14px -17px rgba(34, 60, 80, 0.7);
+  }
+}
+.tariff__container__price {
+  padding: 20px;
+  h1 {
+    font-weight: 700;
+    font-size: 25px;
+  }
+}
+.price {
+  margin: 10px 0px;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  justify-content: space-between;
+  :first-child {
+    font-size: 15px;
+    font-weight: 400;
+  }
+  :last-child {
+    font-weight: 700;
+    font-size: 25px;
+    color: $pimary-color;
+  }
+}
+.description {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 15px;
+}

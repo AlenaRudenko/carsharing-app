@@ -2,7 +2,7 @@ import "./../styles.scss";
 interface IProps {
   handleCurrentVariant: (variant: string) => void;
   variant: string;
-  currentColor: string;
+  currentVariantId: string;
   variantColor: string;
 }
 
@@ -10,7 +10,7 @@ export const Colors = ({
   handleCurrentVariant,
   variant,
   variantColor,
-  currentColor,
+  currentVariantId,
 }: IProps) => {
   return (
     <div
@@ -18,7 +18,7 @@ export const Colors = ({
         handleCurrentVariant(variant);
       }}
       className={`currentCar__reviewColors ${
-        currentColor === variant ? "currentCar__reviewColors--selected" : ""
+        currentVariantId === variant ? "currentCar__reviewColors--selected" : ""
       }`}
       style={{ backgroundColor: `#${variantColor}` }}
     ></div>

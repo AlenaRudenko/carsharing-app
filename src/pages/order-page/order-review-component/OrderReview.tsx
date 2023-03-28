@@ -7,8 +7,9 @@ import { RootState } from "../../../store/store";
 import { Api } from "../../../services/api.service";
 import { ICar } from "../../../interfaces/car";
 import { OrderField } from "./components/OrderField";
+import { Functional } from "./components/functional/Functional";
 interface IProps {
-  address: string;
+  addresses: IAddresses[];
   status: string[];
   paths: string[];
   handleStatusOrder: (point: string) => void;
@@ -17,11 +18,15 @@ interface IProps {
 interface IState {
   isDisabled: boolean;
 }
+interface IAddresses {
+  name: string;
+  id: string;
+}
 export const OrderReview = ({
   paths,
   status,
+  addresses,
   handleStatusOrder,
-  address,
 }: IProps) => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [cars, setCars] = useState<ICar[]>();
@@ -34,10 +39,11 @@ export const OrderReview = ({
   );
   const location = useLocation();
   const navigate = useNavigate();
+  const functional = ["Удаленный прогрев", "Бортовой компьютер", "Полный бак"];
   const selectedCar = useMemo(() => {
     return cars?.find((car) => car.id === carId);
   }, [cars, carId]);
-  //
+  const selectedAddress = addresses?.find((item) => item.id === addressId);
   const variantW = selectedCar?.variants.find(
     (item) => item.id === carVariantId
   );
@@ -78,33 +84,43 @@ export const OrderReview = ({
   }, []);
   return (
     <div className="orderReview__container">
-      <span>Ваш заказ:</span>
-      <div className="orderReview__content">
-        {addressId && (
-          <OrderField
-            description={"пункт выдачи автомобиля:"}
-            value={address}
-          />
-        )}
+      <h2>Ваш заказ</h2>
+      <div className="orderReview__car">
         {selectedCar && (
           <>
             <OrderField
-              description={"Марка автомобиля"}
-              value={selectedCar?.brand}
+              fontSize={"20px"}
+              value={`${selectedCar?.brand} ${selectedCar?.model}`}
             />
-            <OrderField
-              description={"Марка автомобиля"}
-              value={selectedCar?.model}
-            />
+            <div className="orderReview__carPic">
+              <img
+                src={`https://api.need-car.online/${
+                  variantW
+                    ? variantW?.imageUrl
+                    : selectedCar.variants[1].imageUrl
+                }`}
+                alt=""
+              />
+            </div>
           </>
         )}
-        {carVariantId && (
-          <div className="orderReview__previewCarColor">
-            <img
-              src={`https://api.need-car.online/${variantW?.imageUrl}`}
-              alt=""
-            />
+      </div>
+      <div className="orderReview__additional">
+        {selectedCar && (
+          <div className="functional">
+            {functional.map((item) => (
+              <Functional text={item} />
+            ))}
           </div>
+        )}
+        <span>Рш</span>
+      </div>
+      <div className="orderReview__pickPoint">
+        {selectedAddress && (
+          <OrderField
+            description={"пункт выдачи автомобиля:"}
+            value={selectedAddress?.name}
+          />
         )}
       </div>
       <AppButton

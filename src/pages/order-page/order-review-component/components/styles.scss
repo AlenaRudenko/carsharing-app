@@ -1,11 +1,10 @@
 .orderField {
   font-size: 15px;
-  height: 20%;
+  height: 10%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   :last-child {
-    margin-left: 10px;
     font-weight: 700;
   }
 }

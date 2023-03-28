@@ -10,6 +10,7 @@ interface IMenu {
   id: number;
   title: string;
   description: string;
+  fullDescription: string;
 }
 
 export const MenuPage = ({ menu, handleOnClickMenuItem, idNumber }: IProps) => {
