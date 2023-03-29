@@ -8,6 +8,7 @@ import { Api } from "../../../services/api.service";
 import { ICar } from "../../../interfaces/car";
 import { OrderField } from "./components/OrderField";
 import { Functional } from "./components/functional/Functional";
+import { ITariff } from "../../../interfaces/tariffs";
 interface IProps {
   addresses: IAddresses[];
   status: string[];
@@ -30,6 +31,7 @@ export const OrderReview = ({
 }: IProps) => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [cars, setCars] = useState<ICar[]>();
+  const [tariffs, setTariffs] = useState<ITariff[]>();
   const [navPoint, setNavPoint] = useState("order-location");
   const carId = useSelector((state: RootState) => state.order.carId);
   const cityId = useSelector((state: RootState) => state.order.cityId);
@@ -37,6 +39,7 @@ export const OrderReview = ({
   const carVariantId = useSelector(
     (state: RootState) => state.order.carVariantId
   );
+  const tariffId = useSelector((state: RootState) => state.order.tariffId);
   const location = useLocation();
   const navigate = useNavigate();
   const functional = ["Удаленный прогрев", "Бортовой компьютер", "Полный бак"];
@@ -47,6 +50,7 @@ export const OrderReview = ({
   const variantW = selectedCar?.variants.find(
     (item) => item.id === carVariantId
   );
+  const currentTariff = tariffs?.find((tariff) => tariff.id === tariffId);
   useEffect(() => {
     if (
       status.includes("order-location") &&
@@ -76,7 +80,8 @@ export const OrderReview = ({
   };
   useEffect(() => {
     Api.getCars().then((response) => setCars(response.data));
-  });
+    Api.getTariffs().then((response) => setTariffs(response.data));
+  }, []);
   useEffect(() => {
     if (location.pathname !== "/order/order-location" && !carId && !addressId) {
       navigate("/order/order-location");
@@ -113,8 +118,10 @@ export const OrderReview = ({
             ))}
           </div>
         )}
-        <span>Рш</span>
       </div>
+      {currentTariff && (
+        <div>{currentTariff.price === 1999 ? "Суточный" : "Поминутный"}</div>
+      )}
       <div className="orderReview__pickPoint">
         {selectedAddress && (
           <OrderField

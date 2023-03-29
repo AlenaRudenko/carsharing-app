@@ -55,11 +55,11 @@ export const Tariff = ({
             </div>
             <div className="description">
               <span>Пробег</span>
-              <span>70км бесплатно</span>
+              <span>70 км бесплатно</span>
             </div>
             <div className="description">
-              <span>Пробег</span>
-              <span>70км бесплатно</span>
+              <span>Сверх лимита по пробегу</span>
+              <span>10 руб/км</span>
             </div>
             <div className="description">
               <span>10 минут бесплатного ожидания</span>
@@ -67,8 +67,6 @@ export const Tariff = ({
           </>
         )}
       </div>
-
-      <span>{type}</span>
     </div>
   );
 };

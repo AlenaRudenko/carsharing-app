@@ -69,6 +69,8 @@ export const OrderAdditionally = () => {
             />
           ))}
         </div>
+        <h3>Выберите дополнительные услуги</h3>
+        <div></div>
       </div>
     </>
   );

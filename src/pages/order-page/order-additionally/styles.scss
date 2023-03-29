@@ -27,11 +27,12 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 2px solid transparent;
-  box-shadow: -1px -1px 16px 1px rgba(142, 142, 142, 0.25);
+  border: 2px solid rgba(191, 187, 187, 0.2);
+  box-shadow: -1px -1px 16px 1px rgba(142, 142, 142, 0.01);
 }
 .currentCar__reviewColors--selected {
   border: 2px solid $pimary-color;
+  box-shadow: -1px -1px 16px 1px rgba(142, 142, 142, 0.07);
 }
 .orderAdd__tariffs {
   margin: 0 auto;
