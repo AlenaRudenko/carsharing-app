@@ -19,7 +19,6 @@ export const OrderModel = () => {
   // получение машин и тарифов с сервера
   useEffect(() => {
     Api.getCars().then((response) => setCars(response.data));
-    Api.getTariffs().then((response) => console.log(response.data));
   }, []);
 
   //помещение в редакс id машины
@@ -31,10 +30,11 @@ export const OrderModel = () => {
 
   return (
     <>
-      <div className='orderModel__container'>
-        <div className='orderModel__car'>
+      <div className="orderModel__container">
+        <div className="orderModel__car">
           {cars.map((car, index) => (
             <div
+              key={car.id}
               onClick={() => {
                 handleCurrentCar(car);
               }}
@@ -44,10 +44,10 @@ export const OrderModel = () => {
             >
               <span>{car.brand}</span>
               <span>{car.model}</span>
-              <div className='car__pic'>
+              <div className="car__pic">
                 <img
                   src={`https://api.need-car.online/${car.variants[1].imageUrl}`}
-                  alt=''
+                  alt=""
                 />
               </div>
             </div>

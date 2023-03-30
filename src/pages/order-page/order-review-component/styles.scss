@@ -26,7 +26,7 @@
 .orderReview__car {
   font-size: 15px;
   width: 100%;
-  height: 40%;
+
   display: flex;
   align-items: center;
   text-align: center;
@@ -39,7 +39,6 @@
 
 .orderReview__carPic {
   width: 200px;
-  height: 200px;
   img {
     width: 100%;
     transform: scale(-1, 1);
@@ -56,4 +55,5 @@
 }
 .functional {
   display: flex;
+  margin-bottom: 10px;
 }

@@ -9,6 +9,7 @@ import { ICar } from "../../../interfaces/car";
 import { OrderField } from "./components/OrderField";
 import { Functional } from "./components/functional/Functional";
 import { ITariff } from "../../../interfaces/tariffs";
+import { TariffOptions } from "./components/tariff/TariffOptions";
 interface IProps {
   addresses: IAddresses[];
   status: string[];
@@ -114,14 +115,13 @@ export const OrderReview = ({
         {selectedCar && (
           <div className="functional">
             {functional.map((item) => (
-              <Functional text={item} />
+              <Functional key={item} text={item} />
             ))}
           </div>
         )}
+        {currentTariff && <TariffOptions currentTariff={currentTariff} />}
       </div>
-      {currentTariff && (
-        <div>{currentTariff.price === 1999 ? "Суточный" : "Поминутный"}</div>
-      )}
+
       <div className="orderReview__pickPoint">
         {selectedAddress && (
           <OrderField
