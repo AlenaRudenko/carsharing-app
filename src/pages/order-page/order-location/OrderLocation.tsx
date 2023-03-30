@@ -39,13 +39,13 @@ export const OrderLocation = ({
 
   return (
     <>
-      <div className="orderLocation__container">
+      <div className='orderLocation__container'>
         <DropdownMenuAddress
           handleSetCurrentAddress={handleSetCurrentAddress}
           addresses={addresses}
         />
 
-        <div id="map" className="orderLocation__map">
+        <div id='map' className='orderLocation__map'>
           <YandexMap coordsLocation={coordsLocation} />
         </div>
       </div>

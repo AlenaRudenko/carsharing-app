@@ -5,6 +5,7 @@ import { TokenPack } from "./../interfaces/token-pack";
 import { ICity } from "./../interfaces/city";
 import { ICar } from "./../interfaces/car";
 import axios from "axios";
+import { IVariant } from "../interfaces/variant";
 
 class ApiService {
   private instance = axios.create({
@@ -76,6 +77,9 @@ class ApiService {
   }
   getTariffs() {
     return this.instance.get<ITariff[]>("/tariffs");
+  }
+  getVariants() {
+    return this.instance.get<IVariant[]>("/variants");
   }
   getUser(userId: string) {
     return this.instance.get<IUser>(`/users/${userId}`);

@@ -4,6 +4,7 @@
   width: 90%;
   margin: 0 auto;
   height: 100vh;
+  overflow-y: hidden;
 }
 
 //breadcrumbs
@@ -19,13 +20,20 @@
 
 //conteiner with media content
 .order__content {
-  height: 75%;
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
+
   justify-content: space-between;
+  @media screen and (min-width: 786px) {
+    height: 60%;
+  }
+  @media screen and (min-width: 1200px) {
+    height: 75%;
+  }
 }
+
 //container with routes
 .order__routes {
   width: 65%;

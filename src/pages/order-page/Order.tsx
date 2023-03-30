@@ -16,6 +16,7 @@ import { AuthService } from "./../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { Fragment } from "react";
 import { ICoords } from "../../interfaces/coords";
+import { Api } from "../../services/api.service";
 
 interface IState {
   status: string[];
@@ -52,7 +53,11 @@ export const Order = ({
       navigate("/");
     }
   });
-
+  useEffect(() => {
+    Api.getVariants().then((response) =>
+      console.log("ЧИЖАЧКА ЧЕ ТО СДЕЛАЛ", response.data)
+    );
+  }, []);
   const paths = [
     "order-location",
     "order-model",
@@ -68,15 +73,15 @@ export const Order = ({
     dispatch.order.setAddressId(address.id);
   };
   return (
-    <div className="order__container">
+    <div className='order__container'>
       <Header
         key={"2"}
         handleLocalStoreCity={handleLocalStoreCity}
         localCity={localCity}
-        padding="20px 0px 50px 0px"
-        size="35px"
+        padding='20px 0px 50px 0px'
+        size='35px'
       />
-      <div className="order__navigation">
+      <div className='order__navigation'>
         {navArray.map((item, index) => (
           <Fragment key={item}>
             <OrderNavigation
@@ -85,16 +90,16 @@ export const Order = ({
               status={status}
             />
             {index < navArray.length - 1 && (
-              <AppIcon icon="ArrowRight" color={COLORS.GREY} size={14} />
+              <AppIcon icon='ArrowRight' color={COLORS.GREY} size={14} />
             )}
           </Fragment>
         ))}
       </div>
-      <div className="order__content">
-        <div className="order__routes">
+      <div className='order__content'>
+        <div className='order__routes'>
           <Routes>
             <Route
-              path="order-location"
+              path='order-location'
               element={
                 <OrderLocation
                   handleSetCurrentAddress={handleSetCurrentAddress}
@@ -104,13 +109,13 @@ export const Order = ({
                 />
               }
             />
-            <Route path="order-model" element={<OrderModel />} />
-            <Route path="order-additionally" element={<OrderAdditionally />} />
-            <Route path="order-full" element={<OrderFull />} />
+            <Route path='order-model' element={<OrderModel />} />
+            <Route path='order-additionally' element={<OrderAdditionally />} />
+            <Route path='order-full' element={<OrderFull />} />
           </Routes>
         </div>
         <OrderReview
-        addresses={addresses}
+          addresses={addresses}
           status={status}
           paths={paths}
           handleStatusOrder={handleStatusOrder}

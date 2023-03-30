@@ -9,8 +9,8 @@ export const YandexMap = ({ coordsLocation }: IProps) => {
   return (
     <YMaps>
       <Map
-        width={800}
-        height={500}
+        width={500}
+        height={200}
         state={{
           center: [coordsLocation.lon, coordsLocation.lat],
           zoom: 15,

@@ -10,6 +10,7 @@ import { LocalStore } from "./services/localStorage.service";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "./store/store";
 import { ICoords } from "./interfaces/coords";
+import { DotsFlashing } from "./components/loading/DotsFlashing";
 
 interface IToken {
   exp: number;
@@ -30,6 +31,7 @@ export const App = () => {
     lon: 0,
   });
   const [city, setCity] = useState<IState["city"]>("");
+  const [loading, setLoading] = useState(true);
   const [coordsLocation, setCoordsLocation] = useState<
     IState["coordsLocation"]
   >({ lat: 0, lon: 0 });
@@ -39,13 +41,20 @@ export const App = () => {
   //хук токенов юзера
   useEffect(() => {
     const accessToken = AuthService.getAccessToken();
+    console.log("TOKEN", accessToken);
     if (accessToken) {
       const decodedHeader: IToken = jwt_decode(accessToken);
       Api.setToken(accessToken);
-      Api.getUser(decodedHeader.userId).then((response) =>
-        dispatch.user.setUser(response.data)
-      );
+      Api.getUser(decodedHeader.userId).then((response) => {
+        dispatch.user.setUser(response.data);
+        setLoading(false);
+      });
+    } else {
+      setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
     const onChange = (params: any) => {
       setCoordinates({
         lat: params.coords.latitude,
@@ -54,10 +63,9 @@ export const App = () => {
     };
     navigator.geolocation.getCurrentPosition(onChange);
   }, []);
-
   //хук сета координат для карты в заказах на основании города из стейта
   useEffect(() => {
-    const onChangeCoords = () => {
+    if (city) {
       axios
         .get(
           `https://geocode-maps.yandex.ru/1.x/?apikey=53d5212f-7d74-43fd-a7c7-c464212677b9&format=json&geocode=${city}`
@@ -68,11 +76,8 @@ export const App = () => {
               .split(" ")
               .map((coord: string) => +coord);
           setCoordsLocation({ lat: coords[0], lon: coords[1] });
-          console.log("ГДЕ Я ВАЩЕ", coords);
         });
-    };
-    navigator.geolocation.getCurrentPosition(onChangeCoords);
-    console.log("ffffffffffff", city);
+    }
   }, [city]);
 
   //хук сета города при обновлении и инициализации проекта
@@ -85,7 +90,6 @@ export const App = () => {
         Geo.postLocation(coordinates).then((response) => {
           LocalStore.setCurrentCity(response.data.suggestions[0].data.city);
           setCity(response.data.suggestions[0].data.city);
-          console.log("city", city);
         });
       }
     }
@@ -98,11 +102,15 @@ export const App = () => {
 
   return (
     <div className='main--container'>
-      <MainContent
-        coordsLocation={coordsLocation}
-        localCity={city}
-        handleChangeCityName={handleChangeCityName}
-      />
+      {loading ? (
+        <DotsFlashing />
+      ) : (
+        <MainContent
+          coordsLocation={coordsLocation}
+          localCity={city}
+          handleChangeCityName={handleChangeCityName}
+        />
+      )}
     </div>
   );
 };

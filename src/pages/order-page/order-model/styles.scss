@@ -5,15 +5,20 @@
   height: 100%;
 }
 .orderModel__car {
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  @media screen and (min-width: 786px) {
+    height: 80%;
+  }
+  @media screen and (min-width: 1200px) {
+    height: 100%;
+  }
 }
 .car__item {
   width: 30%;
-  height: 50%;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,6 +26,12 @@
   border-radius: 10px;
   border: 2px solid rgba(191, 187, 187, 0.2);
   margin: 5px;
+  @media screen and (min-width: 786px) {
+    height: 20%;
+  }
+  @media screen and (min-width: 1200px) {
+    height: 50%;
+  }
 
   span {
     color: $grey-color;
@@ -35,9 +46,14 @@
   border-radius: 10px;
 }
 .car__pic {
-  width: 200px;
-  height: 200px;
   img {
+    width: 100%;
+  }
+  @media screen and (min-width: 786px) {
+    width: 70%;
+  }
+  @media screen and (min-width: 1200px) {
+    height: 200px;
     width: 100%;
   }
 }
