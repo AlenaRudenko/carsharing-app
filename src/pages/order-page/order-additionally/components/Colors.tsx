@@ -4,6 +4,7 @@ interface IProps {
   variant: string;
   currentVariantId: string;
   variantColor: string;
+  imageUrl: string;
 }
 
 export const Colors = ({
@@ -11,6 +12,7 @@ export const Colors = ({
   variant,
   variantColor,
   currentVariantId,
+  imageUrl,
 }: IProps) => {
   return (
     <div
@@ -20,7 +22,8 @@ export const Colors = ({
       className={`currentCar__reviewColors ${
         currentVariantId === variant ? "currentCar__reviewColors--selected" : ""
       }`}
-      style={{ backgroundColor: `#${variantColor}` }}
-    ></div>
+    >
+      <img alt="" src={`https://api.need-car.online/${imageUrl}`} />
+    </div>
   );
 };

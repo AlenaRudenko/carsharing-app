@@ -88,13 +88,14 @@ export const OrderAdditionally = () => {
 
   return (
     <>
-      <div className='orderAdd__container'>
+      <div className="orderAdd__container">
         <h3>Выберите цвет автомобиля</h3>
-        <div className='colors__block'>
-          <div className='currentCar__reviewColorsContainer'>
+        <div className="colors__block">
+          <div className="currentCar__reviewColorsContainer">
             {selectedCar?.variants.map((variant) => (
               <Colors
                 key={variant.id}
+                imageUrl={variant.imageUrl}
                 variantColor={variant.color}
                 variant={variant.id}
                 currentVariantId={currentVariantId}
@@ -104,7 +105,7 @@ export const OrderAdditionally = () => {
           </div>
         </div>
         <h3>Выберите тариф</h3>
-        <div className='orderAdd__tariffs'>
+        <div className="orderAdd__tariffs">
           {tariffs.map((tariff) => (
             <Tariff
               key={tariff.id}
@@ -117,7 +118,7 @@ export const OrderAdditionally = () => {
           ))}
         </div>
         <h3>Выберите дополнительные услуги</h3>
-        <div className='orderAdd__services'>
+        <div className="orderAdd__services">
           {services.map((service) => (
             <Service
               currentServices={currentServices}

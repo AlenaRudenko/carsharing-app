@@ -1,5 +1,6 @@
 import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 import { ICoords } from "../interfaces/coords";
+import { useState, useEffect } from "react";
 
 interface IProps {
   coordsLocation: ICoords;
@@ -9,8 +10,8 @@ export const YandexMap = ({ coordsLocation }: IProps) => {
   return (
     <YMaps>
       <Map
-        width={500}
-        height={200}
+        width="100%"
+        height="100%"
         state={{
           center: [coordsLocation.lon, coordsLocation.lat],
           zoom: 15,

@@ -98,17 +98,16 @@ export const OrderReview = ({
               fontSize={"20px"}
               value={`${selectedCar?.brand} ${selectedCar?.model}`}
             />
-            <div className="orderReview__carPic">
-              <img
-                src={`https://api.need-car.online/${
-                  variantW
-                    ? variantW?.imageUrl
-                    : selectedCar.variants[1].imageUrl
-                }`}
-                alt=""
-              />
-            </div>
           </>
+        )}{" "}
+        {variantW && (
+          <div className="orderReview__colorContainer">
+            <span>цвет</span>
+            <div
+              style={{ backgroundColor: "#" + variantW.color }}
+              className="orderReview__color"
+            ></div>
+          </div>
         )}
       </div>
       <div className="orderReview__additional">

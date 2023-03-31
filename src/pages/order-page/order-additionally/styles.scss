@@ -6,7 +6,7 @@
 }
 .colors__block {
   width: 100%;
-  height: 20%;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,19 +17,29 @@
 }
 
 .currentCar__reviewColorsContainer {
-  width: 200px;
+  width: 100%;
   display: flex;
   align-items: center;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 .currentCar__reviewColors {
+  padding: 3px;
   cursor: pointer;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 2px solid rgba(191, 187, 187, 0.2);
+  width: 150px;
+  border: 2px solid transparent;
+  border-radius: 10px;
   box-shadow: -1px -1px 16px 1px rgba(142, 142, 142, 0.01);
+
+  // @media screen and (max-width: 992px) {
+  //   width: 10%;
+  // }
+  // @media screen and (min-width: 1200px) {
+  //   width: 20%;
+  // }
+  img {
+    width: 100%;
+  }
 }
 .currentCar__reviewColors--selected {
   border: 2px solid $pimary-color;

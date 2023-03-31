@@ -44,6 +44,7 @@ export const Order = ({
     { name: "ул. Васенко 15", id: "2" },
     { name: "ул. Ленина 55", id: "3" },
   ];
+  const [paddingHeader, setPaddingHeader] = useState("20px 0px 50px 0px");
   const [address, setAddress] = useState("");
   const [status, setStatus] = useState<IState["status"]>(["order-location"]);
   const navigate = useNavigate();
@@ -57,6 +58,12 @@ export const Order = ({
     Api.getVariants().then((response) =>
       console.log("ЧИЖАЧКА ЧЕ ТО СДЕЛАЛ", response.data)
     );
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.clientWidth < 992
+      ? setPaddingHeader("10px 0px 15px 0px")
+      : setPaddingHeader("20px 0px 50px 0px");
   }, []);
   const paths = [
     "order-location",
@@ -73,15 +80,15 @@ export const Order = ({
     dispatch.order.setAddressId(address.id);
   };
   return (
-    <div className='order__container'>
+    <div className="order__container">
       <Header
         key={"2"}
         handleLocalStoreCity={handleLocalStoreCity}
         localCity={localCity}
-        padding='20px 0px 50px 0px'
-        size='35px'
+        padding={paddingHeader}
+        size="35px"
       />
-      <div className='order__navigation'>
+      <div className="order__navigation">
         {navArray.map((item, index) => (
           <Fragment key={item}>
             <OrderNavigation
@@ -90,16 +97,16 @@ export const Order = ({
               status={status}
             />
             {index < navArray.length - 1 && (
-              <AppIcon icon='ArrowRight' color={COLORS.GREY} size={14} />
+              <AppIcon icon="ArrowRight" color={COLORS.GREY} size={14} />
             )}
           </Fragment>
         ))}
       </div>
-      <div className='order__content'>
-        <div className='order__routes'>
+      <div className="order__content">
+        <div className="order__routes">
           <Routes>
             <Route
-              path='order-location'
+              path="order-location"
               element={
                 <OrderLocation
                   handleSetCurrentAddress={handleSetCurrentAddress}
@@ -109,9 +116,9 @@ export const Order = ({
                 />
               }
             />
-            <Route path='order-model' element={<OrderModel />} />
-            <Route path='order-additionally' element={<OrderAdditionally />} />
-            <Route path='order-full' element={<OrderFull />} />
+            <Route path="order-model" element={<OrderModel />} />
+            <Route path="order-additionally" element={<OrderAdditionally />} />
+            <Route path="order-full" element={<OrderFull />} />
           </Routes>
         </div>
         <OrderReview
