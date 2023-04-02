@@ -12,9 +12,8 @@ import { ITariff } from "../../../interfaces/tariffs";
 import { TariffOptions } from "./components/tariff/TariffOptions";
 interface IProps {
   addresses: IAddresses[];
-  status: string[];
-  paths: string[];
-  handleStatusOrder: (point: string) => void;
+  handleStatusNavigation: () => void;
+  handleStatus: (status: string) => void;
 }
 
 interface IState {
@@ -25,15 +24,14 @@ interface IAddresses {
   id: string;
 }
 export const OrderReview = ({
-  paths,
-  status,
   addresses,
-  handleStatusOrder,
+  handleStatusNavigation,
+  handleStatus,
 }: IProps) => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [cars, setCars] = useState<ICar[]>();
   const [tariffs, setTariffs] = useState<ITariff[]>();
-  const [navPoint, setNavPoint] = useState("order-location");
+  const [navPoint, setNavPoint] = useState("");
   const carId = useSelector((state: RootState) => state.order.carId);
   const cityId = useSelector((state: RootState) => state.order.cityId);
   const addressId = useSelector((state: RootState) => state.order.addressId);
@@ -52,33 +50,41 @@ export const OrderReview = ({
     (item) => item.id === carVariantId
   );
   const currentTariff = tariffs?.find((tariff) => tariff.id === tariffId);
+
+  //смена статуса кнопки и статусов навигации сверху
   useEffect(() => {
-    if (
-      status.includes("order-location") &&
-      !status.includes("order-model") &&
-      addressId
-    ) {
-      setNavPoint("order-location");
+    if (location.pathname === "/order/order-location" && addressId) {
+      handleStatus("order-location");
+      setIsDisabled(false);
+    } else if (location.pathname === "/order/order-model" && carId) {
+      handleStatus("order-model");
       setIsDisabled(false);
     } else if (
-      status.includes("order-model") &&
-      !status.includes("order-additionally") &&
-      carId
-    ) {
-      setNavPoint("order-model");
-      setIsDisabled(false);
-    } else if (
-      status.includes("order-additionally") &&
-      !status.includes("order-full") &&
+      location.pathname === "/order/order-additionally" &&
       carVariantId
     ) {
-      setNavPoint("order-additionally");
+      handleStatus("order-additionally");
       setIsDisabled(false);
     } else setIsDisabled(true);
-  });
-  const handleContinueButton = () => {
-    handleStatusOrder(navPoint);
-  };
+  }, [location.pathname, addressId, carId, carVariantId]);
+
+  //смена текста кнопки
+  useEffect(() => {
+    if (location.pathname === "/order/order-location") {
+      setNavPoint("Выбрать модель");
+    } else {
+      if (location.pathname === "/order/order-model") {
+        setNavPoint("Выбрать параметры аренды автомобиля");
+      } else {
+        if (location.pathname === "/order/order-additionally") {
+          setNavPoint("Подтвердить заказ");
+        } else {
+          setNavPoint("Забронировать автомобиль");
+        }
+      }
+    }
+  }, [location.pathname]);
+
   useEffect(() => {
     Api.getCars().then((response) => setCars(response.data));
     Api.getTariffs().then((response) => setTariffs(response.data));
@@ -88,10 +94,14 @@ export const OrderReview = ({
       navigate("/order/order-location");
     }
   }, []);
+
+  const handleContinueButton = () => {
+    handleStatusNavigation();
+  };
   return (
-    <div className="orderReview__container">
+    <div className='orderReview__container'>
       <h2>Ваш заказ</h2>
-      <div className="orderReview__car">
+      <div className='orderReview__car'>
         {selectedCar && (
           <>
             <OrderField
@@ -99,20 +109,22 @@ export const OrderReview = ({
               value={`${selectedCar?.brand} ${selectedCar?.model}`}
             />
           </>
-        )}{" "}
-        {variantW && (
-          <div className="orderReview__colorContainer">
-            <span>цвет</span>
-            <div
-              style={{ backgroundColor: "#" + variantW.color }}
-              className="orderReview__color"
-            ></div>
-          </div>
         )}
+        <div className='orderReview__colorContainer'>
+          {variantW && (
+            <>
+              <span>цвет</span>
+              <div
+                style={{ backgroundColor: "#" + variantW.color }}
+                className='orderReview__color'
+              ></div>
+            </>
+          )}{" "}
+        </div>
       </div>
-      <div className="orderReview__additional">
+      <div className='orderReview__additional'>
         {selectedCar && (
-          <div className="functional">
+          <div className='functional'>
             {functional.map((item) => (
               <Functional key={item} text={item} />
             ))}
@@ -121,7 +133,7 @@ export const OrderReview = ({
         {currentTariff && <TariffOptions currentTariff={currentTariff} />}
       </div>
 
-      <div className="orderReview__pickPoint">
+      <div className='orderReview__pickPoint'>
         {selectedAddress && (
           <OrderField
             description={"пункт выдачи автомобиля:"}
@@ -131,7 +143,7 @@ export const OrderReview = ({
       </div>
       <AppButton
         isDisabled={isDisabled}
-        text="Продолжить"
+        text={navPoint}
         onClick={handleContinueButton}
       />
     </div>

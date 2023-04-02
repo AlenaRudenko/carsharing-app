@@ -26,9 +26,9 @@
 .orderReview__car {
   font-size: 15px;
   width: 100%;
-
+  flex-direction: column;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   text-align: center;
   justify-content: space-between;
   :nth-child(even) {
@@ -37,7 +37,9 @@
   }
 }
 .orderReview__colorContainer {
+  height: 20px;
   display: flex;
+  align-items: center;
 }
 .orderReview__color {
   width: 20px;

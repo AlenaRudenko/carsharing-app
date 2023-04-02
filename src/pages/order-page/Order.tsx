@@ -10,7 +10,7 @@ import { OrderLocation } from "./order-location/OrderLocation";
 import { OrderModel } from "./order-model/OrderModel";
 import { OrderAdditionally } from "./order-additionally/OrderAdditionally";
 import { OrderFull } from "./order-full/OrderFull";
-import { Route, Routes } from "react-router";
+import { Route, Routes, useLocation } from "react-router";
 import { OrderReview } from "./order-review-component/OrderReview";
 import { AuthService } from "./../../services/auth.service";
 import { useNavigate } from "react-router-dom";
@@ -44,51 +44,62 @@ export const Order = ({
     { name: "ул. Васенко 15", id: "2" },
     { name: "ул. Ленина 55", id: "3" },
   ];
-  const [paddingHeader, setPaddingHeader] = useState("20px 0px 50px 0px");
-  const [address, setAddress] = useState("");
-  const [status, setStatus] = useState<IState["status"]>(["order-location"]);
-  const navigate = useNavigate();
-  const dispatch = useDispatch<Dispatch>();
-  useEffect(() => {
-    if (!AuthService.getAccessToken()) {
-      navigate("/");
-    }
-  });
-  useEffect(() => {
-    Api.getVariants().then((response) =>
-      console.log("ЧИЖАЧКА ЧЕ ТО СДЕЛАЛ", response.data)
-    );
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.clientWidth < 992
-      ? setPaddingHeader("10px 0px 15px 0px")
-      : setPaddingHeader("20px 0px 50px 0px");
-  }, []);
   const paths = [
     "order-location",
     "order-model",
     "order-additionally",
     "order-full",
   ];
+  const fullPathNames = [
+    "/order/order-location",
+    "/order/order-model",
+    "/order/order-additionally",
+    "/order/order-full",
+  ];
+
+  const [paddingHeader, setPaddingHeader] = useState("20px 0px 50px 0px");
+  const [address, setAddress] = useState("");
+  const [status, setStatus] = useState<IState["status"]>(["order-location"]);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch<Dispatch>();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!AuthService.getAccessToken()) {
+      navigate("/");
+    }
+  });
+
+  //смена отступов
+  useEffect(() => {
+    document.documentElement.clientWidth < 992
+      ? setPaddingHeader("10px 0px 15px 0px")
+      : setPaddingHeader("20px 0px 50px 0px");
+  }, []);
+
+  const handleStatusNavigation = () => {
+    navigate(fullPathNames[fullPathNames.indexOf(location.pathname) + 1]);
+  };
+
   const handleStatusOrder = (point: string) => {
     setStatus([...status, paths[paths.indexOf(point) + 1]]);
-    navigate(paths[paths.indexOf(point) + 1]);
   };
+
   const handleSetCurrentAddress = (address: IAddress) => {
     setAddress(address.name);
     dispatch.order.setAddressId(address.id);
   };
   return (
-    <div className="order__container">
+    <div className='order__container'>
       <Header
         key={"2"}
         handleLocalStoreCity={handleLocalStoreCity}
         localCity={localCity}
         padding={paddingHeader}
-        size="35px"
+        size='35px'
       />
-      <div className="order__navigation">
+      <div className='order__navigation'>
         {navArray.map((item, index) => (
           <Fragment key={item}>
             <OrderNavigation
@@ -97,16 +108,16 @@ export const Order = ({
               status={status}
             />
             {index < navArray.length - 1 && (
-              <AppIcon icon="ArrowRight" color={COLORS.GREY} size={14} />
+              <AppIcon icon='ArrowRight' color={COLORS.GREY} size={14} />
             )}
           </Fragment>
         ))}
       </div>
-      <div className="order__content">
-        <div className="order__routes">
+      <div className='order__content'>
+        <div className='order__routes'>
           <Routes>
             <Route
-              path="order-location"
+              path='order-location'
               element={
                 <OrderLocation
                   handleSetCurrentAddress={handleSetCurrentAddress}
@@ -116,16 +127,15 @@ export const Order = ({
                 />
               }
             />
-            <Route path="order-model" element={<OrderModel />} />
-            <Route path="order-additionally" element={<OrderAdditionally />} />
-            <Route path="order-full" element={<OrderFull />} />
+            <Route path='order-model' element={<OrderModel />} />
+            <Route path='order-additionally' element={<OrderAdditionally />} />
+            <Route path='order-full' element={<OrderFull />} />
           </Routes>
         </div>
         <OrderReview
           addresses={addresses}
-          status={status}
-          paths={paths}
-          handleStatusOrder={handleStatusOrder}
+          handleStatusNavigation={handleStatusNavigation}
+          handleStatus={handleStatusOrder}
         ></OrderReview>
       </div>
     </div>

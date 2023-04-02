@@ -21,13 +21,13 @@ export const Service = ({
   currentServices,
 }: IProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  const handleIcons = () => {
-    if (title === "Детское кресло") return "Smile";
-    else if (title === "КАСКО") return "Tool";
-    else return "Heart";
-  };
+  const [fontSize, setFontSize] = useState("small");
   useEffect(() => {
-    console.log("WAAAAAAt", currentServices);
+    document.documentElement.clientWidth < 992
+      ? setFontSize("xx-small")
+      : document.documentElement.clientWidth < 1200
+      ? setFontSize("small")
+      : setFontSize("11px");
   }, []);
   return (
     <div
@@ -36,9 +36,10 @@ export const Service = ({
         currentServices.includes(title) && "--active"
       }`}
     >
-      <div className="service__title">
+      <div className='service__title'>
         <div
           className={`service__help service__help${isVisible && "--active"}`}
+          style={{ fontSize: fontSize }}
         >
           <span>{descrintion}</span>
         </div>

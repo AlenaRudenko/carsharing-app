@@ -33,6 +33,7 @@ export const order = createModel<RootModel>()({
       return {
         ...state,
         carId: payload,
+        carVariantId: "",
       };
     },
     setCityId(state, payload: IOrder["cityId"]) {
