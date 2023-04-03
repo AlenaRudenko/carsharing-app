@@ -29,7 +29,7 @@ export const TariffContent = ({
 }: IProps) => {
   return (
     <div>
-      <div className='price' style={{ fontSize: textParams.priceSize }}>
+      <div className="price" style={{ fontSize: textParams.priceSize }}>
         <span>{tariff === "DAY" ? "Аренда" : "В пути"}</span>
         <span>
           {tariff === "DAY" ? `${price} руб/сут` : `${price} руб/мин`}
@@ -38,10 +38,11 @@ export const TariffContent = ({
       {tariffParams
         .filter((value) => value.type === tariff)
         .map((tariff) => (
-          <>
+          <div key={tariff.type}>
             {tariff.carWaiting && (
               <div
-                className='description'
+                key={tariff.carWaiting}
+                className="description"
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -53,7 +54,8 @@ export const TariffContent = ({
             )}
             {tariff.fuel && (
               <div
-                className='description'
+                key={tariff.fuel}
+                className="description"
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -65,7 +67,8 @@ export const TariffContent = ({
             )}
             {tariff.mileage && (
               <div
-                className='description'
+                key={tariff.mileage}
+                className="description"
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -77,7 +80,8 @@ export const TariffContent = ({
             )}
             {tariff.overMileage && (
               <div
-                className='description'
+                key={tariff.overMileage}
+                className="description"
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -89,7 +93,8 @@ export const TariffContent = ({
             )}
             {tariff.standbyMode && (
               <div
-                className='description'
+                key={tariff.standbyMode}
+                className="description"
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -98,7 +103,7 @@ export const TariffContent = ({
                 <span>{tariff.standbyMode}</span>
               </div>
             )}
-          </>
+          </div>
         ))}
     </div>
   );

@@ -27,7 +27,13 @@ export const OrderAdditionally = () => {
   const currentTariffId = useSelector(
     (state: RootState) => state.order.tariffId
   );
-
+  const childChair = useSelector((state: RootState) => state.order.childChair);
+  const carEnsurance = useSelector(
+    (state: RootState) => state.order.carEnsurance
+  );
+  const lifeEnsurance = useSelector(
+    (state: RootState) => state.order.lifeEnsurance
+  );
   useEffect(() => {
     Api.getCars().then((response) => setCars(response.data));
   }, []);
@@ -67,28 +73,32 @@ export const OrderAdditionally = () => {
   }, [cars, currentCarId]);
 
   const handleCurrentVariant = (variant: ICarVariant["id"]) => {
-    dispatch.order.setCarVariantId(variant);
+    return dispatch.order.setCarVariantId(variant);
   };
   //выбор и сет тарифа в редакс
   const handleTariff = (tariff: ITariff["id"]) => {
-    dispatch.order.setTariffId(tariff);
+    return dispatch.order.setTariffId(tariff);
   };
-
+  const handleSetServices = (title: string) => {
+    return title === "Детское кресло"
+      ? dispatch.order.toggleChildChair()
+      : title === "Страхование жизни и здоровья"
+      ? dispatch.order.toggleLifeEnsurance()
+      : dispatch.order.toggleCarEnsurance();
+  };
   const handleService = (title: string) => {
-    console.log("title", title);
-    console.log("currentServices", currentServices);
+    handleSetServices(title);
     if (currentServices.includes(title)) {
       setCurrentServices([...currentServices.filter((item) => item !== title)]);
     } else setCurrentServices((prevState) => [...prevState, title]);
-    console.log("шо осталось", currentServices);
   };
 
   return (
     <>
-      <div className='orderAdd__container'>
+      <div className="orderAdd__container">
         <h3>Выберите цвет автомобиля</h3>
-        <div className='colors__block'>
-          <div className='currentCar__reviewColorsContainer'>
+        <div className="colors__block">
+          <div className="currentCar__reviewColorsContainer">
             {selectedCar?.variants.map((variant) => (
               <Colors
                 key={variant.id}
@@ -102,7 +112,7 @@ export const OrderAdditionally = () => {
           </div>
         </div>
         <h3>Выберите тариф</h3>
-        <div className='orderAdd__tariffs'>
+        <div className="orderAdd__tariffs">
           {tariffs.map((tariff) => (
             <Tariff
               key={tariff.id}
@@ -115,7 +125,7 @@ export const OrderAdditionally = () => {
           ))}
         </div>
         <h3>Выберите дополнительные услуги</h3>
-        <div className='orderAdd__services'>
+        <div className="orderAdd__services">
           {services.map((service) => (
             <Service
               currentServices={currentServices}

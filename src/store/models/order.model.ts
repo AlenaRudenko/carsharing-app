@@ -15,6 +15,9 @@ export const order = createModel<RootModel>()({
     variantId: "",
     tariffId: "",
     addressId: "",
+    childChair: false,
+    lifeEnsurance: false,
+    carEnsurance: false,
   },
   reducers: {
     setCarVariantId: (state, payload: ICarVariant["id"]) => {
@@ -23,29 +26,47 @@ export const order = createModel<RootModel>()({
         carVariantId: payload,
       };
     },
-    setTariffId(state, payload: ITariff["id"]) {
-      return {
-        ...state,
-        tariffId: payload,
-      };
-    },
-    setCarId(state, payload: ICar["id"]) {
+    setCarId: (state, payload: ICar["id"]) => {
       return {
         ...state,
         carId: payload,
         carVariantId: "",
       };
     },
-    setCityId(state, payload: IOrder["cityId"]) {
+    setCityId: (state, payload: IOrder["cityId"]) => {
       return {
         ...state,
         cityId: payload,
       };
     },
-    setAddressId(state, payload: IOrder["addressId"]) {
+    setAddressId: (state, payload: IOrder["addressId"]) => {
       return {
         ...state,
         addressId: payload,
+      };
+    },
+    setTariffId: (state, payload: IOrder["tariffId"]) => {
+      return {
+        ...state,
+        tariffId: payload,
+      };
+    },
+    toggleChildChair: (state) => {
+      return {
+        ...state,
+        childChair: !state.childChair,
+      };
+    },
+    toggleCarEnsurance: (state) => {
+      return {
+        ...state,
+        carEnsurance: !state.carEnsurance,
+      };
+    },
+    toggleLifeEnsurance: (state) => {
+      return {
+        ...state,
+        lifeEnsurance: !state.lifeEnsurance,
       };
     },
   },

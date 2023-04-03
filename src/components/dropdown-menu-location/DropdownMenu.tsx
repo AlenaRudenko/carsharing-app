@@ -5,9 +5,10 @@ import "./styles.scss";
 import { ICity } from "../../interfaces/city";
 import { Api } from "../../services/api.service";
 import { LocalStore } from "../../services/localStorage.service";
-import { useDispatch } from "react-redux";
-import { Dispatch } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { Dispatch, RootState } from "../../store/store";
 import { isVisible } from "@testing-library/user-event/dist/utils";
+import { useLocation } from "react-router-dom";
 
 interface IProps {
   localCity: string | undefined;
@@ -24,20 +25,25 @@ export const DropdownMenu = ({ localCity, handleLocalStoreCity }: IProps) => {
 
   const [isVisible, setIsVisible] = useState<IState["isVisible"]>(false);
   const [cities, setCities] = useState<IState["cities"]>([]);
-
-  //смена видимости выплывающего списка
-  const handleSetIsVisible = () => {
-    setIsVisible(!isVisible);
-  };
+  const addressId = useSelector((state: RootState) => state.order.addressId);
+  const location = useLocation();
 
   //сет города в rematch и родителю App
   const handleSetCurrentLocation = (city: ICity) => {
     LocalStore.setCurrentCity(city.name);
-    handleSetIsVisible();
+    setIsVisible(false);
     dispatch.order.setCityId(city.id);
     handleLocalStoreCity(city!.name);
   };
-
+  const handleIsVisible = () => {
+    if (
+      addressId &&
+      location.pathname.includes("/order/order") &&
+      location.pathname !== "/order/order-location"
+    ) {
+      return setIsVisible(false);
+    } else return setIsVisible(true);
+  };
   useEffect(() => {
     Api.getCities().then((response) => {
       setCities(response.data);
@@ -45,12 +51,10 @@ export const DropdownMenu = ({ localCity, handleLocalStoreCity }: IProps) => {
   }, []);
 
   return (
-    <div className='dropdown'>
-      <div className='dropdown__current'>
+    <div className="dropdown">
+      <div className="dropdown__current">
         <span
-          onMouseOver={() => {
-            setIsVisible(true);
-          }}
+          onMouseOver={handleIsVisible}
           onMouseOut={() => {
             setIsVisible(false);
           }}
@@ -59,7 +63,7 @@ export const DropdownMenu = ({ localCity, handleLocalStoreCity }: IProps) => {
           {localCity}
         </span>
       </div>
-      <div className='dropdown__icon' style={{ userSelect: "none" }}>
+      <div className="dropdown__icon" style={{ userSelect: "none" }}>
         <AppIcon size={15} icon={"MapPin"} color={COLORS.PRIMARY} />
       </div>
       <div

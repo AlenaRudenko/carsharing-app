@@ -61,12 +61,13 @@ export const OrderReview = ({
       setIsDisabled(false);
     } else if (
       location.pathname === "/order/order-additionally" &&
-      carVariantId
+      carVariantId &&
+      tariffId
     ) {
       handleStatus("order-additionally");
       setIsDisabled(false);
     } else setIsDisabled(true);
-  }, [location.pathname, addressId, carId, carVariantId]);
+  }, [location.pathname, addressId, carId, carVariantId, tariffId]);
 
   //смена текста кнопки
   useEffect(() => {
@@ -99,9 +100,9 @@ export const OrderReview = ({
     handleStatusNavigation();
   };
   return (
-    <div className='orderReview__container'>
+    <div className="orderReview__container">
       <h2>Ваш заказ</h2>
-      <div className='orderReview__car'>
+      <div className="orderReview__car">
         {selectedCar && (
           <>
             <OrderField
@@ -110,21 +111,21 @@ export const OrderReview = ({
             />
           </>
         )}
-        <div className='orderReview__colorContainer'>
+        <div className="orderReview__colorContainer">
           {variantW && (
             <>
               <span>цвет</span>
               <div
                 style={{ backgroundColor: "#" + variantW.color }}
-                className='orderReview__color'
+                className="orderReview__color"
               ></div>
             </>
           )}{" "}
         </div>
       </div>
-      <div className='orderReview__additional'>
+      <div className="orderReview__additional">
         {selectedCar && (
-          <div className='functional'>
+          <div className="functional">
             {functional.map((item) => (
               <Functional key={item} text={item} />
             ))}
@@ -133,7 +134,7 @@ export const OrderReview = ({
         {currentTariff && <TariffOptions currentTariff={currentTariff} />}
       </div>
 
-      <div className='orderReview__pickPoint'>
+      <div className="orderReview__pickPoint">
         {selectedAddress && (
           <OrderField
             description={"пункт выдачи автомобиля:"}
