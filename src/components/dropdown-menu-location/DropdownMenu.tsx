@@ -22,7 +22,6 @@ interface IState {
 
 export const DropdownMenu = ({ localCity, handleLocalStoreCity }: IProps) => {
   const dispatch = useDispatch<Dispatch>();
-
   const [isVisible, setIsVisible] = useState<IState["isVisible"]>(false);
   const [cities, setCities] = useState<IState["cities"]>([]);
   const addressId = useSelector((state: RootState) => state.order.addressId);
@@ -44,6 +43,7 @@ export const DropdownMenu = ({ localCity, handleLocalStoreCity }: IProps) => {
       return setIsVisible(false);
     } else return setIsVisible(true);
   };
+
   useEffect(() => {
     Api.getCities().then((response) => {
       setCities(response.data);

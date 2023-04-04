@@ -16,6 +16,7 @@ interface IText {
   fontSize: string;
   marginBottom: string;
   priceSize: string;
+  headlingSize: string;
 }
 export const Tariff = ({
   price,
@@ -28,6 +29,7 @@ export const Tariff = ({
     fontSize: "small",
     marginBottom: "10px",
     priceSize: "xx-small",
+    headlingSize: "10px",
   });
   const tariffParams = [
     {
@@ -57,6 +59,7 @@ export const Tariff = ({
           fontSize: "x-small",
           marginBottom: "5px",
           priceSize: "small",
+          headlingSize: "15px",
         }))
       : document.documentElement.clientWidth < 1200
       ? setTextParams((prevState) => ({
@@ -64,12 +67,14 @@ export const Tariff = ({
           fontSize: "small",
           marginBottom: "3px",
           priceSize: "medium",
+          headlingSize: "20px",
         }))
       : setTextParams((prevState) => ({
           ...prevState,
           fontSize: "small",
           marginBottom: "6px",
           priceSize: "large",
+          headlingSize: "25px",
         }));
   }, []);
   return (
@@ -80,10 +85,10 @@ export const Tariff = ({
       onClick={handleOnClick}
     >
       {" "}
-      <h1 style={{ marginBottom: "10px" }}>
+      <h1 style={{ fontSize: textParams.headlingSize, marginBottom: "10px" }}>
         {type === "DAY" ? "Суточный" : "Поминутный"}
       </h1>
-      <div className='tariff__container__price'>
+      <div className="tariff__container__price">
         <TariffContent
           textParams={textParams}
           tariffParams={tariffParams}

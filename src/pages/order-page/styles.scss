@@ -26,6 +26,9 @@
   align-items: center;
 
   justify-content: space-between;
+  &--fullPage {
+    justify-content: center;
+  }
   @media screen and (min-width: 786px) {
     height: 60%;
   }
@@ -38,4 +41,7 @@
 .order__routes {
   width: 65%;
   height: 100%;
+  &--fullPage {
+    width: 0%;
+  }
 }

@@ -91,15 +91,15 @@ export const Order = ({
     dispatch.order.setAddressId(address.id);
   };
   return (
-    <div className='order__container'>
+    <div className="order__container">
       <Header
         key={"2"}
         handleLocalStoreCity={handleLocalStoreCity}
         localCity={localCity}
         padding={paddingHeader}
-        size='35px'
+        size="35px"
       />
-      <div className='order__navigation'>
+      <div className="order__navigation">
         {navArray.map((item, index) => (
           <Fragment key={item}>
             <OrderNavigation
@@ -108,16 +108,24 @@ export const Order = ({
               status={status}
             />
             {index < navArray.length - 1 && (
-              <AppIcon icon='ArrowRight' color={COLORS.GREY} size={14} />
+              <AppIcon icon="ArrowRight" color={COLORS.GREY} size={14} />
             )}
           </Fragment>
         ))}
       </div>
-      <div className='order__content'>
-        <div className='order__routes'>
+      <div
+        className={`order__content order__content${
+          location.pathname === "/order/order-full" ? "--fullPage" : ""
+        }`}
+      >
+        <div
+          className={`order__routes order__routes${
+            location.pathname === "/order/order-full" ? "--fullPage" : ""
+          }`}
+        >
           <Routes>
             <Route
-              path='order-location'
+              path="order-location"
               element={
                 <OrderLocation
                   handleSetCurrentAddress={handleSetCurrentAddress}
@@ -127,9 +135,9 @@ export const Order = ({
                 />
               }
             />
-            <Route path='order-model' element={<OrderModel />} />
-            <Route path='order-additionally' element={<OrderAdditionally />} />
-            <Route path='order-full' element={<OrderFull />} />
+            <Route path="order-model" element={<OrderModel />} />
+            <Route path="order-additionally" element={<OrderAdditionally />} />
+            <Route path="order-full" element={<OrderFull />} />
           </Routes>
         </div>
         <OrderReview

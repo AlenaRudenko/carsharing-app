@@ -128,6 +128,9 @@ export const OrderAdditionally = () => {
         <div className="orderAdd__services">
           {services.map((service) => (
             <Service
+              carEnsurance={carEnsurance}
+              lifeEnsurance={lifeEnsurance}
+              childChair={childChair}
               currentServices={currentServices}
               handleService={handleService}
               key={service.title}

@@ -28,7 +28,7 @@ export const TariffContent = ({
   textParams,
 }: IProps) => {
   return (
-    <div>
+    <div style={{ userSelect: "none" }}>
       <div className="price" style={{ fontSize: textParams.priceSize }}>
         <span>{tariff === "DAY" ? "Аренда" : "В пути"}</span>
         <span>

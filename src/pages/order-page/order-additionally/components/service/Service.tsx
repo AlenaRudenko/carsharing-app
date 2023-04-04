@@ -9,6 +9,9 @@ interface IProps {
   tariff: string;
   handleService: (id: string) => void;
   currentServices: string[];
+  carEnsurance: boolean;
+  lifeEnsurance: boolean;
+  childChair: boolean;
 }
 
 export const Service = ({
@@ -19,6 +22,9 @@ export const Service = ({
   tariff,
   handleService,
   currentServices,
+  carEnsurance,
+  lifeEnsurance,
+  childChair,
 }: IProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [fontSize, setFontSize] = useState("small");
@@ -33,10 +39,13 @@ export const Service = ({
     <div
       onClick={() => handleService(title)}
       className={`service__container service__container${
-        currentServices.includes(title) && "--active"
+        ((childChair && title === "Детское кресло") ||
+          (carEnsurance && title === "КАСКО") ||
+          (lifeEnsurance && title === "Страхование жизни и здоровья")) &&
+        "--active"
       }`}
     >
-      <div className='service__title'>
+      <div className="service__title">
         <div
           className={`service__help service__help${isVisible && "--active"}`}
           style={{ fontSize: fontSize }}

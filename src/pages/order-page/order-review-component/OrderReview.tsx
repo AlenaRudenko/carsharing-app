@@ -2,14 +2,16 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { AppButton } from "../../../components/app-button/AppButton";
 import "./styles.scss";
 import { useState, useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, Dispatch } from "../../../store/store";
 import { Api } from "../../../services/api.service";
 import { ICar } from "../../../interfaces/car";
 import { OrderField } from "./components/OrderField";
 import { Functional } from "./components/functional/Functional";
 import { ITariff } from "../../../interfaces/tariffs";
+import { IVariant } from "../../../interfaces/variant";
 import { TariffOptions } from "./components/tariff/TariffOptions";
+import { TariffVariants } from "./components/tariff-variants/TariffVariants";
 interface IProps {
   addresses: IAddresses[];
   handleStatusNavigation: () => void;
@@ -31,6 +33,7 @@ export const OrderReview = ({
   const [isDisabled, setIsDisabled] = useState(false);
   const [cars, setCars] = useState<ICar[]>();
   const [tariffs, setTariffs] = useState<ITariff[]>();
+  const [variants, setVariants] = useState<IVariant[]>();
   const [navPoint, setNavPoint] = useState("");
   const carId = useSelector((state: RootState) => state.order.carId);
   const cityId = useSelector((state: RootState) => state.order.cityId);
@@ -39,6 +42,7 @@ export const OrderReview = ({
     (state: RootState) => state.order.carVariantId
   );
   const tariffId = useSelector((state: RootState) => state.order.tariffId);
+  const dispatch = useDispatch<Dispatch>();
   const location = useLocation();
   const navigate = useNavigate();
   const functional = ["Удаленный прогрев", "Бортовой компьютер", "Полный бак"];
@@ -50,7 +54,16 @@ export const OrderReview = ({
     (item) => item.id === carVariantId
   );
   const currentTariff = tariffs?.find((tariff) => tariff.id === tariffId);
-
+  const childChair = useSelector((state: RootState) => state.order.childChair);
+  const carEnsurance = useSelector(
+    (state: RootState) => state.order.carEnsurance
+  );
+  const currentVariant = useSelector(
+    (state: RootState) => state.order.variantId
+  );
+  const lifeEnsurance = useSelector(
+    (state: RootState) => state.order.lifeEnsurance
+  );
   //смена статуса кнопки и статусов навигации сверху
   useEffect(() => {
     if (location.pathname === "/order/order-location" && addressId) {
@@ -89,18 +102,28 @@ export const OrderReview = ({
   useEffect(() => {
     Api.getCars().then((response) => setCars(response.data));
     Api.getTariffs().then((response) => setTariffs(response.data));
+    Api.getVariants().then((response) => {
+      setVariants(response.data);
+      console.log("варианты", response.data);
+    });
   }, []);
   useEffect(() => {
     if (location.pathname !== "/order/order-location" && !carId && !addressId) {
       navigate("/order/order-location");
     }
   }, []);
-
+  const handleVariant = (id: IVariant["id"]) => {
+    dispatch.order.setVariantId(id);
+  };
   const handleContinueButton = () => {
     handleStatusNavigation();
   };
   return (
-    <div className="orderReview__container">
+    <div
+      className={`orderReview__container orderReview__container${
+        location.pathname === "/order/order-full" ? "--fullPage" : ""
+      }`}
+    >
       <h2>Ваш заказ</h2>
       <div className="orderReview__car">
         {selectedCar && (
@@ -132,8 +155,49 @@ export const OrderReview = ({
           </div>
         )}
         {currentTariff && <TariffOptions currentTariff={currentTariff} />}
+        {childChair && (
+          <OrderField
+            description={"Детское кресло в автомобиле"}
+            value={"50 руб"}
+          />
+        )}
+        {carEnsurance && (
+          <OrderField description={"КАСКО"} value={"2 руб/мин"} />
+        )}
+        {lifeEnsurance && (
+          <OrderField
+            description={"Страхование жизни и здоровья"}
+            value={"0,5 руб/мин"}
+          />
+        )}
       </div>
-
+      <div className="orderReview__variants">
+        {currentTariff && <span>Выберите минимальный пакет бронирования</span>}
+        {currentTariff &&
+          currentTariff?.type === "DAY" &&
+          variants!
+            .filter((variant) => variant.variant === "ONE_DAY")
+            .map((item) => (
+              <TariffVariants
+                currentVariant={currentVariant}
+                handleVariant={handleVariant}
+                variantId={item.id}
+                variant={item.variant}
+              />
+            ))}
+        {currentTariff &&
+          currentTariff?.type === "MINUTE" &&
+          variants!
+            .filter((variant) => variant.variant !== "ONE_DAY")
+            .map((item) => (
+              <TariffVariants
+                currentVariant={currentVariant}
+                handleVariant={handleVariant}
+                variantId={item.id}
+                variant={item.variant}
+              />
+            ))}
+      </div>
       <div className="orderReview__pickPoint">
         {selectedAddress && (
           <OrderField

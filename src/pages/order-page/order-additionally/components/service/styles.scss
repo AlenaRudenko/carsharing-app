@@ -1,5 +1,6 @@
 @import "../../../../../default-variables.scss";
 .service__container {
+  user-select: none;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;

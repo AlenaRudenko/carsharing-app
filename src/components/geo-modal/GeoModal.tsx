@@ -43,20 +43,19 @@ export const GeoModal = ({
   const handleCity = () => {
     if (cityH) {
       handleCityId(cityH);
-      console.log("DDDDDDDDDDDDDDDDDSSS", cityH);
     }
   };
   return (
-    <div className='geoModal__content'>
+    <div className="geoModal__content">
       {isActive ? (
-        <div className='geoModal__choise'>
+        <div className="geoModal__choise">
           <input
-            className='geoModal__input'
-            list='cities'
+            className="geoModal__input"
+            list="cities"
             value={currentCity}
             onChange={handleCurrentCity}
           />
-          <datalist id='cities'>
+          <datalist id="cities">
             {cities.map((city) => (
               <option
                 key={city.name}
@@ -68,7 +67,7 @@ export const GeoModal = ({
               />
             ))}
           </datalist>
-          <div className='geoModal__choiseButton'>
+          <div className="geoModal__choiseButton">
             <AppButton
               isDisabled={!cities.some((el) => el.name === currentCity)}
               size={"small"}
@@ -83,7 +82,7 @@ export const GeoModal = ({
         </div>
       ) : (
         <>
-          <div className='geoModal__button'>
+          <div className="geoModal__button">
             <AppButton
               text={"Нет, выбрать другой"}
               backgroundColor={COLORS.GREY}
@@ -94,7 +93,7 @@ export const GeoModal = ({
               }}
             />
           </div>
-          <div className='geoModal__button'>
+          <div className="geoModal__button">
             <AppButton
               text={"Да, верно"}
               onClick={() => {

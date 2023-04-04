@@ -12,6 +12,9 @@
     font-size: 20px;
     color: $pimary-color;
   }
+  &--fullPage {
+    width: 50%;
+  }
 }
 // container with content
 .orderReview__content {
@@ -24,6 +27,7 @@
 }
 
 .orderReview__car {
+  height: 10%;
   font-size: 15px;
   width: 100%;
   flex-direction: column;
@@ -51,8 +55,12 @@
   width: 100%;
   height: 10%;
 }
+.orderReview__variants {
+  width: 100%;
+  height: 20%;
+}
 .orderReview__additional {
-  height: 50%;
+  height: 40%;
   width: 100%;
 }
 .functional {

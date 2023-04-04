@@ -45,10 +45,17 @@ export const order = createModel<RootModel>()({
         addressId: payload,
       };
     },
+    setVariantId: (state, payload: IOrder["variantId"]) => {
+      return {
+        ...state,
+        variantId: payload,
+      };
+    },
     setTariffId: (state, payload: IOrder["tariffId"]) => {
       return {
         ...state,
         tariffId: payload,
+        variantId: "",
       };
     },
     toggleChildChair: (state) => {

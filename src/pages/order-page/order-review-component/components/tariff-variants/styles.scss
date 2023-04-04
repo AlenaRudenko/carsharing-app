@@ -1,0 +1,16 @@
+@import "../../../../../default-variables.scss";
+.tariffVariant__container {
+  cursor: pointer;
+  user-select: none;
+  width: 30%;
+  border-radius: 10px;
+  border: 2px solid rgba(191, 187, 187, 0.2);
+  padding: 2px 5px;
+  text-align: center;
+  &:hover {
+    border: 2px solid $pimary-color;
+  }
+  &--active {
+    border: 2px solid $pimary-color;
+  }
+}

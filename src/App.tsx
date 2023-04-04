@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { Dispatch } from "./store/store";
 import { ICoords } from "./interfaces/coords";
 import { DotsFlashing } from "./components/loading/DotsFlashing";
-
+import { ICity } from "./interfaces/city";
 interface IToken {
   exp: number;
   iat: number;
@@ -101,7 +101,7 @@ export const App = () => {
   };
 
   return (
-    <div className='main--container'>
+    <div className="main--container">
       {loading ? (
         <DotsFlashing />
       ) : (
