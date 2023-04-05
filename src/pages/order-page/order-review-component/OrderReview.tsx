@@ -10,6 +10,7 @@ import { OrderField } from "./components/OrderField";
 import { Functional } from "./components/functional/Functional";
 import { ITariff } from "../../../interfaces/tariffs";
 import { IVariant } from "../../../interfaces/variant";
+import { TEvent } from "../../../interfaces/event";
 import { TariffOptions } from "./components/tariff/TariffOptions";
 import { TariffVariants } from "./components/tariff-variants/TariffVariants";
 interface IProps {
@@ -41,6 +42,10 @@ export const OrderReview = ({
   const carVariantId = useSelector(
     (state: RootState) => state.order.carVariantId
   );
+  const [startsAtDate, setStartsAtDate] = useState(
+    new Date().toJSON().slice(0, 10)
+  );
+  const [endsAtDate, setEndsAtDate] = useState("");
   const tariffId = useSelector((state: RootState) => state.order.tariffId);
   const dispatch = useDispatch<Dispatch>();
   const location = useLocation();
@@ -54,7 +59,9 @@ export const OrderReview = ({
     (item) => item.id === carVariantId
   );
   const currentTariff = tariffs?.find((tariff) => tariff.id === tariffId);
+
   const childChair = useSelector((state: RootState) => state.order.childChair);
+
   const carEnsurance = useSelector(
     (state: RootState) => state.order.carEnsurance
   );
@@ -112,12 +119,73 @@ export const OrderReview = ({
       navigate("/order/order-location");
     }
   }, []);
-  const handleVariant = (id: IVariant["id"]) => {
-    dispatch.order.setVariantId(id);
+  const handleVariant = (variant: IVariant) => {
+    dispatch.order.setVariantId(variant.id);
+    switch (variant.variant) {
+      case "ONE_DAY": {
+        let newDateState = new Date(startsAtDate);
+        let newDate = new Date(
+          Date.UTC(
+            newDateState.getFullYear(),
+            newDateState.getMonth(),
+            newDateState.getDate() + 1
+          )
+        );
+        setEndsAtDate(newDate.toJSON().slice(0, 10));
+        console.log("?????????", startsAtDate);
+        console.log("!!!!!!!!!!!!!!!", newDate.toJSON().slice(0, 10));
+      }
+    }
   };
   const handleContinueButton = () => {
     handleStatusNavigation();
   };
+  const handleDataPickerStart = (e: TEvent) => {
+    setStartsAtDate(e.target.value);
+  };
+  useEffect(() => {
+    let day2 = new Date(endsAtDate);
+    let day1 = new Date(startsAtDate);
+    let diff = Math.abs(day2.getTime() - day1.getTime());
+    let daysRange = Math.ceil(diff / (1000 * 3600 * 24));
+    if (daysRange === 1) {
+      let currVariant = variants?.find((item) => item.variant === "ONE_DAY");
+      dispatch.order.setVariantId(currVariant!.id);
+      console.log("РАБОАТЕТ", daysRange);
+    } else
+      console.log(
+        "НЕ РАБОАТЕТ",
+        daysRange,
+        "последний день",
+        day2,
+        "первый день",
+        day1
+      );
+  }, [endsAtDate]);
+  useEffect(() => {});
+  const handleDataPickerEnd = (e: TEvent) => {
+    setEndsAtDate(e.target.value);
+    dispatch.order.removeVariantId();
+  };
+  useEffect(() => {
+    let year = new Date(startsAtDate).getFullYear();
+    let month = new Date(startsAtDate).getMonth();
+    let day = new Date(startsAtDate).getDate();
+    let endYear = new Date(endsAtDate).getFullYear();
+    let endMonth = new Date(endsAtDate).getMonth();
+    let endDay = new Date(endsAtDate).getDate();
+    if (year > endYear) {
+      return setEndsAtDate("");
+    } else {
+      if (month > endMonth) {
+        return setEndsAtDate("");
+      } else {
+        if (day >= endDay) {
+          return setEndsAtDate("");
+        }
+      }
+    }
+  }, [startsAtDate]);
   return (
     <div
       className={`orderReview__container orderReview__container${
@@ -171,18 +239,63 @@ export const OrderReview = ({
           />
         )}
       </div>
+      <div className="orderReview__dateTime">
+        {currentTariff && currentTariff?.type === "DAY" && (
+          <>
+            <input
+              key={"start"}
+              type="date"
+              id="start"
+              min={new Date().toJSON().slice(0, 10)}
+              max={new Date(
+                Date.UTC(new Date(startsAtDate).getFullYear(), 11, 31)
+              )
+                .toJSON()
+                .slice(0, 10)}
+              value={startsAtDate}
+              onChange={handleDataPickerStart}
+            />
+            {/* <input type="time" /> */}
+            <input
+              key={"end"}
+              id="end"
+              type="date"
+              min={new Date(
+                Date.UTC(
+                  new Date(startsAtDate).getFullYear(),
+                  new Date(startsAtDate).getMonth(),
+                  new Date(startsAtDate).getDate() + 1
+                )
+              )
+                .toJSON()
+                .slice(0, 10)}
+              max={new Date(
+                Date.UTC(new Date(startsAtDate).getFullYear() + 1, 0, 1)
+              )
+                .toJSON()
+                .slice(0, 10)}
+              value={endsAtDate}
+              onChange={handleDataPickerEnd}
+            />
+            {/* <input type="time" /> */}
+          </>
+        )}
+      </div>
       <div className="orderReview__variants">
-        {currentTariff && <span>Выберите минимальный пакет бронирования</span>}
+        {currentTariff && (
+          <span>или выберите минимальный пакет бронирования</span>
+        )}
         {currentTariff &&
           currentTariff?.type === "DAY" &&
           variants!
             .filter((variant) => variant.variant === "ONE_DAY")
             .map((item) => (
               <TariffVariants
+                key={item.id}
                 currentVariant={currentVariant}
                 handleVariant={handleVariant}
                 variantId={item.id}
-                variant={item.variant}
+                variant={item}
               />
             ))}
         {currentTariff &&
@@ -191,10 +304,11 @@ export const OrderReview = ({
             .filter((variant) => variant.variant !== "ONE_DAY")
             .map((item) => (
               <TariffVariants
+                key={item.id}
                 currentVariant={currentVariant}
                 handleVariant={handleVariant}
                 variantId={item.id}
-                variant={item.variant}
+                variant={item}
               />
             ))}
       </div>

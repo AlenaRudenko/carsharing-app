@@ -51,6 +51,12 @@ export const order = createModel<RootModel>()({
         variantId: payload,
       };
     },
+    removeVariantId: (state) => {
+      return {
+        ...state,
+        variantId: "",
+      };
+    },
     setTariffId: (state, payload: IOrder["tariffId"]) => {
       return {
         ...state,

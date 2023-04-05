@@ -3,8 +3,8 @@ import { IVariant } from "../../../../../interfaces/variant";
 
 interface IProps {
   variantId: string;
-  handleVariant: (id: string) => void;
-  variant: string;
+  handleVariant: (id: IVariant) => void;
+  variant: IVariant;
   currentVariant: IVariant["id"];
 }
 
@@ -19,11 +19,11 @@ export const TariffVariants = ({
       className={`tariffVariant__container tariffVariant__container${
         currentVariant === variantId ? "--active" : ""
       }`}
-      onClick={() => handleVariant(variantId)}
+      onClick={() => handleVariant(variant)}
     >
-      {variant.includes("DAY")
+      {variant.variant.includes("DAY")
         ? "Один день"
-        : variant.includes("ONE_H")
+        : variant.variant.includes("ONE_H")
         ? "Один час"
         : "Три часа"}
     </div>
