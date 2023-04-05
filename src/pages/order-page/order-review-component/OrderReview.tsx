@@ -161,7 +161,7 @@ export const OrderReview = ({
         "первый день",
         day1
       );
-  }, [endsAtDate]);
+  }, [endsAtDate, startsAtDate]);
   useEffect(() => {});
   const handleDataPickerEnd = (e: TEvent) => {
     setEndsAtDate(e.target.value);
@@ -175,13 +175,16 @@ export const OrderReview = ({
     let endMonth = new Date(endsAtDate).getMonth();
     let endDay = new Date(endsAtDate).getDate();
     if (year > endYear) {
-      return setEndsAtDate("");
+      setEndsAtDate("");
+      dispatch.order.removeVariantId();
     } else {
       if (month > endMonth) {
-        return setEndsAtDate("");
+        setEndsAtDate("");
+        dispatch.order.removeVariantId();
       } else {
         if (day >= endDay) {
-          return setEndsAtDate("");
+          setEndsAtDate("");
+          dispatch.order.removeVariantId();
         }
       }
     }
