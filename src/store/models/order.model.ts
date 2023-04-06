@@ -18,6 +18,7 @@ export const order = createModel<RootModel>()({
     childChair: false,
     lifeEnsurance: false,
     carEnsurance: false,
+    price: 0,
   },
   reducers: {
     setCarVariantId: (state, payload: ICarVariant["id"]) => {
@@ -80,6 +81,12 @@ export const order = createModel<RootModel>()({
       return {
         ...state,
         lifeEnsurance: !state.lifeEnsurance,
+      };
+    },
+    setPrice: (state, payload: number) => {
+      return {
+        ...state,
+        price: state.price + payload,
       };
     },
   },

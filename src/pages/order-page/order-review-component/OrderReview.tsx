@@ -13,55 +13,65 @@ import { IVariant } from "../../../interfaces/variant";
 import { TEvent } from "../../../interfaces/event";
 import { TariffOptions } from "./components/tariff/TariffOptions";
 import { TariffVariants } from "./components/tariff-variants/TariffVariants";
+
 interface IProps {
+  services: IService[];
+  cars: ICar[];
+  tariffs: ITariff[];
+  variants: IVariant[];
   addresses: IAddresses[];
   handleStatusNavigation: () => void;
   handleStatus: (status: string) => void;
 }
+interface IService {
+  id: string;
+  title: string;
+  descrintion: string;
+  tariffs: ITariffOptions[];
+}
+interface ITariffOptions {
+  price: number;
+  tariff: string;
+}
 
 interface IState {
   isDisabled: boolean;
+  navPoint: string;
+  startsAtDate: string;
+  endsAtDate: string;
+  startsAtTime: string;
+  endsAtTime: string;
 }
 interface IAddresses {
   name: string;
   id: string;
 }
 export const OrderReview = ({
+  services,
+  cars,
+  tariffs,
+  variants,
   addresses,
   handleStatusNavigation,
   handleStatus,
 }: IProps) => {
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [cars, setCars] = useState<ICar[]>();
-  const [tariffs, setTariffs] = useState<ITariff[]>();
-  const [variants, setVariants] = useState<IVariant[]>();
-  const [navPoint, setNavPoint] = useState("");
+  const [isDisabled, setIsDisabled] = useState<IState["isDisabled"]>(false);
+  const [navPoint, setNavPoint] = useState<IState["navPoint"]>("");
+  const [startsAtDate, setStartsAtDate] = useState<IState["startsAtDate"]>(
+    new Date().toJSON().slice(0, 10)
+  );
+  const [endsAtDate, setEndsAtDate] = useState<IState["endsAtDate"]>("");
+  const [startsAtTime, setStartsAtTime] = useState<IState["startsAtTime"]>("");
+  const [endsAtTime, setEndsAtTime] = useState<IState["endsAtTime"]>("");
+
   const carId = useSelector((state: RootState) => state.order.carId);
   const cityId = useSelector((state: RootState) => state.order.cityId);
   const addressId = useSelector((state: RootState) => state.order.addressId);
   const carVariantId = useSelector(
     (state: RootState) => state.order.carVariantId
   );
-  const [startsAtDate, setStartsAtDate] = useState(
-    new Date().toJSON().slice(0, 10)
-  );
-  const [endsAtDate, setEndsAtDate] = useState("");
   const tariffId = useSelector((state: RootState) => state.order.tariffId);
-  const dispatch = useDispatch<Dispatch>();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const functional = ["Удаленный прогрев", "Бортовой компьютер", "Полный бак"];
-  const selectedCar = useMemo(() => {
-    return cars?.find((car) => car.id === carId);
-  }, [cars, carId]);
-  const selectedAddress = addresses?.find((item) => item.id === addressId);
-  const variantW = selectedCar?.variants.find(
-    (item) => item.id === carVariantId
-  );
-  const currentTariff = tariffs?.find((tariff) => tariff.id === tariffId);
-
   const childChair = useSelector((state: RootState) => state.order.childChair);
-
   const carEnsurance = useSelector(
     (state: RootState) => state.order.carEnsurance
   );
@@ -71,6 +81,23 @@ export const OrderReview = ({
   const lifeEnsurance = useSelector(
     (state: RootState) => state.order.lifeEnsurance
   );
+
+  const dispatch = useDispatch<Dispatch>();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const functional = ["Удаленный прогрев", "Бортовой компьютер", "Полный бак"];
+
+  const selectedCar = useMemo(() => {
+    return cars?.find((car) => car.id === carId);
+  }, [cars, carId]);
+
+  const selectedAddress = addresses?.find((item) => item.id === addressId);
+  const variantW = selectedCar?.variants.find(
+    (item) => item.id === carVariantId
+  );
+  const currentTariff = tariffs?.find((tariff) => tariff.id === tariffId);
+
   //смена статуса кнопки и статусов навигации сверху
   useEffect(() => {
     if (location.pathname === "/order/order-location" && addressId) {
@@ -106,19 +133,14 @@ export const OrderReview = ({
     }
   }, [location.pathname]);
 
-  useEffect(() => {
-    Api.getCars().then((response) => setCars(response.data));
-    Api.getTariffs().then((response) => setTariffs(response.data));
-    Api.getVariants().then((response) => {
-      setVariants(response.data);
-      console.log("варианты", response.data);
-    });
-  }, []);
+  //сброс всего к началу заказа после одновления и возврат на страницу выбора пункта выдачи
   useEffect(() => {
     if (location.pathname !== "/order/order-location" && !carId && !addressId) {
       navigate("/order/order-location");
     }
   }, []);
+
+  //обработчик варианта бронирования
   const handleVariant = (variant: IVariant) => {
     dispatch.order.setVariantId(variant.id);
     switch (variant.variant) {
@@ -132,17 +154,48 @@ export const OrderReview = ({
           )
         );
         setEndsAtDate(newDate.toJSON().slice(0, 10));
-        console.log("?????????", startsAtDate);
-        console.log("!!!!!!!!!!!!!!!", newDate.toJSON().slice(0, 10));
       }
     }
   };
+
+  //переход на следующий уровень бронирования
   const handleContinueButton = () => {
     handleStatusNavigation();
   };
+
+  //обработчик ввода даты начала бронирования
   const handleDataPickerStart = (e: TEvent) => {
     setStartsAtDate(e.target.value);
   };
+
+  const handleTimePickerStart = (e: TEvent) => {
+    setStartsAtTime(e.target.value);
+    setEndsAtTime(e.target.value);
+  };
+
+  //хук ввода времени бронирования поминутный тариф
+  useEffect(() => {
+    let year = new Date().getFullYear();
+    let month = new Date().getMonth();
+    let day = new Date().getDate();
+    let hour = new Date().getHours();
+    let minutes = new Date().getMinutes();
+    let newHours = startsAtTime.split(":").map((i) => +i)[0];
+    let newMinutes = startsAtTime.split(":").map((i) => +i)[1];
+    let currentYear = new Date(startsAtDate).getFullYear();
+    let currentMonth = new Date(startsAtDate).getMonth();
+    let currentDay = new Date(startsAtDate).getDate();
+    if (year === currentYear && month === currentMonth && day === currentDay) {
+      if (hour > newHours) {
+        setStartsAtTime("");
+      } else {
+        if (hour === newHours && minutes > newMinutes) {
+          setStartsAtTime("");
+        }
+      }
+    }
+  }, [startsAtTime]);
+  //хук варианта одного дня и сет варианта в редакс
   useEffect(() => {
     let day2 = new Date(endsAtDate);
     let day1 = new Date(startsAtDate);
@@ -151,22 +204,19 @@ export const OrderReview = ({
     if (daysRange === 1) {
       let currVariant = variants?.find((item) => item.variant === "ONE_DAY");
       dispatch.order.setVariantId(currVariant!.id);
-      console.log("РАБОАТЕТ", daysRange);
-    } else
-      console.log(
-        "НЕ РАБОАТЕТ",
-        daysRange,
-        "последний день",
-        day2,
-        "первый день",
-        day1
-      );
+    }
   }, [endsAtDate, startsAtDate]);
-  useEffect(() => {});
+
+  //обработчик ввода даты конца бронирования
   const handleDataPickerEnd = (e: TEvent) => {
     setEndsAtDate(e.target.value);
     dispatch.order.removeVariantId();
   };
+  const handleTimePickerEnd = (e: TEvent) => {
+    setEndsAtTime(e.target.value);
+  };
+
+  //хук запрета бронирования на следующий год
   useEffect(() => {
     let year = new Date(startsAtDate).getFullYear();
     let month = new Date(startsAtDate).getMonth();
@@ -258,7 +308,23 @@ export const OrderReview = ({
               value={startsAtDate}
               onChange={handleDataPickerStart}
             />
-            {/* <input type="time" /> */}
+            <input
+              key={"startDayMin"}
+              value={startsAtTime}
+              onChange={handleTimePickerStart}
+              type="time"
+              min={new Date(
+                Date.UTC(
+                  new Date(startsAtDate).getFullYear(),
+                  new Date(startsAtDate).getMonth(),
+                  new Date(startsAtDate).getDate(),
+                  new Date(startsAtDate).getHours(),
+                  new Date(startsAtDate).getMinutes()
+                )
+              )
+                .toJSON()
+                .slice(0, 10)}
+            />
             <input
               key={"end"}
               id="end"
@@ -280,7 +346,56 @@ export const OrderReview = ({
               value={endsAtDate}
               onChange={handleDataPickerEnd}
             />
-            {/* <input type="time" /> */}
+            <input
+              key={"endDayMin"}
+              value={endsAtTime}
+              onChange={handleTimePickerStart}
+              type="time"
+              min={new Date(
+                Date.UTC(
+                  new Date(startsAtDate).getFullYear(),
+                  new Date(startsAtDate).getMonth(),
+                  new Date(startsAtDate).getDate(),
+                  new Date(startsAtDate).getHours(),
+                  new Date(startsAtDate).getMinutes()
+                )
+              )
+                .toJSON()
+                .slice(0, 10)}
+            />
+          </>
+        )}
+        {currentTariff && currentTariff?.type === "MINUTE" && (
+          <>
+            <input
+              type="date"
+              key={"dateMin"}
+              value={startsAtDate}
+              onChange={handleDataPickerStart}
+              min={new Date().toJSON().slice(0, 10)}
+              max={new Date(
+                Date.UTC(new Date(startsAtDate).getFullYear(), 11, 31)
+              )
+                .toJSON()
+                .slice(0, 10)}
+            />
+            <input
+              key={"timeMin"}
+              value={startsAtTime}
+              onChange={handleTimePickerStart}
+              type="time"
+              min={new Date(
+                Date.UTC(
+                  new Date(startsAtDate).getFullYear(),
+                  new Date(startsAtDate).getMonth(),
+                  new Date(startsAtDate).getDate(),
+                  new Date(startsAtDate).getHours(),
+                  new Date(startsAtDate).getMinutes()
+                )
+              )
+                .toJSON()
+                .slice(0, 10)}
+            />
           </>
         )}
       </div>

@@ -16,6 +16,10 @@ import { AuthService } from "./../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { Fragment } from "react";
 import { ICoords } from "../../interfaces/coords";
+import { ICar } from "../../interfaces/car";
+import { ICity } from "../../interfaces/city";
+import { IVariant } from "../../interfaces/variant";
+import { ITariff } from "../../interfaces/tariffs";
 import { Api } from "../../services/api.service";
 
 interface IState {
@@ -60,17 +64,77 @@ export const Order = ({
   const [paddingHeader, setPaddingHeader] = useState("20px 0px 50px 0px");
   const [address, setAddress] = useState("");
   const [status, setStatus] = useState<IState["status"]>(["order-location"]);
-
+  const [cars, setCars] = useState<ICar[]>([]);
+  const [tariffs, setTariffs] = useState<ITariff[]>([]);
+  const [variants, setVariants] = useState<IVariant[]>([]);
+  const [cities, setCities] = useState<ICity[]>([]);
   const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
   const location = useLocation();
+
+  const services = [
+    {
+      id: "1",
+      title: "Детское кресло",
+      descrintion: "Кресло подходит для перевозки детей весом от 9 до 36 кг",
+      tariffs: [
+        {
+          price: 50,
+          tariff: "min",
+        },
+        {
+          price: 200,
+          tariff: "day",
+        },
+      ],
+    },
+    {
+      id: "2",
+      title: "Страхование жизни и здоровья",
+      descrintion:
+        "Действует в случае травм, инвалидности или смерти застрахованного. Застрахованными считаются все пассажиры (если их количество не превышает вместимость транспорта)",
+      tariffs: [
+        {
+          price: 0.5,
+          tariff: "min",
+        },
+        {
+          price: 999,
+          tariff: "day",
+        },
+      ],
+    },
+    {
+      id: "3",
+      title: "КАСКО",
+      descrintion:
+        "КАСКО помогает сократить размер выплаты, если водитель виновен в аварии. Если авария произошла по вине пользователя или виновное лицо не установлено, то пользователь возмещает реальный ущерб, но не более 30 000 ₽",
+      tariffs: [
+        {
+          price: 2,
+          tariff: "min",
+        },
+        {
+          price: 1500,
+          tariff: "day",
+        },
+      ],
+    },
+  ];
 
   useEffect(() => {
     if (!AuthService.getAccessToken()) {
       navigate("/");
     }
   });
-
+  useEffect(() => {
+    Api.getCars().then((response) => setCars(response.data));
+    Api.getTariffs().then((response) => setTariffs(response.data));
+    Api.getVariants().then((response) => {
+      setVariants(response.data);
+    });
+    Api.getCities().then((response) => setCities(response.data));
+  }, []);
   //смена отступов
   useEffect(() => {
     document.documentElement.clientWidth < 992
@@ -78,14 +142,17 @@ export const Order = ({
       : setPaddingHeader("20px 0px 50px 0px");
   }, []);
 
+//переход по кнопке на следующий уровень заказа
   const handleStatusNavigation = () => {
     navigate(fullPathNames[fullPathNames.indexOf(location.pathname) + 1]);
   };
 
+//добавка нового статуса если все условия выполнены и загорание навигации сверху разрешения перехода на следующий уровень
   const handleStatusOrder = (point: string) => {
     setStatus([...status, paths[paths.indexOf(point) + 1]]);
   };
 
+//сет адреса в редакс
   const handleSetCurrentAddress = (address: IAddress) => {
     setAddress(address.name);
     dispatch.order.setAddressId(address.id);
@@ -128,6 +195,7 @@ export const Order = ({
               path="order-location"
               element={
                 <OrderLocation
+                  cities={cities}
                   handleSetCurrentAddress={handleSetCurrentAddress}
                   addresses={addresses}
                   localCity={localCity}
@@ -135,12 +203,25 @@ export const Order = ({
                 />
               }
             />
-            <Route path="order-model" element={<OrderModel />} />
-            <Route path="order-additionally" element={<OrderAdditionally />} />
+            <Route path="order-model" element={<OrderModel cars={cars} />} />
+            <Route
+              path="order-additionally"
+              element={
+                <OrderAdditionally
+                  cars={cars}
+                  tariffs={tariffs}
+                  services={services}
+                />
+              }
+            />
             <Route path="order-full" element={<OrderFull />} />
           </Routes>
         </div>
         <OrderReview
+        services={services}
+          cars={cars}
+          tariffs={tariffs}
+          variants={variants}
           addresses={addresses}
           handleStatusNavigation={handleStatusNavigation}
           handleStatus={handleStatusOrder}

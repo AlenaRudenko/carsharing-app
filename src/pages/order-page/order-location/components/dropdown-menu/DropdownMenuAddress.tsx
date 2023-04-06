@@ -7,7 +7,9 @@ import "./styles.scss";
 import { TEvent } from "../../../../../interfaces/event";
 import { ICity } from "../../../../../interfaces/city";
 import { Dispatch } from "../../../../../store/store";
+
 interface IProps {
+  cities: ICity[];
   addresses: IAddress[];
   handleSetCurrentAddress: (address: IAddress) => void;
 }
@@ -21,12 +23,13 @@ interface IState {
   address: IAddress;
 }
 export const DropdownMenuAddress = ({
+  cities,
   addresses,
   handleSetCurrentAddress,
 }: IProps) => {
   const [currentAddress, setCurrentInputAddress] = useState("");
   const [local, setLocal] = useState("");
-  const [cities, setCities] = useState<ICity[]>([]);
+
   const addressCheck = addresses.find(
     (address) => address.name === currentAddress
   );
@@ -42,7 +45,6 @@ export const DropdownMenuAddress = ({
     setCurrentInputAddress(e.target.value);
   };
   useEffect(() => {
-    Api.getCities().then((response) => setCities(response.data));
     const localCity = LocalStore.getCurrentCity();
     if (localCity) {
       setLocal(localCity);

@@ -1,33 +1,40 @@
 import "./styles.scss";
 import { AppIcon } from "../../../../../components/app-icon/AppIcon";
+import { Api } from "../../../../../services/api.service";
+import { ITariff } from "../../../../../interfaces/tariffs";
+import { RootState } from "../../../../../store/store";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 interface IProps {
   id: string;
   title: string;
   descrintion: string;
-  price: number;
-  tariff: string;
+  tariffs: ITariffsOptions[];
+  allTariffs: ITariff[];
   handleService: (id: string) => void;
-  currentServices: string[];
   carEnsurance: boolean;
   lifeEnsurance: boolean;
   childChair: boolean;
 }
 
+interface ITariffsOptions {
+  price: number;
+  tariff: string;
+}
 export const Service = ({
   id,
   title,
   descrintion,
-  price,
-  tariff,
+  tariffs,
+  allTariffs,
   handleService,
-  currentServices,
   carEnsurance,
   lifeEnsurance,
   childChair,
 }: IProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [fontSize, setFontSize] = useState("small");
+
   useEffect(() => {
     document.documentElement.clientWidth < 992
       ? setFontSize("xx-small")
@@ -35,6 +42,15 @@ export const Service = ({
       ? setFontSize("small")
       : setFontSize("11px");
   }, []);
+
+  const currentTariffId = useSelector(
+    (state: RootState) => state.order.tariffId
+  );
+
+  const currentTariff = allTariffs?.find(
+    (tariff) => tariff.id === currentTariffId
+  );
+
   return (
     <div
       onClick={() => handleService(title)}
@@ -74,8 +90,26 @@ export const Service = ({
             : "Heart"
         }
       />
-      <span>{price}</span>
-      {tariff === "min" ? <span>руб/мин</span> : <span>руб</span>}
+      {currentTariff && currentTariff.type === "DAY" && (
+        <>
+          {tariffs
+            .filter((e) => e.tariff === "day")
+            .map((value: ITariffsOptions) => (
+              <span>{value.price}</span>
+            ))}
+          <span>руб/сутки</span>
+        </>
+      )}
+      {currentTariff && currentTariff.type === "MINUTE" && (
+        <>
+          {tariffs
+            .filter((e) => e.tariff === "min")
+            .map((value: ITariffsOptions) => (
+              <span>{value.price}</span>
+            ))}
+          <span>руб/мин</span>
+        </>
+      )}
     </div>
   );
 };

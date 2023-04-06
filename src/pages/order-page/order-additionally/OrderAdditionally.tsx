@@ -11,13 +11,27 @@ import { ITariff } from "../../../interfaces/tariffs";
 import { Tariff } from "./components/tariff/Tariff";
 import { Service } from "./components/service/Service";
 
-export const OrderAdditionally = () => {
-  const [cars, setCars] = useState<ICar[]>([]);
-  const [tariffs, setTariffs] = useState<ITariff[]>([]);
+interface IProps {
+  services: IService[];
+  tariffs: ITariff[];
+  cars: ICar[];
+}
+
+interface IService {
+  id: string;
+  title: string;
+  descrintion: string;
+  tariffs: ITariffOptions[];
+}
+interface ITariffOptions {
+  price: number;
+  tariff: string;
+}
+
+export const OrderAdditionally = ({ cars, tariffs, services }: IProps) => {
   const [currentServices, setCurrentServices] = useState<string[]>(
     [] as string[]
   );
-
   const dispatch = useDispatch<Dispatch>();
 
   const currentCarId = useSelector((state: RootState) => state.order.carId);
@@ -34,63 +48,27 @@ export const OrderAdditionally = () => {
   const lifeEnsurance = useSelector(
     (state: RootState) => state.order.lifeEnsurance
   );
-  useEffect(() => {
-    Api.getCars().then((response) => setCars(response.data));
-  }, []);
-
-  useEffect(() => {
-    Api.getTariffs().then((response) => setTariffs(response.data));
-  }, []);
-
-  const services = [
-    {
-      id: "1",
-      title: "Детское кресло",
-      descrintion: "Кресло подходит для перевозки детей весом от 9 до 36 кг",
-      price: 50,
-      tariff: "fix",
-    },
-    {
-      id: "2",
-      title: "Страхование жизни и здоровья",
-      descrintion:
-        "Действует в случае травм, инвалидности или смерти застрахованного. Застрахованными считаются все пассажиры (если их количество не превышает вместимость транспорта)",
-      price: 0.5,
-      tariff: "min",
-    },
-    {
-      id: "3",
-      title: "КАСКО",
-      descrintion:
-        "КАСКО помогает сократить размер выплаты, если водитель виновен в аварии. Если авария произошла по вине пользователя или виновное лицо не установлено, то пользователь возмещает реальный ущерб, но не более 30 000 ₽",
-      price: 2,
-      tariff: "min",
-    },
-  ];
 
   const selectedCar = useMemo(() => {
     return cars.find((car) => car.id === currentCarId);
   }, [cars, currentCarId]);
 
+  //сет варианта автомобиля цвет
   const handleCurrentVariant = (variant: ICarVariant["id"]) => {
     return dispatch.order.setCarVariantId(variant);
   };
   //выбор и сет тарифа в редакс
-  const handleTariff = (tariff: ITariff["id"]) => {
-    return dispatch.order.setTariffId(tariff);
+  const handleTariff = (tariff: ITariff) => {
+    return dispatch.order.setTariffId(tariff.id);
   };
+
+  //toggle доп сервисов
   const handleSetServices = (title: string) => {
     return title === "Детское кресло"
       ? dispatch.order.toggleChildChair()
       : title === "Страхование жизни и здоровья"
       ? dispatch.order.toggleLifeEnsurance()
       : dispatch.order.toggleCarEnsurance();
-  };
-  const handleService = (title: string) => {
-    handleSetServices(title);
-    if (currentServices.includes(title)) {
-      setCurrentServices([...currentServices.filter((item) => item !== title)]);
-    } else setCurrentServices((prevState) => [...prevState, title]);
   };
 
   return (
@@ -117,9 +95,7 @@ export const OrderAdditionally = () => {
             <Tariff
               key={tariff.id}
               currentTariffId={currentTariffId}
-              id={tariff.id}
-              type={tariff.type}
-              price={tariff.price}
+              tariff={tariff}
               handleTariff={handleTariff}
             />
           ))}
@@ -128,17 +104,16 @@ export const OrderAdditionally = () => {
         <div className="orderAdd__services">
           {services.map((service) => (
             <Service
+              allTariffs={tariffs}
               carEnsurance={carEnsurance}
               lifeEnsurance={lifeEnsurance}
               childChair={childChair}
-              currentServices={currentServices}
-              handleService={handleService}
+              handleService={handleSetServices}
               key={service.title}
               id={service.id}
               title={service.title}
               descrintion={service.descrintion}
-              price={service.price}
-              tariff={service.tariff}
+              tariffs={service.tariffs}
             />
           ))}
         </div>

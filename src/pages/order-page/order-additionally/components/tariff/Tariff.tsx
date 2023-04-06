@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import "./styles.scss";
 import { TariffContent } from "./TariffContent";
+import { ITariff } from "../../../../../interfaces/tariffs";
 
 interface IProps {
-  id: string;
-  type: string;
-  price: number;
+  tariff: ITariff;
   currentTariffId: string;
-  handleTariff: (id: string) => void;
+  handleTariff: (tariff: ITariff) => void;
 }
 interface IState {
   textParams: IText;
@@ -18,13 +17,7 @@ interface IText {
   priceSize: string;
   headlingSize: string;
 }
-export const Tariff = ({
-  price,
-  type,
-  id,
-  handleTariff,
-  currentTariffId,
-}: IProps) => {
+export const Tariff = ({ tariff, handleTariff, currentTariffId }: IProps) => {
   const [textParams, setTextParams] = useState<IState["textParams"]>({
     fontSize: "small",
     marginBottom: "10px",
@@ -50,7 +43,7 @@ export const Tariff = ({
     },
   ];
   const handleOnClick = () => {
-    handleTariff(id);
+    handleTariff(tariff);
   };
   useEffect(() => {
     document.documentElement.clientWidth < 992
@@ -80,20 +73,20 @@ export const Tariff = ({
   return (
     <div
       className={`tariff__container tariff__container${
-        currentTariffId === id && "--active"
+        currentTariffId === tariff.id && "--active"
       }`}
       onClick={handleOnClick}
     >
       {" "}
       <h1 style={{ fontSize: textParams.headlingSize, marginBottom: "10px" }}>
-        {type === "DAY" ? "Суточный" : "Поминутный"}
+        {tariff.type === "DAY" ? "Суточный" : "Поминутный"}
       </h1>
       <div className="tariff__container__price">
         <TariffContent
           textParams={textParams}
           tariffParams={tariffParams}
-          price={price}
-          tariff={type}
+          price={tariff.price}
+          tariff={tariff.type}
         />
       </div>
     </div>

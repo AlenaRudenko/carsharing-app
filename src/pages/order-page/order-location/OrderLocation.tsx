@@ -3,10 +3,12 @@ import { YandexMap } from "../../../YandexMap/YandexMap";
 import "./styles.scss";
 import { DropdownMenuAddress } from "./components/dropdown-menu/DropdownMenuAddress";
 import { ICoords } from "../../../interfaces/coords";
+import { ICity } from "../../../interfaces/city";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "../../../store/store";
 
 interface IProps {
+  cities: ICity[];
   addresses: IAddress[];
   localCity: string;
   coordsLocation: ICoords;
@@ -27,6 +29,7 @@ export const OrderLocation = ({
   localCity,
   coordsLocation,
   addresses,
+  cities
 }: IProps) => {
   const [value, setValue] = useState<IState["value"]>("");
 
@@ -39,13 +42,14 @@ export const OrderLocation = ({
 
   return (
     <>
-      <div className='orderLocation__container'>
+      <div className="orderLocation__container">
         <DropdownMenuAddress
+        cities={cities}
           handleSetCurrentAddress={handleSetCurrentAddress}
           addresses={addresses}
         />
 
-        <div id='map' className='orderLocation__map'>
+        <div id="map" className="orderLocation__map">
           <YandexMap coordsLocation={coordsLocation} />
         </div>
       </div>

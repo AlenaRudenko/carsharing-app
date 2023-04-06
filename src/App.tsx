@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "./App.css";
+import "./App.scss";
 import { MainContent } from "./pages/main-page/MainContent";
 import jwt_decode from "jwt-decode";
 import { AuthService } from "./services/auth.service";
