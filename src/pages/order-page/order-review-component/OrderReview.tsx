@@ -13,6 +13,7 @@ import { IVariant } from "../../../interfaces/variant";
 import { TEvent } from "../../../interfaces/event";
 import { TariffOptions } from "./components/tariff/TariffOptions";
 import { TariffVariants } from "./components/tariff-variants/TariffVariants";
+import { TimePickerDay } from "./components/time-picker/TimePickerDay";
 
 interface IProps {
   services: IService[];
@@ -292,6 +293,7 @@ export const OrderReview = ({
           />
         )}
       </div>
+      <TimePickerDay />
       <div className="orderReview__dateTime">
         {currentTariff && currentTariff?.type === "DAY" && (
           <>
