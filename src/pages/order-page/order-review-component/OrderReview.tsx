@@ -64,7 +64,7 @@ export const OrderReview = ({
   const [endsAtDate, setEndsAtDate] = useState<IState["endsAtDate"]>("");
   const [startsAtTime, setStartsAtTime] = useState<IState["startsAtTime"]>("");
   const [endsAtTime, setEndsAtTime] = useState<IState["endsAtTime"]>("");
-
+  const [duration, setDuration] = useState(0);
   const carId = useSelector((state: RootState) => state.order.carId);
   const cityId = useSelector((state: RootState) => state.order.cityId);
   const addressId = useSelector((state: RootState) => state.order.addressId);
@@ -240,6 +240,9 @@ export const OrderReview = ({
       }
     }
   }, [startsAtDate]);
+  const handleTimeDuration = (min: number) => {
+    setDuration(min);
+  };
   return (
     <div
       className={`orderReview__container orderReview__container${
@@ -293,8 +296,23 @@ export const OrderReview = ({
           />
         )}
       </div>
-      <TimePickerDay />
-      <div className="orderReview__dateTime">
+      {currentTariff && (
+        <>
+          <TimePickerDay
+            tariffs={tariffs}
+            currentTariff={currentTariff}
+            handleTimeDuration={handleTimeDuration}
+          />
+          {currentTariff.type === "MINUTE" && (
+            <span>{`${duration} минут`}</span>
+          )}
+          {currentTariff.type === "DAY" && (
+            <span>{`${Math.ceil(duration / 1140)} дней`}</span>
+          )}
+        </>
+      )}
+
+      {/* <div className="orderReview__dateTime">
         {currentTariff && currentTariff?.type === "DAY" && (
           <>
             <input
@@ -400,7 +418,7 @@ export const OrderReview = ({
             />
           </>
         )}
-      </div>
+      </div> */}
       <div className="orderReview__variants">
         {currentTariff && (
           <span>или выберите минимальный пакет бронирования</span>
