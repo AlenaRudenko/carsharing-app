@@ -2,6 +2,8 @@ import "./styles.scss";
 import { IVariant } from "../../../../../interfaces/variant";
 
 interface IProps {
+  variants: IVariant[];
+  currentTariff: ITariff;
   variantId: string;
   handleVariant: (id: IVariant) => void;
   variant: IVariant;
@@ -9,13 +11,16 @@ interface IProps {
 }
 
 export const TariffVariants = ({
+  variants,
+  currentTariff,
   variant,
   variantId,
   handleVariant,
   currentVariant,
 }: IProps) => {
   return (
-    <div
+    {variants!.filter((variant) => variant.variant !== "ONE_DAY").map((item) => (
+         <div key={item.id}
       className={`tariffVariant__container tariffVariant__container${
         currentVariant === variantId ? "--active" : ""
       }`}
@@ -27,5 +32,7 @@ export const TariffVariants = ({
         ? "Один час"
         : "Три часа"}
     </div>
+    ))}
+ 
   );
 };

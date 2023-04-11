@@ -304,10 +304,10 @@ export const OrderReview = ({
             handleTimeDuration={handleTimeDuration}
           />
           {currentTariff.type === "MINUTE" && (
-            <span>{`${duration} минут`}</span>
+            <span>{`${duration / 60000} минут`}</span>
           )}
           {currentTariff.type === "DAY" && (
-            <span>{`${Math.ceil(duration / 1140)} дней`}</span>
+            <span>{`${Math.ceil(duration / (1000 * 3600 * 24))} дней`}</span>
           )}
         </>
       )}

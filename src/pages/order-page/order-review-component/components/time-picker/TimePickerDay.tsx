@@ -92,7 +92,7 @@ export const TimePickerDay = ({
     let diff = Math.abs(day2.getTime() - day1.getTime());
     let hoursRange = Math.trunc(diff / (1000 * 3600));
     let daysRange = Math.ceil(diff / (1000 * 3600 * 24));
-    handleTimeDuration(diff / 60000);
+    handleTimeDuration(diff);
     if (hoursRange >= 24 && currentTariff.type === "MINUTE") {
       dispatch.order.setTariffId(anotherTariff?.id);
     }
