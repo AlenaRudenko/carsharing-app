@@ -39,31 +39,12 @@ export const OrderTime = ({
       </>
       <div className="orderReview__variants">
         <span>или выберите минимальный пакет бронирования</span>
-        {currentTariff?.type === "DAY" &&
-          variants!
-            .filter((variant) => variant.variant === "ONE_DAY")
-            .map((item) => (
-              <TariffVariants
-                key={item.id}
-                currentVariant={currentVariant}
-                handleVariant={handleVariant}
-                currentTariff={currentTariff}
-                variants={variants}
-              />
-            ))}
-        {currentTariff &&
-          currentTariff?.type === "MINUTE" &&
-          variants!
-            .filter((variant) => variant.variant !== "ONE_DAY")
-            .map((item) => (
-              <TariffVariants
-                variants={variants}
-                currentTariff={currentTariff}
-                key={item.id}
-                currentVariant={currentVariant}
-                handleVariant={handleVariant}
-              />
-            ))}
+        <TariffVariants
+          currentVariant={currentVariant}
+          handleVariant={handleVariant}
+          currentTariff={currentTariff}
+          variants={variants}
+        />
       </div>
     </div>
   );

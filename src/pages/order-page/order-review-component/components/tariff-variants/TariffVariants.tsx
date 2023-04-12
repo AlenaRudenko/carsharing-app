@@ -17,7 +17,6 @@ export const TariffVariants = ({
 }: IProps) => {
   return (
     <>
-      <span>или выберите минимальный пакет бронирования</span>
       {currentTariff?.type === "DAY"
         ? variants!
             .filter((variant) => variant.variant === "ONE_DAY")
