@@ -2,17 +2,26 @@ import { TimePickerDay } from "../time-picker/TimePickerDay";
 import { TariffVariants } from "../tariff-variants/TariffVariants";
 import { ITariff } from "../../../../../interfaces/tariffs";
 import { IVariant } from "../../../../../interfaces/variant";
+import { useState } from "react";
 interface IProps {
   tariffs: ITariff[];
   variants: IVariant[];
   currentTariff: ITariff;
   currentVariant: IVariant["id"];
-  handleTimeDuration: (min: number) => void;
   handleVariant: (id: IVariant) => void;
-  duration: number;
 }
 
-export const OrderTime = () => {
+export const OrderTime = ({
+  tariffs,
+  variants,
+  currentTariff,
+  currentVariant,
+  handleVariant,
+}: IProps) => {
+  const [duration, setDuration] = useState(0);
+  const handleTimeDuration = (min: number) => {
+    setDuration(min);
+  };
   return (
     <div>
       <>
@@ -38,8 +47,8 @@ export const OrderTime = () => {
                 key={item.id}
                 currentVariant={currentVariant}
                 handleVariant={handleVariant}
-                variantId={item.id}
-                variant={item}
+                currentTariff={currentTariff}
+                variants={variants}
               />
             ))}
         {currentTariff &&
@@ -53,8 +62,6 @@ export const OrderTime = () => {
                 key={item.id}
                 currentVariant={currentVariant}
                 handleVariant={handleVariant}
-                variantId={item.id}
-                variant={item}
               />
             ))}
       </div>

@@ -85,7 +85,6 @@ export const TimePickerDay = ({
       }
     }
   }, [startsAt]);
-  useEffect(() => {}, [startsAt, endsAt]);
   useEffect(() => {
     let day2 = new Date(endsAt);
     let day1 = new Date(startsAt);
@@ -94,7 +93,7 @@ export const TimePickerDay = ({
     let daysRange = Math.ceil(diff / (1000 * 3600 * 24));
     handleTimeDuration(diff);
     if (hoursRange >= 24 && currentTariff.type === "MINUTE") {
-      dispatch.order.setTariffId(anotherTariff?.id);
+      dispatch.order.setTariffId(anotherTariff!.id);
     }
 
     console.log("количество минут", diff / 60000);

@@ -4,9 +4,9 @@ interface IProps {
   text: string;
 }
 
-export const Functional = ({ text }: IProps) => {
+export const EquipmentComponent = ({ text }: IProps) => {
   return (
-    <div className="functional__container">
+    <div className="equipment__container">
       <span>{text}</span>
     </div>
   );

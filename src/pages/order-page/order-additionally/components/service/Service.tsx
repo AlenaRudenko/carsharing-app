@@ -95,7 +95,7 @@ export const Service = ({
           {tariffs
             .filter((e) => e.tariff === "day")
             .map((value: ITariffsOptions) => (
-              <span>{value.price}</span>
+              <span key={value.tariff}>{value.price}</span>
             ))}
           <span>руб/сутки</span>
         </>
@@ -105,7 +105,7 @@ export const Service = ({
           {tariffs
             .filter((e) => e.tariff === "min")
             .map((value: ITariffsOptions) => (
-              <span>{value.price}</span>
+              <span key={value.tariff}>{value.price}</span>
             ))}
           <span>руб/мин</span>
         </>
