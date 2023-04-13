@@ -1,33 +1,48 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "../../../../../store/store";
 import { ITariff } from "../../../../../interfaces/tariffs";
+import { IVariant } from "../../../../../interfaces/variant";
+import { RootState } from "../../../../../store/store";
+import { TEvent } from "../../../../../interfaces/event";
 
 interface IProps {
   currentTariff: ITariff;
   tariffs: ITariff[];
+  variants: IVariant[];
   handleTimeDuration: (min: number) => void;
+  startsAt: string;
+  endsAt: string;
+  handleChangeStartPicker: (e: TEvent) => void;
+  handleChangeStartTime: (time: string) => void;
+  handleChangeEndPicker: (e: TEvent) => void;
+  handleChangeEndTime: (time: string) => void;
 }
 
 export const TimePickerDay = ({
+  startsAt,
+  endsAt,
   tariffs,
+  variants,
   currentTariff,
   handleTimeDuration,
+  handleChangeStartPicker,
+  handleChangeStartTime,
+  handleChangeEndPicker,
+  handleChangeEndTime,
 }: IProps) => {
-  const [startsAt, setStartsAt] = useState(new Date().toJSON().slice(0, 16));
-  const [endsAt, setEndsAt] = useState("");
-
   const anotherTariff = tariffs.find(
     (tariff) => tariff.id !== currentTariff?.id
   );
-  const dispatch = useDispatch<Dispatch>();
 
-  const handleChangeStart = (e: any) => {
-    setStartsAt(e.target.value);
-  };
-  const handleChangeEnd = (e: any) => {
-    setEndsAt(e.target.value);
-  };
+  const tariffVariant = useSelector(
+    (state: RootState) => state.order.variantId
+  );
+  const currentTariffVariant = variants.find(
+    (variant: IVariant) => variant.id === tariffVariant
+  );
+
+  const dispatch = useDispatch<Dispatch>();
 
   useEffect(() => {
     let year = new Date(startsAt).getFullYear();
@@ -41,18 +56,18 @@ export const TimePickerDay = ({
     let endHour = new Date(endsAt).getHours();
     let endMin = new Date(endsAt).getMinutes();
     if (year > endYear) {
-      setEndsAt("");
+      handleChangeEndTime("");
     } else {
       if (month > endMonth) {
-        setEndsAt("");
+        handleChangeEndTime("");
       } else {
         if (day > endDay) {
-          setEndsAt("");
+          handleChangeEndTime("");
         } else {
           if (day === endDay && hour > endHour) {
-            setEndsAt("");
+            handleChangeEndTime("");
           } else if (day === endDay && hour === endHour && min > endMin) {
-            setEndsAt("");
+            handleChangeEndTime("");
           }
         }
       }
@@ -64,23 +79,17 @@ export const TimePickerDay = ({
     let day = new Date().getDate();
     let hour = new Date().getHours();
     let minutes = new Date().getMinutes();
-    let newHours = startsAt
-      .slice(-5)
-      .split(":")
-      .map((i) => +i)[0];
-    let newMinutes = startsAt
-      .slice(-5)
-      .split(":")
-      .map((i) => +i)[1];
+    let newHours = new Date(startsAt).getHours();
+    let newMinutes = new Date(startsAt).getMinutes();
     let currentYear = new Date(startsAt).getFullYear();
     let currentMonth = new Date(startsAt).getMonth();
     let currentDay = new Date(startsAt).getDate();
     if (year === currentYear && month === currentMonth && day === currentDay) {
       if (hour > newHours) {
-        setStartsAt("");
+        handleChangeStartTime("");
       } else {
         if (hour === newHours && minutes > newMinutes) {
-          setStartsAt("");
+          handleChangeStartTime("");
         }
       }
     }
@@ -103,14 +112,14 @@ export const TimePickerDay = ({
       <input
         key={"start"}
         value={startsAt}
-        onChange={handleChangeStart}
+        onChange={handleChangeStartPicker}
         type="datetime-local"
         min={new Date().toJSON().slice(0, 16)}
       />
       <input
         key={"end"}
         value={endsAt}
-        onChange={handleChangeEnd}
+        onChange={handleChangeEndPicker}
         type="datetime-local"
         min={
           startsAt

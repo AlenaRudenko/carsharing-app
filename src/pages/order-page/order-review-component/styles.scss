@@ -55,10 +55,6 @@
   width: 100%;
   height: 5%;
 }
-.orderReview__variants {
-  width: 100%;
-  height: 20%;
-}
 .orderReview__additional {
   height: 40%;
   width: 100%;
@@ -66,4 +62,8 @@
 .equipment {
   display: flex;
   margin-bottom: 10px;
+}
+.orderReview__dateTime {
+  height: 20%;
+  width: 100%;
 }
