@@ -5,6 +5,7 @@ interface IProps {
   price: number;
   tariffParams: ITariffParams[];
   textParams: IText;
+  duration: number;
 }
 
 interface IText {
@@ -26,10 +27,16 @@ export const TariffContent = ({
   price,
   tariffParams,
   textParams,
+  duration,
 }: IProps) => {
   return (
     <div style={{ userSelect: "none" }}>
-      <div className="price" style={{ fontSize: textParams.priceSize }}>
+      <div
+        className={`price price${
+          duration >= 24 && tariff === "MINUTE" && "--unactive"
+        }`}
+        style={{ fontSize: textParams.priceSize }}
+      >
         <span>{tariff === "DAY" ? "Аренда" : "В пути"}</span>
         <span>
           {tariff === "DAY" ? `${price} руб/сут` : `${price} руб/мин`}

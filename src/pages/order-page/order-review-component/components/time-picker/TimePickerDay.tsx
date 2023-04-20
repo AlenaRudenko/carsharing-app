@@ -8,6 +8,7 @@ import { TEvent } from "../../../../../interfaces/event";
 
 interface IProps {
   currentTariff: ITariff;
+  isDisabledInput: boolean;
   tariffs: ITariff[];
   variants: IVariant[];
   handleTimeDuration: (min: number) => void;
@@ -21,6 +22,7 @@ interface IProps {
 
 export const TimePickerDay = ({
   startsAt,
+  isDisabledInput,
   endsAt,
   tariffs,
   variants,
@@ -31,9 +33,8 @@ export const TimePickerDay = ({
   handleChangeEndPicker,
   handleChangeEndTime,
 }: IProps) => {
-  const anotherTariff = tariffs.find(
-    (tariff) => tariff.id !== currentTariff?.id
-  );
+  const [minEnd, setMinEnd] = useState("");
+  const anotherTariff = tariffs.find((tariff) => tariff.type === "DAY");
 
   const tariffVariant = useSelector(
     (state: RootState) => state.order.variantId
@@ -66,7 +67,11 @@ export const TimePickerDay = ({
         } else {
           if (day === endDay && hour > endHour) {
             handleChangeEndTime("");
-          } else if (day === endDay && hour === endHour && min > endMin) {
+          } else if (
+            day === endDay &&
+            hour === endHour &&
+            (min > endMin || min === endMin)
+          ) {
             handleChangeEndTime("");
           }
         }
@@ -84,16 +89,23 @@ export const TimePickerDay = ({
     let currentYear = new Date(startsAt).getFullYear();
     let currentMonth = new Date(startsAt).getMonth();
     let currentDay = new Date(startsAt).getDate();
-    if (year === currentYear && month === currentMonth && day === currentDay) {
-      if (hour > newHours) {
-        handleChangeStartTime("");
-      } else {
-        if (hour === newHours && minutes > newMinutes) {
+    if (startsAt) {
+      if (
+        year === currentYear &&
+        month === currentMonth &&
+        day === currentDay
+      ) {
+        if (hour > newHours) {
           handleChangeStartTime("");
+        } else {
+          if (hour === newHours && minutes > newMinutes) {
+            handleChangeStartTime("");
+          }
         }
       }
     }
   }, [startsAt]);
+
   useEffect(() => {
     let day2 = new Date(endsAt);
     let day1 = new Date(startsAt);
@@ -117,13 +129,24 @@ export const TimePickerDay = ({
         min={new Date().toJSON().slice(0, 16)}
       />
       <input
+        disabled={isDisabledInput}
         key={"end"}
         value={endsAt}
         onChange={handleChangeEndPicker}
         type="datetime-local"
         min={
           startsAt
-            ? new Date(startsAt).toJSON().slice(0, 16)
+            ? new Date(
+                Date.UTC(
+                  new Date(startsAt).getFullYear(),
+                  new Date(startsAt).getMonth(),
+                  new Date(startsAt).getDate(),
+                  new Date(startsAt).getHours(),
+                  new Date(startsAt).getMinutes() + 1
+                )
+              )
+                .toJSON()
+                .slice(0, 16)
             : new Date().toJSON().slice(0, 16)
         }
       />

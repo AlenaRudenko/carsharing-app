@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import "./styles.scss";
 import { TariffContent } from "./TariffContent";
 import { ITariff } from "../../../../../interfaces/tariffs";
+import { RootState } from "../../../../../store/store";
 
 interface IProps {
   tariff: ITariff;
@@ -18,6 +20,19 @@ interface IText {
   headlingSize: string;
 }
 export const Tariff = ({ tariff, handleTariff, currentTariffId }: IProps) => {
+  const [duration, setDuration] = useState(0);
+  const startsAt = useSelector((state: RootState) => state.order.startsAt);
+  const endsAt = useSelector((state: RootState) => state.order.endsAt);
+  useEffect(() => {
+    if (endsAt && startsAt) {
+      setDuration(
+        Math.trunc(
+          (new Date(endsAt).getTime() - new Date(startsAt).getTime()) /
+            (1000 * 3600)
+        )
+      );
+    }
+  }, [endsAt]);
   const [textParams, setTextParams] = useState<IState["textParams"]>({
     fontSize: "small",
     marginBottom: "10px",
@@ -74,6 +89,8 @@ export const Tariff = ({ tariff, handleTariff, currentTariffId }: IProps) => {
     <div
       className={`tariff__container tariff__container${
         currentTariffId === tariff.id && "--active"
+      } tariff__container${
+        duration >= 24 && tariff.type === "MINUTE" && "--unactive"
       }`}
       onClick={handleOnClick}
     >
@@ -87,6 +104,7 @@ export const Tariff = ({ tariff, handleTariff, currentTariffId }: IProps) => {
           tariffParams={tariffParams}
           price={tariff.price}
           tariff={tariff.type}
+          duration={duration}
         />
       </div>
     </div>
