@@ -1,0 +1,16 @@
+@import "../../../../../default-variables.scss";
+.timepicker__container {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-direction: row;
+}
+.timepicker {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  input {
+    color: $pimary-color;
+  }
+}

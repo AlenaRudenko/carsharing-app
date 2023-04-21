@@ -22,6 +22,7 @@ export const TariffVariants = ({
 }: IProps) => {
   return (
     <>
+
       {currentTariff?.type === "DAY"
         ? variants!
             .filter((variant) => variant.variant === "ONE_DAY")

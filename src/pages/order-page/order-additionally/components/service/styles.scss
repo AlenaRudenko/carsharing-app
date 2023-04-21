@@ -20,33 +20,3 @@
   justify-content: space-between;
   text-align: left;
 }
-.service__help {
-  position: absolute;
-  padding: 8px;
-  top: -100%;
-  z-index: 20;
-  left: 100%;
-  width: 250px;
-  text-align: justify;
-  border-radius: 7px;
-  color: $pimary-color;
-  background-color: #f0f0f0;
-  opacity: 0;
-  z-index: -100;
-  &--active {
-    opacity: 1;
-    z-index: 5;
-
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-        transform: translateX(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateX(0px);
-      }
-    }
-    animation: fadeIn 1s ease 0s 1 normal forwards;
-  }
-}

@@ -28,9 +28,11 @@ export const Tariff = ({ tariff, handleTariff, currentTariffId }: IProps) => {
       setDuration(
         Math.trunc(
           (new Date(endsAt).getTime() - new Date(startsAt).getTime()) /
-            (1000 * 3600)
+            (60000)
         )
       );
+    } else {
+      setDuration(0);
     }
   }, [endsAt]);
   const [textParams, setTextParams] = useState<IState["textParams"]>({

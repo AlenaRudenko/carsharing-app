@@ -26,7 +26,10 @@ export const OrderTime = ({
   const [endsAt, setEndsAt] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [isDisabledInput, setIsDisabledInput] = useState(false);
+  const [duration, setDuration] = useState(0);
+
   const dispatch = useDispatch<Dispatch>();
+
   const currentVariantTariff = variants.find(
     (item) => item.id === currentVariant
   );
@@ -49,7 +52,7 @@ export const OrderTime = ({
       );
     }
   }, [currentVariant]);
-  const [duration, setDuration] = useState(0);
+
   const handleTimeDuration = (min: number) => {
     setDuration(min);
   };
@@ -75,15 +78,17 @@ export const OrderTime = ({
       setIsChecked(!isChecked);
       setIsDisabledInput(true);
     } else {
+      dispatch.order.removeEndsAt();
       dispatch.order.removeVariantId();
       setIsChecked(!isChecked);
       setIsDisabledInput(false);
       setEndsAt("");
+      setDuration(0);
     }
   };
   return (
-    <div>
-      <>
+    <>
+      <div className="orderReview__time">
         <TimePickerDay
           isDisabledInput={isDisabledInput}
           startsAt={startsAt}
@@ -97,13 +102,15 @@ export const OrderTime = ({
           currentTariff={currentTariff}
           handleTimeDuration={handleTimeDuration}
         />
-        {currentTariff.type === "MINUTE" && (
+      </div>
+      <div className="orderReview__duration">
+        {startsAt && endsAt && currentTariff.type === "MINUTE" && (
           <span>{`${duration / 60000} минут`}</span>
         )}
-        {currentTariff.type === "DAY" && (
+        {startsAt && endsAt && currentTariff.type === "DAY" && (
           <span>{`${Math.ceil(duration / (1000 * 3600 * 24))} дней`}</span>
         )}
-      </>
+      </div>
 
       <div className="orderReview__variants">
         {startsAt && (
@@ -120,6 +127,6 @@ export const OrderTime = ({
           </>
         )}
       </div>
-    </div>
+    </>
   );
 };

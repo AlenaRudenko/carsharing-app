@@ -1,3 +1,4 @@
+import "./styles.scss";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "../../../../../store/store";
@@ -120,36 +121,43 @@ export const TimePickerDay = ({
     console.log("количество минут", diff / 60000);
   }, [endsAt, startsAt, currentTariff]);
   return (
-    <div>
-      <input
-        key={"start"}
-        value={startsAt}
-        onChange={handleChangeStartPicker}
-        type="datetime-local"
-        min={new Date().toJSON().slice(0, 16)}
-      />
-      <input
-        disabled={isDisabledInput}
-        key={"end"}
-        value={endsAt}
-        onChange={handleChangeEndPicker}
-        type="datetime-local"
-        min={
-          startsAt
-            ? new Date(
-                Date.UTC(
-                  new Date(startsAt).getFullYear(),
-                  new Date(startsAt).getMonth(),
-                  new Date(startsAt).getDate(),
-                  new Date(startsAt).getHours(),
-                  new Date(startsAt).getMinutes() + 1
+    <div className="timepicker__container">
+      <div className="timepicker">
+        {" "}
+        <span>Начало бронирования</span>
+        <input
+          key={"start"}
+          value={startsAt}
+          onChange={handleChangeStartPicker}
+          type="datetime-local"
+          min={new Date().toJSON().slice(0, 16)}
+        />
+      </div>
+      <div className="timepicker">
+        <span>Окончание бронирования</span>
+        <input
+          disabled={isDisabledInput}
+          key={"end"}
+          value={endsAt}
+          onChange={handleChangeEndPicker}
+          type="datetime-local"
+          min={
+            startsAt
+              ? new Date(
+                  Date.UTC(
+                    new Date(startsAt).getFullYear(),
+                    new Date(startsAt).getMonth(),
+                    new Date(startsAt).getDate(),
+                    new Date(startsAt).getHours(),
+                    new Date(startsAt).getMinutes() + 1
+                  )
                 )
-              )
-                .toJSON()
-                .slice(0, 16)
-            : new Date().toJSON().slice(0, 16)
-        }
-      />
+                  .toJSON()
+                  .slice(0, 16)
+              : new Date().toJSON().slice(0, 16)
+          }
+        />
+      </div>
     </div>
   );
 };

@@ -33,7 +33,7 @@ export const TariffContent = ({
     <div style={{ userSelect: "none" }}>
       <div
         className={`price price${
-          duration >= 24 && tariff === "MINUTE" && "--unactive"
+          duration >= 1440 && tariff === "MINUTE" && "--unactive"
         }`}
         style={{ fontSize: textParams.priceSize }}
       >

@@ -3,6 +3,7 @@ import { AppIcon } from "../../../../../components/app-icon/AppIcon";
 import { Api } from "../../../../../services/api.service";
 import { ITariff } from "../../../../../interfaces/tariffs";
 import { RootState } from "../../../../../store/store";
+import { HelpModal } from "../../../../../components/help-modal/HelpModal";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 interface IProps {
@@ -62,23 +63,13 @@ export const Service = ({
       }`}
     >
       <div className="service__title">
-        <div
-          className={`service__help service__help${isVisible && "--active"}`}
-          style={{ fontSize: fontSize }}
-        >
-          <span>{descrintion}</span>
-        </div>
         <p>{title}</p>
-        <div
-          onMouseOver={() => {
-            setIsVisible(true);
-          }}
-          onMouseOut={() => {
-            setIsVisible(false);
-          }}
-        >
-          <AppIcon icon={"HelpCircle"} />
-        </div>
+        <HelpModal
+          descrintion={descrintion}
+          fontSize={fontSize}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+        />
       </div>
 
       <AppIcon
