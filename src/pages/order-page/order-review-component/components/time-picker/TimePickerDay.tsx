@@ -63,7 +63,7 @@ export const TimePickerDay = ({
       if (month > endMonth) {
         handleChangeEndTime("");
       } else {
-        if (day > endDay) {
+        if (day > endDay && month === endMonth) {
           handleChangeEndTime("");
         } else {
           if (day === endDay && hour > endHour) {

@@ -16,4 +16,20 @@
   color: $pimary-color;
   font-size: 20px;
   font-weight: 700;
+  margin-bottom: 10px;
+}
+.orderReview__helpContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.orderReview__help {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  span {
+    margin-right: 10px;
+  }
 }

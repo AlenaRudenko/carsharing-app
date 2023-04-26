@@ -1,3 +1,5 @@
+@import "../../default-variables.scss";
+
 .toggle {
   --width: 40px;
   --height: calc(var(--width) / 2);
@@ -30,7 +32,7 @@
   transition: transform 0.2s;
 }
 .toggle__input:checked ~ .toggle__fill {
-  background: #009578;
+  background: $pimary-color;
 }
 
 .toggle__input:checked ~ .toggle__fill::after {

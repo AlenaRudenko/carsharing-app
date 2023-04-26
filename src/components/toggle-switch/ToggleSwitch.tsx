@@ -1,11 +1,17 @@
 import "./styles.scss";
+import { useState } from "react";
 
 interface IProps {
-  onClick?: () => void;
+  toggleSwitchHandle?: () => void;
   isChecked: boolean;
 }
 
-export const ToggleSwitch = ({ onClick, isChecked }: IProps) => {
+export const ToggleSwitch = ({ toggleSwitchHandle }: IProps) => {
+  const [isChecked, setIsChecked] = useState(false);
+  const handleClick = () => {
+    setIsChecked(!isChecked);
+    toggleSwitchHandle();
+  };
   return (
     <div className="toggle">
       <input
@@ -14,7 +20,7 @@ export const ToggleSwitch = ({ onClick, isChecked }: IProps) => {
         type="checkbox"
         id="myToggle"
       />
-      <div className="toggle__fill" onClick={onClick}></div>
+      <div className="toggle__fill" onClick={handleClick}></div>
     </div>
   );
 };

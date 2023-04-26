@@ -8,23 +8,23 @@
   width: 250px;
   text-align: justify;
   border-radius: 7px;
-  color: red;
-  background-color: red;
+  color: $pimary-color;
+  background-color: rgb(224, 222, 222);
   opacity: 0;
   z-index: -100;
   &--active {
     opacity: 1;
     z-index: 5;
+    animation: fadeIn 1s ease 0s 1 normal forwards;
   }
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      transform: translateX(20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0px);
-    }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
   }
-  animation: fadeIn 10s ease 0s 1 normal forwards;
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
 }

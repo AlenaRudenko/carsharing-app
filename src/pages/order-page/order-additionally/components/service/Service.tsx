@@ -33,9 +33,8 @@ export const Service = ({
   lifeEnsurance,
   childChair,
 }: IProps) => {
-  const [isVisible, setIsVisible] = useState(false);
   const [fontSize, setFontSize] = useState("small");
-
+  const handleSetIsVisible = () => {};
   useEffect(() => {
     document.documentElement.clientWidth < 992
       ? setFontSize("xx-small")
@@ -65,10 +64,9 @@ export const Service = ({
       <div className="service__title">
         <p>{title}</p>
         <HelpModal
+          key={descrintion}
           descrintion={descrintion}
           fontSize={fontSize}
-          isVisible={isVisible}
-          setIsVisible={setIsVisible}
         />
       </div>
 

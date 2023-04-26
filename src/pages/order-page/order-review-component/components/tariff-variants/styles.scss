@@ -14,3 +14,12 @@
     border: 2px solid $pimary-color;
   }
 }
+.tariffVariant {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  span {
+    margin-right: 10px;
+  }
+}

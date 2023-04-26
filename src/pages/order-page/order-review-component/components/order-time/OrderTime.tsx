@@ -4,9 +4,10 @@ import { TimePickerDay } from "../time-picker/TimePickerDay";
 import { TariffVariants } from "../tariff-variants/TariffVariants";
 import { ITariff } from "../../../../../interfaces/tariffs";
 import { IVariant } from "../../../../../interfaces/variant";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "../../../../../store/store";
+import { HelpModal } from "../../../../../components/help-modal/HelpModal";
 interface IProps {
   tariffs: ITariff[];
   variants: IVariant[];
@@ -51,7 +52,7 @@ export const OrderTime = ({
           .slice(0, 16)
       );
     }
-  }, [currentVariant]);
+  }, [currentVariant, startsAt]);
 
   const handleTimeDuration = (min: number) => {
     setDuration(min);
@@ -86,6 +87,34 @@ export const OrderTime = ({
       setDuration(0);
     }
   };
+  function daysNaming(duration: number) {
+    const cases = [2, 0, 1, 1, 1, 2];
+    const dayText = ["день", "дня", "дней"];
+    const minText = ["минута", "минуты", "минут"];
+    if (currentTariff.type === "DAY") {
+      const time = Math.ceil(duration / (1000 * 3600 * 24));
+      return (
+        Math.ceil(duration / (1000 * 3600 * 24)) +
+        " " +
+        dayText[
+          time % 100 > 4 && time % 100 < 20
+            ? 2
+            : cases[time % 10 < 5 ? time % 10 : 5]
+        ]
+      );
+    } else {
+      const time = duration / 60000;
+      return (
+        duration / 60000 +
+        " " +
+        minText[
+          time % 100 > 4 && time % 100 < 20
+            ? 2
+            : cases[time % 10 < 5 ? time % 10 : 5]
+        ]
+      );
+    }
+  }
   return (
     <>
       <div className="orderReview__time">
@@ -105,17 +134,29 @@ export const OrderTime = ({
       </div>
       <div className="orderReview__duration">
         {startsAt && endsAt && currentTariff.type === "MINUTE" && (
-          <span>{`${duration / 60000} минут`}</span>
+          <span>{`${daysNaming(duration)}`}</span>
         )}
         {startsAt && endsAt && currentTariff.type === "DAY" && (
-          <span>{`${Math.ceil(duration / (1000 * 3600 * 24))} дней`}</span>
+          <div className="orderReview__helpContainer">
+            <div className="orderReview__help">
+              <span>{`${daysNaming(duration)}`}</span>{" "}
+              <HelpModal
+                fontSize="13px"
+                descrintion={
+                  'В тарифе "Суточный" одна минута считается за полные сутки, тем самым вы бронируете авто на все сутки'
+                }
+              />
+            </div>
+          </div>
         )}
       </div>
 
       <div className="orderReview__variants">
         {startsAt && (
           <>
-            <span>или выберите минимальный пакет бронирования</span>
+            <span style={{ marginBottom: "10px" }}>
+              или выберите минимальный пакет бронирования
+            </span>
             <TariffVariants
               handleTogleSwitch={handleTogleSwitch}
               isChecked={isChecked}

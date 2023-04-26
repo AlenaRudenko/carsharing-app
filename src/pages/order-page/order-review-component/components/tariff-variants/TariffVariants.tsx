@@ -22,32 +22,32 @@ export const TariffVariants = ({
 }: IProps) => {
   return (
     <>
-
       {currentTariff?.type === "DAY"
         ? variants!
             .filter((variant) => variant.variant === "ONE_DAY")
             .map((item) => (
-              <div key={item.id}>
+              <div className="tariffVariant" key={item.id}>
                 <span>Один день</span>
                 <ToggleSwitch
-                  onClick={() => {
+                  toggleSwitchHandle={() => {
                     handleTogleSwitch(item.id);
                   }}
-                  isChecked={isChecked}
                 />
               </div>
             ))
         : variants!
             .filter((variant) => variant.variant !== "ONE_DAY")
             .map((item) => (
-              <div
-                key={item.id}
-                className={`tariffVariant__container tariffVariant__container${
-                  currentVariant === item.id ? "--active" : ""
-                }`}
-                onClick={() => handleVariant(item)}
-              >
-                {item.variant.includes("ONE_H") ? "Один час" : "Три часа"}
+              <div className="tariffVariant" key={item.variant}>
+                <span>
+                  {item.variant.includes("ONE_H") ? "Один час" : "Три часа"}
+                </span>
+                <ToggleSwitch
+                  key={item.variant}
+                  toggleSwitchHandle={() => {
+                    handleTogleSwitch(item.id);
+                  }}
+                />
               </div>
             ))}
     </>
