@@ -13,7 +13,6 @@ interface IProps {
   variants: IVariant[];
   currentTariff: ITariff;
   currentVariant: IVariant["id"];
-  handleVariant: (id: IVariant) => void;
 }
 
 export const OrderTime = ({
@@ -21,11 +20,9 @@ export const OrderTime = ({
   variants,
   currentTariff,
   currentVariant,
-  handleVariant,
 }: IProps) => {
   const [startsAt, setStartsAt] = useState("");
   const [endsAt, setEndsAt] = useState("");
-  const [isChecked, setIsChecked] = useState(false);
   const [isDisabledInput, setIsDisabledInput] = useState(false);
   const [duration, setDuration] = useState(0);
 
@@ -35,6 +32,9 @@ export const OrderTime = ({
     (item) => item.id === currentVariant
   );
 
+useEffect(() => {
+  setEndsAt('')
+},[currentTariff])
   useEffect(() => {
     console.log("ДЕНЬ", currentVariantTariff);
     if (currentVariantTariff?.variant === "ONE_DAY") {
@@ -51,6 +51,38 @@ export const OrderTime = ({
           .toJSON()
           .slice(0, 16)
       );
+    } else {
+      if (currentVariantTariff?.variant === "ONE_HOUR") {
+        handleChangeEndTime(
+          new Date(
+            Date.UTC(
+              new Date(startsAt).getFullYear(),
+              new Date(startsAt).getMonth(),
+              new Date(startsAt).getDate(),
+              new Date(startsAt).getHours() + 1,
+              new Date(startsAt).getMinutes()
+            )
+          )
+            .toJSON()
+            .slice(0, 16)
+        );
+      } else {
+        if (currentVariantTariff?.variant === "THREE_HOURS") {
+          handleChangeEndTime(
+            new Date(
+              Date.UTC(
+                new Date(startsAt).getFullYear(),
+                new Date(startsAt).getMonth(),
+                new Date(startsAt).getDate(),
+                new Date(startsAt).getHours() + 3,
+                new Date(startsAt).getMinutes()
+              )
+            )
+              .toJSON()
+              .slice(0, 16)
+          );
+        }
+      }
     }
   }, [currentVariant, startsAt]);
 
@@ -74,14 +106,12 @@ export const OrderTime = ({
     dispatch.order.setEndsAt(time);
   };
   const handleTogleSwitch = (id: string) => {
-    if (!isChecked) {
+    if (id !== currentVariantTariff?.id) {
       dispatch.order.setVariantId(id);
-      setIsChecked(!isChecked);
       setIsDisabledInput(true);
     } else {
       dispatch.order.removeEndsAt();
       dispatch.order.removeVariantId();
-      setIsChecked(!isChecked);
       setIsDisabledInput(false);
       setEndsAt("");
       setDuration(0);
@@ -158,10 +188,8 @@ export const OrderTime = ({
               или выберите минимальный пакет бронирования
             </span>
             <TariffVariants
-              handleTogleSwitch={handleTogleSwitch}
-              isChecked={isChecked}
               currentVariant={currentVariant}
-              handleVariant={handleVariant}
+              handleVariant={handleTogleSwitch}
               currentTariff={currentTariff}
               variants={variants}
             />

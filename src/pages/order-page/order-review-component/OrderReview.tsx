@@ -11,9 +11,10 @@ import { EquipmentComponent } from "./components/equipment/EquipmentComponent";
 import { ITariff } from "../../../interfaces/tariffs";
 import { IVariant } from "../../../interfaces/variant";
 import { TEvent } from "../../../interfaces/event";
-import { TariffOptions } from "./components/tariff/TariffOptions";
+import { TariffOptions } from "./components/tariff-options/TariffOptions";
 import { TariffVariants } from "./components/tariff-variants/TariffVariants";
 import { OrderTime } from "./components/order-time/OrderTime";
+import { OrderAddition } from "./components/order-addition/OrderAddition";
 
 interface IProps {
   services: IService[];
@@ -92,7 +93,7 @@ export const OrderReview = ({
     (item) => item.id === carVariantId
   );
   const currentTariff = tariffs?.find((tariff) => tariff.id === tariffId);
-
+  const selectedVariant = variants?.find((item) => item.id === currentVariant);
   //смена статуса кнопки и статусов навигации сверху
   useEffect(() => {
     if (location.pathname === "/order/order-location" && addressId) {
@@ -135,11 +136,6 @@ export const OrderReview = ({
     }
   }, []);
 
-  //обработчик варианта бронирования
-  const handleVariant = (variant: IVariant) => {
-    dispatch.order.setVariantId(variant.id);
-  };
-
   //переход на следующий уровень бронирования
   const handleContinueButton = () => {
     handleStatusNavigation();
@@ -181,22 +177,18 @@ export const OrderReview = ({
             ))}
           </div>
         )}
-        {currentTariff && <TariffOptions currentTariff={currentTariff} />}
-        {childChair && (
-          <OrderField
-            description={"Детское кресло в автомобиле"}
-            value={"50 руб"}
+        {currentTariff && (
+          <TariffOptions
+            selectedVariant={selectedVariant}
+            currentTariff={currentTariff}
           />
         )}
-        {carEnsurance && (
-          <OrderField description={"КАСКО"} value={"2 руб/мин"} />
-        )}
-        {lifeEnsurance && (
-          <OrderField
-            description={"Страхование жизни и здоровья"}
-            value={"0,5 руб/мин"}
-          />
-        )}
+        <OrderAddition
+          services={services}
+          childChair={childChair}
+          carEnsurance={carEnsurance}
+          lifeEnsurance={lifeEnsurance}
+        />
       </div>
 
       <div className="orderReview__dateTime">
@@ -206,7 +198,6 @@ export const OrderReview = ({
             variants={variants}
             currentTariff={currentTariff}
             currentVariant={currentVariant}
-            handleVariant={handleVariant}
           />
         )}
       </div>
@@ -226,79 +217,3 @@ export const OrderReview = ({
     </div>
   );
 };
-// //обработчик ввода даты начала бронирования
-// const handleDataPickerStart = (e: TEvent) => {
-//   setStartsAtDate(e.target.value);
-// };
-
-// const handleTimePickerStart = (e: TEvent) => {
-//   setStartsAtTime(e.target.value);
-//   setEndsAtTime(e.target.value);
-// };
-
-//хук ввода времени бронирования поминутный тариф
-// useEffect(() => {
-//   let year = new Date().getFullYear();
-//   let month = new Date().getMonth();
-//   let day = new Date().getDate();
-//   let hour = new Date().getHours();
-//   let minutes = new Date().getMinutes();
-//   let newHours = startsAtTime.split(":").map((i) => +i)[0];
-//   let newMinutes = startsAtTime.split(":").map((i) => +i)[1];
-//   let currentYear = new Date(startsAtDate).getFullYear();
-//   let currentMonth = new Date(startsAtDate).getMonth();
-//   let currentDay = new Date(startsAtDate).getDate();
-//   if (year === currentYear && month === currentMonth && day === currentDay) {
-//     if (hour > newHours) {
-//       setStartsAtTime("");
-//     } else {
-//       if (hour === newHours && minutes > newMinutes) {
-//         setStartsAtTime("");
-//       }
-//     }
-//   }
-// }, [startsAtTime]);
-// //хук варианта одного дня и сет варианта в редакс
-// useEffect(() => {
-//   let day2 = new Date(endsAtDate);
-//   let day1 = new Date(startsAtDate);
-//   let diff = Math.abs(day2.getTime() - day1.getTime());
-//   let daysRange = Math.ceil(diff / (1000 * 3600 * 24));
-//   if (daysRange === 1) {
-//     let currVariant = variants?.find((item) => item.variant === "ONE_DAY");
-//     dispatch.order.setVariantId(currVariant!.id);
-//   }
-// }, [endsAtDate, startsAtDate]);
-
-// //обработчик ввода даты конца бронирования
-// const handleDataPickerEnd = (e: TEvent) => {
-//   setEndsAtDate(e.target.value);
-//   dispatch.order.removeVariantId();
-// };
-// const handleTimePickerEnd = (e: TEvent) => {
-//   setEndsAtTime(e.target.value);
-// };
-
-// //хук запрета бронирования на следующий год
-// useEffect(() => {
-//   let year = new Date(startsAtDate).getFullYear();
-//   let month = new Date(startsAtDate).getMonth();
-//   let day = new Date(startsAtDate).getDate();
-//   let endYear = new Date(endsAtDate).getFullYear();
-//   let endMonth = new Date(endsAtDate).getMonth();
-//   let endDay = new Date(endsAtDate).getDate();
-//   if (year > endYear) {
-//     setEndsAtDate("");
-//     dispatch.order.removeVariantId();
-//   } else {
-//     if (month > endMonth) {
-//       setEndsAtDate("");
-//       dispatch.order.removeVariantId();
-//     } else {
-//       if (day >= endDay) {
-//         setEndsAtDate("");
-//         dispatch.order.removeVariantId();
-//       }
-//     }
-//   }
-// }, [startsAtDate]);

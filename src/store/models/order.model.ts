@@ -63,6 +63,7 @@ export const order = createModel<RootModel>()({
         ...state,
         tariffId: payload,
         variantId: "",
+        endsAt: "",
       };
     },
     toggleChildChair: (state) => {

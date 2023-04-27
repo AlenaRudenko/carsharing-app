@@ -6,10 +6,8 @@ import { ToggleSwitch } from "../../../../../components/toggle-switch/ToggleSwit
 interface IProps {
   variants: IVariant[];
   currentTariff: ITariff;
-  handleVariant: (id: IVariant) => void;
+  handleVariant: (id: string) => void;
   currentVariant: IVariant["id"];
-  handleTogleSwitch: (id: string) => void;
-  isChecked: boolean;
 }
 
 export const TariffVariants = ({
@@ -17,11 +15,9 @@ export const TariffVariants = ({
   currentTariff,
   handleVariant,
   currentVariant,
-  handleTogleSwitch,
-  isChecked,
 }: IProps) => {
   return (
-    <>
+    <div className="tariff__containerMedia">
       {currentTariff?.type === "DAY"
         ? variants!
             .filter((variant) => variant.variant === "ONE_DAY")
@@ -29,8 +25,10 @@ export const TariffVariants = ({
               <div className="tariffVariant" key={item.id}>
                 <span>Один день</span>
                 <ToggleSwitch
-                  toggleSwitchHandle={() => {
-                    handleTogleSwitch(item.id);
+                  key={item.variant}
+                  isChecked={currentVariant === item.id}
+                  toggleSwitch={() => {
+                    handleVariant(item.id);
                   }}
                 />
               </div>
@@ -43,13 +41,14 @@ export const TariffVariants = ({
                   {item.variant.includes("ONE_H") ? "Один час" : "Три часа"}
                 </span>
                 <ToggleSwitch
+                  isChecked={currentVariant === item.id}
                   key={item.variant}
-                  toggleSwitchHandle={() => {
-                    handleTogleSwitch(item.id);
+                  toggleSwitch={() => {
+                    handleVariant(item.id);
                   }}
                 />
               </div>
             ))}
-    </>
+    </div>
   );
 };

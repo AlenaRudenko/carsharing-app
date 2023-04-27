@@ -27,8 +27,7 @@ export const Tariff = ({ tariff, handleTariff, currentTariffId }: IProps) => {
     if (endsAt && startsAt) {
       setDuration(
         Math.trunc(
-          (new Date(endsAt).getTime() - new Date(startsAt).getTime()) /
-            (60000)
+          (new Date(endsAt).getTime() - new Date(startsAt).getTime()) / 60000
         )
       );
     } else {
@@ -92,7 +91,7 @@ export const Tariff = ({ tariff, handleTariff, currentTariffId }: IProps) => {
       className={`tariff__container tariff__container${
         currentTariffId === tariff.id && "--active"
       } tariff__container${
-        duration >= 24 && tariff.type === "MINUTE" && "--unactive"
+        duration >= 1440 && tariff.type === "MINUTE" && "--unactive"
       }`}
       onClick={handleOnClick}
     >

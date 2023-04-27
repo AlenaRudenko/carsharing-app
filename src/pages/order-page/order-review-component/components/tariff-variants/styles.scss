@@ -23,3 +23,15 @@
     margin-right: 10px;
   }
 }
+.tariff__containerMedia {
+  @media screen and (min-width: 992px) {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
+  @media screen and (min-width: 1200px) {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

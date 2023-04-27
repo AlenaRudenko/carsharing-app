@@ -59,7 +59,7 @@ export const OrderAdditionally = ({ cars, tariffs, services }: IProps) => {
   };
   //выбор и сет тарифа в редакс
   const handleTariff = (tariff: ITariff) => {
-    return dispatch.order.setTariffId(tariff.id);
+    currentTariffId !== tariff.id && dispatch.order.setTariffId(tariff.id);
   };
 
   //toggle доп сервисов
