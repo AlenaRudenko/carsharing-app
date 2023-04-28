@@ -102,20 +102,21 @@ export const OrderAdditionally = ({ cars, tariffs, services }: IProps) => {
         </div>
         <h3>Выберите дополнительные услуги</h3>
         <div className="orderAdd__services">
-          {services.map((service) => (
-            <Service
-              allTariffs={tariffs}
-              carEnsurance={carEnsurance}
-              lifeEnsurance={lifeEnsurance}
-              childChair={childChair}
-              handleService={handleSetServices}
-              key={service.title}
-              id={service.id}
-              title={service.title}
-              descrintion={service.descrintion}
-              tariffs={service.tariffs}
-            />
-          ))}
+          {currentTariffId &&
+            services.map((service) => (
+              <Service
+                allTariffs={tariffs}
+                carEnsurance={carEnsurance}
+                lifeEnsurance={lifeEnsurance}
+                childChair={childChair}
+                handleService={handleSetServices}
+                key={service.title}
+                id={service.id}
+                title={service.title}
+                descrintion={service.descrintion}
+                tariffs={service.tariffs}
+              />
+            ))}
         </div>
       </div>
     </>

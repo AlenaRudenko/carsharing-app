@@ -4,6 +4,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-size: 12px;
+  :first-child {
+    margin-bottom: 10px;
+    max-width: 150px;
+  }
   :last-child {
     font-weight: 700;
   }

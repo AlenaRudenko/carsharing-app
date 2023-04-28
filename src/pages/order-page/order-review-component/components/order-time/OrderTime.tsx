@@ -36,7 +36,6 @@ useEffect(() => {
   setEndsAt('')
 },[currentTariff])
   useEffect(() => {
-    console.log("ДЕНЬ", currentVariantTariff);
     if (currentVariantTariff?.variant === "ONE_DAY") {
       handleChangeEndTime(
         new Date(

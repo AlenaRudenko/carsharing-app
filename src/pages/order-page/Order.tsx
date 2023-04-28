@@ -74,7 +74,7 @@ export const Order = ({
 
   const services = [
     {
-      id: "1",
+      id: "childChair",
       title: "Детское кресло",
       descrintion: "Кресло подходит для перевозки детей весом от 9 до 36 кг",
       tariffs: [
@@ -89,7 +89,7 @@ export const Order = ({
       ],
     },
     {
-      id: "2",
+      id: "carEnsurance",
       title: "Страхование жизни и здоровья",
       descrintion:
         "Действует в случае травм, инвалидности или смерти застрахованного. Застрахованными считаются все пассажиры (если их количество не превышает вместимость транспорта)",
@@ -105,7 +105,7 @@ export const Order = ({
       ],
     },
     {
-      id: "3",
+      id: "lifeEnsurance",
       title: "КАСКО",
       descrintion:
         "КАСКО помогает сократить размер выплаты, если водитель виновен в аварии. Если авария произошла по вине пользователя или виновное лицо не установлено, то пользователь возмещает реальный ущерб, но не более 30 000 ₽",
@@ -142,17 +142,17 @@ export const Order = ({
       : setPaddingHeader("20px 0px 50px 0px");
   }, []);
 
-//переход по кнопке на следующий уровень заказа
+  //переход по кнопке на следующий уровень заказа
   const handleStatusNavigation = () => {
     navigate(fullPathNames[fullPathNames.indexOf(location.pathname) + 1]);
   };
 
-//добавка нового статуса если все условия выполнены и загорание навигации сверху разрешения перехода на следующий уровень
+  //добавка нового статуса если все условия выполнены и загорание навигации сверху разрешения перехода на следующий уровень
   const handleStatusOrder = (point: string) => {
     setStatus([...status, paths[paths.indexOf(point) + 1]]);
   };
 
-//сет адреса в редакс
+  //сет адреса в редакс
   const handleSetCurrentAddress = (address: IAddress) => {
     setAddress(address.name);
     dispatch.order.setAddressId(address.id);
@@ -218,7 +218,7 @@ export const Order = ({
           </Routes>
         </div>
         <OrderReview
-        services={services}
+          services={services}
           cars={cars}
           tariffs={tariffs}
           variants={variants}

@@ -96,7 +96,7 @@ export const Service = ({
             .map((value: ITariffsOptions) => (
               <span key={value.tariff}>{value.price}</span>
             ))}
-          <span>руб/мин</span>
+          {title === "Детское кресло" ? <span>руб</span> : <span>руб/мин</span>}
         </>
       )}
     </div>

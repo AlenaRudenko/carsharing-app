@@ -59,7 +59,7 @@ export const OrderReview = ({
 }: IProps) => {
   const [isDisabled, setIsDisabled] = useState<IState["isDisabled"]>(false);
   const [navPoint, setNavPoint] = useState<IState["navPoint"]>("");
-
+  const [duration, setDuration] = useState(0);
   const carId = useSelector((state: RootState) => state.order.carId);
   const cityId = useSelector((state: RootState) => state.order.cityId);
   const addressId = useSelector((state: RootState) => state.order.addressId);
@@ -77,7 +77,8 @@ export const OrderReview = ({
   const lifeEnsurance = useSelector(
     (state: RootState) => state.order.lifeEnsurance
   );
-
+  const startsAt = useSelector((state: RootState) => state.order.startsAt);
+  const endsAt = useSelector((state: RootState) => state.order.endsAt);
   const dispatch = useDispatch<Dispatch>();
   const location = useLocation();
   const navigate = useNavigate();
@@ -94,6 +95,28 @@ export const OrderReview = ({
   );
   const currentTariff = tariffs?.find((tariff) => tariff.id === tariffId);
   const selectedVariant = variants?.find((item) => item.id === currentVariant);
+
+  useEffect(() => {
+    if (startsAt && endsAt) {
+      if (currentTariff.type === "DAY") {
+        setDuration(
+          Math.ceil(
+            (new Date(endsAt).getTime() - new Date(startsAt).getTime()) /
+              (1000 * 3600 * 24)
+          )
+        );
+      } else {
+        if (currentTariff.type === "MINUTE") {
+          setDuration(
+            Math.trunc(
+              (new Date(endsAt).getTime() - new Date(startsAt).getTime()) /
+                60000
+            )
+          );
+        }
+      }
+    } else setDuration(0);
+  }, [startsAt, endsAt, selectedVariant]);
   //смена статуса кнопки и статусов навигации сверху
   useEffect(() => {
     if (location.pathname === "/order/order-location" && addressId) {
@@ -179,11 +202,14 @@ export const OrderReview = ({
         )}
         {currentTariff && (
           <TariffOptions
+            duration={duration}
             selectedVariant={selectedVariant}
             currentTariff={currentTariff}
           />
         )}
         <OrderAddition
+          duration={duration}
+          currentTariff={currentTariff}
           services={services}
           childChair={childChair}
           carEnsurance={carEnsurance}
