@@ -13,9 +13,11 @@ export const OrderField = ({
   amount,
 }: IProps) => {
   return (
-    <div className="orderField">
+    <div className='orderField'>
       <span>{description}</span>
-      <span style={{ fontSize: fontSize }}>{value}</span>
+      <span className='orderField__medium' style={{ fontSize: fontSize }}>
+        {value}
+      </span>
       {amount && <span>{amount}</span>}
     </div>
   );

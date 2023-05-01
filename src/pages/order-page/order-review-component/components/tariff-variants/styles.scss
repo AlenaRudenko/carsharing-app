@@ -21,15 +21,17 @@
   justify-content: flex-start;
   span {
     margin-right: 10px;
+    font-size: 13px;
   }
 }
 .tariff__containerMedia {
   @media screen and (min-width: 992px) {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     flex-direction: row;
   }
-  @media screen and (min-width: 1200px) {
+  @media screen and (min-width: 1350px) {
     display: flex;
     align-items: flex-start;
     flex-direction: column;

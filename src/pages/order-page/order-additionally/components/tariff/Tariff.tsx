@@ -68,9 +68,9 @@ export const Tariff = ({ tariff, handleTariff, currentTariffId }: IProps) => {
           fontSize: "x-small",
           marginBottom: "5px",
           priceSize: "small",
-          headlingSize: "15px",
+          headlingSize: "12px",
         }))
-      : document.documentElement.clientWidth < 1200
+      : document.documentElement.clientWidth < 1350
       ? setTextParams((prevState) => ({
           ...prevState,
           fontSize: "small",
@@ -99,7 +99,7 @@ export const Tariff = ({ tariff, handleTariff, currentTariffId }: IProps) => {
       <h1 style={{ fontSize: textParams.headlingSize, marginBottom: "10px" }}>
         {tariff.type === "DAY" ? "Суточный" : "Поминутный"}
       </h1>
-      <div className="tariff__container__price">
+      <div className='tariff__container__price'>
         <TariffContent
           textParams={textParams}
           tariffParams={tariffParams}

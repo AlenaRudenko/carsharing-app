@@ -15,9 +15,11 @@ import { TariffOptions } from "./components/tariff-options/TariffOptions";
 import { TariffVariants } from "./components/tariff-variants/TariffVariants";
 import { OrderTime } from "./components/order-time/OrderTime";
 import { OrderAddition } from "./components/order-addition/OrderAddition";
+import { AppTable } from "../../../components/app-table/AppTable";
+import { PlayLessonOutlined } from "@mui/icons-material";
 
 interface IProps {
-  services: IService[];
+  servicesOrder: IService[];
   cars: ICar[];
   tariffs: ITariff[];
   variants: IVariant[];
@@ -49,7 +51,7 @@ interface IAddresses {
   id: string;
 }
 export const OrderReview = ({
-  services,
+  servicesOrder,
   cars,
   tariffs,
   variants,
@@ -59,6 +61,7 @@ export const OrderReview = ({
 }: IProps) => {
   const [isDisabled, setIsDisabled] = useState<IState["isDisabled"]>(false);
   const [navPoint, setNavPoint] = useState<IState["navPoint"]>("");
+  const [orderPrice, setOrderPrice] = useState(0);
   const [duration, setDuration] = useState(0);
   const carId = useSelector((state: RootState) => state.order.carId);
   const cityId = useSelector((state: RootState) => state.order.cityId);
@@ -79,7 +82,7 @@ export const OrderReview = ({
   );
   const startsAt = useSelector((state: RootState) => state.order.startsAt);
   const endsAt = useSelector((state: RootState) => state.order.endsAt);
-  const dispatch = useDispatch<Dispatch>();
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -98,7 +101,7 @@ export const OrderReview = ({
 
   useEffect(() => {
     if (startsAt && endsAt) {
-      if (currentTariff.type === "DAY") {
+      if (currentTariff?.type === "DAY") {
         setDuration(
           Math.ceil(
             (new Date(endsAt).getTime() - new Date(startsAt).getTime()) /
@@ -106,7 +109,7 @@ export const OrderReview = ({
           )
         );
       } else {
-        if (currentTariff.type === "MINUTE") {
+        if (currentTariff?.type === "MINUTE") {
           setDuration(
             Math.trunc(
               (new Date(endsAt).getTime() - new Date(startsAt).getTime()) /
@@ -116,7 +119,7 @@ export const OrderReview = ({
         }
       }
     } else setDuration(0);
-  }, [startsAt, endsAt, selectedVariant]);
+  }, [startsAt, endsAt, selectedVariant, currentTariff]);
   //смена статуса кнопки и статусов навигации сверху
   useEffect(() => {
     if (location.pathname === "/order/order-location" && addressId) {
@@ -128,12 +131,22 @@ export const OrderReview = ({
     } else if (
       location.pathname === "/order/order-additionally" &&
       carVariantId &&
-      tariffId
+      tariffId &&
+      startsAt &&
+      endsAt
     ) {
       handleStatus("order-additionally");
       setIsDisabled(false);
     } else setIsDisabled(true);
-  }, [location.pathname, addressId, carId, carVariantId, tariffId]);
+  }, [
+    location.pathname,
+    addressId,
+    carId,
+    carVariantId,
+    tariffId,
+    startsAt,
+    endsAt,
+  ]);
 
   //смена текста кнопки
   useEffect(() => {
@@ -157,7 +170,56 @@ export const OrderReview = ({
     if (location.pathname !== "/order/order-location" && !carId && !addressId) {
       navigate("/order/order-location");
     }
-  }, []);
+  }, [location, carId, addressId, navigate]);
+  useEffect(() => {
+    if (location.pathname === "/order/order-full") {
+      if (currentTariff?.type === "DAY") {
+        setOrderPrice(orderPrice + currentTariff.price * duration);
+        if (childChair) {
+          const price = servicesOrder
+            .find((service) => service.id === "childChair")
+            ?.tariffs.find((tariff) => tariff.tariff === "day")?.price;
+          setOrderPrice(orderPrice + price! * duration);
+        }
+        if (lifeEnsurance) {
+          const price = servicesOrder
+            .find((service) => service.id === "lifeEnsurance")
+            ?.tariffs.find((tariff) => tariff.tariff === "day")?.price;
+          setOrderPrice(orderPrice + price! * duration);
+        }
+        if (carEnsurance) {
+          const price = servicesOrder
+            .find((service) => service.id === "carEnsurance")
+            ?.tariffs.find((tariff) => tariff.tariff === "day")?.price;
+          setOrderPrice(orderPrice + price! * duration);
+        }
+      } else {
+        if (currentTariff?.type === "MINUTE") {
+          setOrderPrice(orderPrice + currentTariff.price * duration);
+          if (childChair) {
+            const price = servicesOrder
+              .find((service) => service.id === "childChair")
+              ?.tariffs.find((tariff) => tariff.tariff === "min")?.price;
+            setOrderPrice(orderPrice + price!);
+          }
+          if (lifeEnsurance) {
+            const price = servicesOrder
+              .find((service) => service.id === "lifeEnsurance")
+              ?.tariffs.find((tariff) => tariff.tariff === "min")?.price;
+            setOrderPrice(orderPrice + price! * duration);
+          }
+          if (carEnsurance) {
+            const price = servicesOrder
+              .find((service) => service.id === "carEnsurance")
+              ?.tariffs.find((tariff) => tariff.tariff === "min")?.price;
+            setOrderPrice(orderPrice + price! * duration);
+          }
+        }
+      }
+    } else {
+      setOrderPrice(0);
+    }
+  }, [location]);
 
   //переход на следующий уровень бронирования
   const handleContinueButton = () => {
@@ -171,7 +233,7 @@ export const OrderReview = ({
       }`}
     >
       <h2>Ваш заказ</h2>
-      <div className="orderReview__car">
+      <div className='orderReview__car'>
         {selectedCar && (
           <>
             <OrderField
@@ -180,44 +242,42 @@ export const OrderReview = ({
             />
           </>
         )}
-        <div className="orderReview__colorContainer">
+        <div className='orderReview__colorContainer'>
           {selectedCarVariant && (
             <>
               <span>цвет</span>
               <div
                 style={{ backgroundColor: "#" + selectedCarVariant.color }}
-                className="orderReview__color"
+                className='orderReview__color'
               ></div>
             </>
           )}{" "}
         </div>
       </div>
-      <div className="orderReview__additional">
+      <div className='orderReview__additional'>
         {selectedCar && (
-          <div className="equipment">
+          <div className='equipment'>
             {equipments.map((item) => (
               <EquipmentComponent key={item} text={item} />
             ))}
           </div>
         )}
         {currentTariff && (
-          <TariffOptions
+          <TariffOptions duration={duration} currentTariff={currentTariff} />
+        )}
+        {currentTariff && (
+          <OrderAddition
             duration={duration}
-            selectedVariant={selectedVariant}
             currentTariff={currentTariff}
+            servicesOrder={servicesOrder}
+            childChair={childChair}
+            carEnsurance={carEnsurance}
+            lifeEnsurance={lifeEnsurance}
           />
         )}
-        <OrderAddition
-          duration={duration}
-          currentTariff={currentTariff}
-          services={services}
-          childChair={childChair}
-          carEnsurance={carEnsurance}
-          lifeEnsurance={lifeEnsurance}
-        />
       </div>
 
-      <div className="orderReview__dateTime">
+      <div className='orderReview__dateTime'>
         {currentTariff && (
           <OrderTime
             tariffs={tariffs}
@@ -227,17 +287,21 @@ export const OrderReview = ({
           />
         )}
       </div>
-      <div className="orderReview__pickPoint">
+      <div className='orderReview__pickPoint'>
         {selectedAddress && (
-          <OrderField
-            description={"пункт выдачи автомобиля:"}
-            value={selectedAddress?.name}
+          <AppTable
+            title={"пункт выдачи автомобиля:"}
+            value2={selectedAddress?.name}
           />
         )}
       </div>
       <AppButton
         isDisabled={isDisabled}
-        text={navPoint}
+        text={
+          location.pathname === "/order/order-full"
+            ? `${orderPrice} руб`
+            : navPoint
+        }
         onClick={handleContinueButton}
       />
     </div>

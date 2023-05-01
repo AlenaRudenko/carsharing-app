@@ -9,7 +9,8 @@ import { TEvent } from "../../../../../interfaces/event";
 
 interface IProps {
   currentTariff: ITariff;
-  isDisabledInput: boolean;
+  isDisabledEndInput: boolean;
+  isDisabledStartInput: boolean;
   tariffs: ITariff[];
   variants: IVariant[];
   handleTimeDuration: (min: number) => void;
@@ -23,7 +24,8 @@ interface IProps {
 
 export const TimePickerDay = ({
   startsAt,
-  isDisabledInput,
+  isDisabledEndInput,
+  isDisabledStartInput,
   endsAt,
   tariffs,
   variants,
@@ -34,15 +36,7 @@ export const TimePickerDay = ({
   handleChangeEndPicker,
   handleChangeEndTime,
 }: IProps) => {
-  const [minEnd, setMinEnd] = useState("");
   const anotherTariff = tariffs.find((tariff) => tariff.type === "DAY");
-
-  const tariffVariant = useSelector(
-    (state: RootState) => state.order.variantId
-  );
-  const currentTariffVariant = variants.find(
-    (variant: IVariant) => variant.id === tariffVariant
-  );
 
   const dispatch = useDispatch<Dispatch>();
 
@@ -112,7 +106,6 @@ export const TimePickerDay = ({
     let day1 = new Date(startsAt);
     let diff = Math.abs(day2.getTime() - day1.getTime());
     let hoursRange = Math.trunc(diff / (1000 * 3600));
-    let daysRange = Math.ceil(diff / (1000 * 3600 * 24));
     handleTimeDuration(diff);
     if (hoursRange >= 24 && currentTariff.type === "MINUTE") {
       dispatch.order.setTariffId(anotherTariff!.id);
@@ -121,26 +114,27 @@ export const TimePickerDay = ({
     console.log("количество минут", diff / 60000);
   }, [endsAt, startsAt, currentTariff]);
   return (
-    <div className="timepicker__container">
-      <div className="timepicker">
+    <div className='timepicker__container'>
+      <div className='timepicker'>
         {" "}
         <span>Начало бронирования</span>
         <input
+          disabled={isDisabledStartInput}
           key={"start"}
           value={startsAt}
           onChange={handleChangeStartPicker}
-          type="datetime-local"
+          type='datetime-local'
           min={new Date().toJSON().slice(0, 16)}
         />
       </div>
-      <div className="timepicker">
+      <div className='timepicker'>
         <span>Окончание бронирования</span>
         <input
-          disabled={isDisabledInput}
+          disabled={isDisabledEndInput}
           key={"end"}
           value={endsAt}
           onChange={handleChangeEndPicker}
-          type="datetime-local"
+          type='datetime-local'
           min={
             startsAt
               ? new Date(

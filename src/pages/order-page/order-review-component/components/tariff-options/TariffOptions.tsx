@@ -1,37 +1,27 @@
 import { ITariff } from "../../../../../interfaces/tariffs";
-import { IVariant } from "../../../../../interfaces/variant";
 import "./styles.scss";
-import { OrderField } from "../OrderField";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../store/store";
-import { useEffect, useState } from "react";
+import { AppTable } from "../../../../../components/app-table/AppTable";
 
 interface IProps {
   duration: number;
   currentTariff: ITariff;
-  selectedVariant?: IVariant;
 }
 
-export const TariffOptions = ({
-  currentTariff,
-  selectedVariant,
-  duration,
-}: IProps) => {
+export const TariffOptions = ({ currentTariff, duration }: IProps) => {
   return (
-    <div className="tariffs__container">
-      {duration}
+    <div className='tariffs__container'>
       {currentTariff.type === "DAY" && (
-        <OrderField
-          description="Суточный тариф"
-          value={`${currentTariff.price} руб/сутки`}
-          amount={`${duration * currentTariff.price} руб`}
+        <AppTable
+          title={"Суточный тариф"}
+          value1={`${currentTariff.price} руб/сутки`}
+          value2={`${duration * currentTariff.price} руб`}
         />
       )}
       {currentTariff.type === "MINUTE" && (
-        <OrderField
-          description="Поминутный тариф"
-          value={`${currentTariff.price} руб/мин`}
-          amount={`от ${duration * currentTariff.price} руб`}
+        <AppTable
+          title={"Поминутный тариф"}
+          value1={`${currentTariff.price} руб/мин`}
+          value2={`от ${duration * currentTariff.price} руб`}
         />
       )}
     </div>

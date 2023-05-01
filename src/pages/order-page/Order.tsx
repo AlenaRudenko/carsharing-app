@@ -72,7 +72,7 @@ export const Order = ({
   const dispatch = useDispatch<Dispatch>();
   const location = useLocation();
 
-  const services = [
+  const servicesOrder = [
     {
       id: "childChair",
       title: "Детское кресло",
@@ -158,15 +158,15 @@ export const Order = ({
     dispatch.order.setAddressId(address.id);
   };
   return (
-    <div className="order__container">
+    <div className='order__container'>
       <Header
         key={"2"}
         handleLocalStoreCity={handleLocalStoreCity}
         localCity={localCity}
         padding={paddingHeader}
-        size="35px"
+        size='35px'
       />
-      <div className="order__navigation">
+      <div className='order__navigation'>
         {navArray.map((item, index) => (
           <Fragment key={item}>
             <OrderNavigation
@@ -175,7 +175,7 @@ export const Order = ({
               status={status}
             />
             {index < navArray.length - 1 && (
-              <AppIcon icon="ArrowRight" color={COLORS.GREY} size={14} />
+              <AppIcon icon='ArrowRight' color={COLORS.GREY} size={14} />
             )}
           </Fragment>
         ))}
@@ -192,7 +192,7 @@ export const Order = ({
         >
           <Routes>
             <Route
-              path="order-location"
+              path='order-location'
               element={
                 <OrderLocation
                   cities={cities}
@@ -203,22 +203,22 @@ export const Order = ({
                 />
               }
             />
-            <Route path="order-model" element={<OrderModel cars={cars} />} />
+            <Route path='order-model' element={<OrderModel cars={cars} />} />
             <Route
-              path="order-additionally"
+              path='order-additionally'
               element={
                 <OrderAdditionally
                   cars={cars}
                   tariffs={tariffs}
-                  services={services}
+                  services={servicesOrder}
                 />
               }
             />
-            <Route path="order-full" element={<OrderFull />} />
+            <Route path='order-full' element={<OrderFull />} />
           </Routes>
         </div>
         <OrderReview
-          services={services}
+          servicesOrder={servicesOrder}
           cars={cars}
           tariffs={tariffs}
           variants={variants}

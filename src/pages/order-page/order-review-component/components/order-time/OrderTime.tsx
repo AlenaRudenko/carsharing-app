@@ -8,6 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Dispatch } from "../../../../../store/store";
 import { HelpModal } from "../../../../../components/help-modal/HelpModal";
+import { useLocation } from "react-router";
 interface IProps {
   tariffs: ITariff[];
   variants: IVariant[];
@@ -23,18 +24,28 @@ export const OrderTime = ({
 }: IProps) => {
   const [startsAt, setStartsAt] = useState("");
   const [endsAt, setEndsAt] = useState("");
-  const [isDisabledInput, setIsDisabledInput] = useState(false);
+  const [isDisabledEndInput, setIsDisabledEndInput] = useState(false);
+  const [isDisabledStartInput, setIsDisabledStartInput] = useState(false);
   const [duration, setDuration] = useState(0);
 
   const dispatch = useDispatch<Dispatch>();
+  const location = useLocation();
 
   const currentVariantTariff = variants.find(
     (item) => item.id === currentVariant
   );
-
-useEffect(() => {
-  setEndsAt('')
-},[currentTariff])
+  useEffect(() => {
+    if (location.pathname === "/order/order-full") {
+      setIsDisabledEndInput(true);
+      setIsDisabledStartInput(true);
+    } else {
+      setIsDisabledEndInput(false);
+      setIsDisabledStartInput(false);
+    }
+  }, [location]);
+  useEffect(() => {
+    setEndsAt("");
+  }, [currentTariff]);
   useEffect(() => {
     if (currentVariantTariff?.variant === "ONE_DAY") {
       handleChangeEndTime(
@@ -107,11 +118,11 @@ useEffect(() => {
   const handleTogleSwitch = (id: string) => {
     if (id !== currentVariantTariff?.id) {
       dispatch.order.setVariantId(id);
-      setIsDisabledInput(true);
+      setIsDisabledEndInput(true);
     } else {
       dispatch.order.removeEndsAt();
       dispatch.order.removeVariantId();
-      setIsDisabledInput(false);
+      setIsDisabledEndInput(false);
       setEndsAt("");
       setDuration(0);
     }
@@ -146,9 +157,10 @@ useEffect(() => {
   }
   return (
     <>
-      <div className="orderReview__time">
+      <div className='orderReview__time'>
         <TimePickerDay
-          isDisabledInput={isDisabledInput}
+          isDisabledStartInput={isDisabledStartInput}
+          isDisabledEndInput={isDisabledEndInput}
           startsAt={startsAt}
           endsAt={endsAt}
           handleChangeStartPicker={handleChangeStartPicker}
@@ -161,16 +173,16 @@ useEffect(() => {
           handleTimeDuration={handleTimeDuration}
         />
       </div>
-      <div className="orderReview__duration">
+      <div className='orderReview__duration'>
         {startsAt && endsAt && currentTariff.type === "MINUTE" && (
           <span>{`${daysNaming(duration)}`}</span>
         )}
         {startsAt && endsAt && currentTariff.type === "DAY" && (
-          <div className="orderReview__helpContainer">
-            <div className="orderReview__help">
+          <div className='orderReview__helpContainer'>
+            <div className='orderReview__help'>
               <span>{`${daysNaming(duration)}`}</span>{" "}
               <HelpModal
-                fontSize="13px"
+                fontSize='13px'
                 descrintion={
                   'В тарифе "Суточный" одна минута считается за полные сутки, тем самым вы бронируете авто на все сутки'
                 }
@@ -180,10 +192,10 @@ useEffect(() => {
         )}
       </div>
 
-      <div className="orderReview__variants">
-        {startsAt && (
+      <div className='orderReview__variants'>
+        {startsAt && location.pathname !== "/order/order-full" && (
           <>
-            <span style={{ marginBottom: "10px" }}>
+            <span style={{ marginBottom: "10px", fontSize: "13px" }}>
               или выберите минимальный пакет бронирования
             </span>
             <TariffVariants

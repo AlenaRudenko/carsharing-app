@@ -1,6 +1,6 @@
 .orderField {
   font-size: 15px;
-  height: 10%;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -11,5 +11,7 @@
   }
   :last-child {
     font-weight: 700;
+  }
+  .orderField__medium {
   }
 }
