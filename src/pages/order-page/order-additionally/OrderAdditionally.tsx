@@ -10,8 +10,11 @@ import { Colors } from "./components/Colors";
 import { ITariff } from "../../../interfaces/tariffs";
 import { Tariff } from "./components/tariff/Tariff";
 import { Service } from "./components/service/Service";
+import { OrderTime } from "./components/order-time/OrderTime";
 
 interface IProps {
+  handleDuration: (time: number) => void;
+  currentTariff: ITariff;
   services: IService[];
   tariffs: ITariff[];
   cars: ICar[];
@@ -28,10 +31,13 @@ interface ITariffOptions {
   tariff: string;
 }
 
-export const OrderAdditionally = ({ cars, tariffs, services }: IProps) => {
-  const [currentServices, setCurrentServices] = useState<string[]>(
-    [] as string[]
-  );
+export const OrderAdditionally = ({
+  cars,
+  tariffs,
+  services,
+  currentTariff,
+  handleDuration,
+}: IProps) => {
   const dispatch = useDispatch<Dispatch>();
 
   const currentCarId = useSelector((state: RootState) => state.order.carId);
@@ -74,6 +80,9 @@ export const OrderAdditionally = ({ cars, tariffs, services }: IProps) => {
   return (
     <>
       <div className='orderAdd__container'>
+        <div className='orderReview__dateTime'>
+          <OrderTime handleDuration={handleDuration} />
+        </div>
         <h3>Выберите цвет автомобиля</h3>
         <div className='colors__block'>
           <div className='currentCar__reviewColorsContainer'>

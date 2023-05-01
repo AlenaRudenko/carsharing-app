@@ -2,30 +2,30 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { AppButton } from "../../../components/app-button/AppButton";
 import "./styles.scss";
 import { useState, useEffect, useMemo } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, Dispatch } from "../../../store/store";
-import { Api } from "../../../services/api.service";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+
 import { ICar } from "../../../interfaces/car";
 import { OrderField } from "./components/OrderField";
 import { EquipmentComponent } from "./components/equipment/EquipmentComponent";
 import { ITariff } from "../../../interfaces/tariffs";
 import { IVariant } from "../../../interfaces/variant";
-import { TEvent } from "../../../interfaces/event";
+
 import { TariffOptions } from "./components/tariff-options/TariffOptions";
-import { TariffVariants } from "./components/tariff-variants/TariffVariants";
-import { OrderTime } from "./components/order-time/OrderTime";
+
 import { OrderAddition } from "./components/order-addition/OrderAddition";
 import { AppTable } from "../../../components/app-table/AppTable";
-import { PlayLessonOutlined } from "@mui/icons-material";
+import { HelpModal } from "../../../components/help-modal/HelpModal";
 
 interface IProps {
+  currentTariff: ITariff;
+  duration: number;
   servicesOrder: IService[];
   cars: ICar[];
-  tariffs: ITariff[];
-  variants: IVariant[];
   addresses: IAddresses[];
   handleStatusNavigation: () => void;
   handleStatus: (status: string) => void;
+  daysNaming: () => void;
 }
 interface IService {
   id: string;
@@ -51,10 +51,11 @@ interface IAddresses {
   id: string;
 }
 export const OrderReview = ({
+  duration,
+  currentTariff,
   servicesOrder,
   cars,
-  tariffs,
-  variants,
+  daysNaming,
   addresses,
   handleStatusNavigation,
   handleStatus,
@@ -62,21 +63,18 @@ export const OrderReview = ({
   const [isDisabled, setIsDisabled] = useState<IState["isDisabled"]>(false);
   const [navPoint, setNavPoint] = useState<IState["navPoint"]>("");
   const [orderPrice, setOrderPrice] = useState(0);
-  const [duration, setDuration] = useState(0);
+
   const carId = useSelector((state: RootState) => state.order.carId);
-  const cityId = useSelector((state: RootState) => state.order.cityId);
   const addressId = useSelector((state: RootState) => state.order.addressId);
   const carVariantId = useSelector(
     (state: RootState) => state.order.carVariantId
   );
-  const tariffId = useSelector((state: RootState) => state.order.tariffId);
+
   const childChair = useSelector((state: RootState) => state.order.childChair);
   const carEnsurance = useSelector(
     (state: RootState) => state.order.carEnsurance
   );
-  const currentVariant = useSelector(
-    (state: RootState) => state.order.variantId
-  );
+
   const lifeEnsurance = useSelector(
     (state: RootState) => state.order.lifeEnsurance
   );
@@ -96,30 +94,7 @@ export const OrderReview = ({
   const selectedCarVariant = selectedCar?.variants.find(
     (item) => item.id === carVariantId
   );
-  const currentTariff = tariffs?.find((tariff) => tariff.id === tariffId);
-  const selectedVariant = variants?.find((item) => item.id === currentVariant);
 
-  useEffect(() => {
-    if (startsAt && endsAt) {
-      if (currentTariff?.type === "DAY") {
-        setDuration(
-          Math.ceil(
-            (new Date(endsAt).getTime() - new Date(startsAt).getTime()) /
-              (1000 * 3600 * 24)
-          )
-        );
-      } else {
-        if (currentTariff?.type === "MINUTE") {
-          setDuration(
-            Math.trunc(
-              (new Date(endsAt).getTime() - new Date(startsAt).getTime()) /
-                60000
-            )
-          );
-        }
-      }
-    } else setDuration(0);
-  }, [startsAt, endsAt, selectedVariant, currentTariff]);
   //смена статуса кнопки и статусов навигации сверху
   useEffect(() => {
     if (location.pathname === "/order/order-location" && addressId) {
@@ -131,7 +106,7 @@ export const OrderReview = ({
     } else if (
       location.pathname === "/order/order-additionally" &&
       carVariantId &&
-      tariffId &&
+      currentTariff &&
       startsAt &&
       endsAt
     ) {
@@ -143,7 +118,7 @@ export const OrderReview = ({
     addressId,
     carId,
     carVariantId,
-    tariffId,
+    currentTariff,
     startsAt,
     endsAt,
   ]);
@@ -171,55 +146,55 @@ export const OrderReview = ({
       navigate("/order/order-location");
     }
   }, [location, carId, addressId, navigate]);
-  useEffect(() => {
-    if (location.pathname === "/order/order-full") {
-      if (currentTariff?.type === "DAY") {
-        setOrderPrice(orderPrice + currentTariff.price * duration);
-        if (childChair) {
-          const price = servicesOrder
-            .find((service) => service.id === "childChair")
-            ?.tariffs.find((tariff) => tariff.tariff === "day")?.price;
-          setOrderPrice(orderPrice + price! * duration);
-        }
-        if (lifeEnsurance) {
-          const price = servicesOrder
-            .find((service) => service.id === "lifeEnsurance")
-            ?.tariffs.find((tariff) => tariff.tariff === "day")?.price;
-          setOrderPrice(orderPrice + price! * duration);
-        }
-        if (carEnsurance) {
-          const price = servicesOrder
-            .find((service) => service.id === "carEnsurance")
-            ?.tariffs.find((tariff) => tariff.tariff === "day")?.price;
-          setOrderPrice(orderPrice + price! * duration);
-        }
-      } else {
-        if (currentTariff?.type === "MINUTE") {
-          setOrderPrice(orderPrice + currentTariff.price * duration);
-          if (childChair) {
-            const price = servicesOrder
-              .find((service) => service.id === "childChair")
-              ?.tariffs.find((tariff) => tariff.tariff === "min")?.price;
-            setOrderPrice(orderPrice + price!);
-          }
-          if (lifeEnsurance) {
-            const price = servicesOrder
-              .find((service) => service.id === "lifeEnsurance")
-              ?.tariffs.find((tariff) => tariff.tariff === "min")?.price;
-            setOrderPrice(orderPrice + price! * duration);
-          }
-          if (carEnsurance) {
-            const price = servicesOrder
-              .find((service) => service.id === "carEnsurance")
-              ?.tariffs.find((tariff) => tariff.tariff === "min")?.price;
-            setOrderPrice(orderPrice + price! * duration);
-          }
-        }
-      }
-    } else {
-      setOrderPrice(0);
-    }
-  }, [location]);
+  // useEffect(() => {
+  //   if (location.pathname === "/order/order-full") {
+  //     if (currentTariff?.type === "DAY") {
+  //       setOrderPrice(orderPrice + currentTariff.price * duration);
+  //       if (childChair) {
+  //         const price = servicesOrder
+  //           .find((service) => service.id === "childChair")
+  //           ?.tariffs.find((tariff) => tariff.tariff === "day")?.price;
+  //         setOrderPrice(orderPrice + price! * dayDuration);
+  //       }
+  //       if (lifeEnsurance) {
+  //         const price = servicesOrder
+  //           .find((service) => service.id === "lifeEnsurance")
+  //           ?.tariffs.find((tariff) => tariff.tariff === "day")?.price;
+  //         setOrderPrice(orderPrice + price! * dayDuration);
+  //       }
+  //       if (carEnsurance) {
+  //         const price = servicesOrder
+  //           .find((service) => service.id === "carEnsurance")
+  //           ?.tariffs.find((tariff) => tariff.tariff === "day")?.price;
+  //         setOrderPrice(orderPrice + price! * dayDuration);
+  //       }
+  //     } else {
+  //       if (currentTariff?.type === "MINUTE") {
+  //         setOrderPrice(orderPrice + currentTariff.price * minDuration);
+  //         if (childChair) {
+  //           const price = servicesOrder
+  //             .find((service) => service.id === "childChair")
+  //             ?.tariffs.find((tariff) => tariff.tariff === "min")?.price;
+  //           setOrderPrice(orderPrice + price!);
+  //         }
+  //         if (lifeEnsurance) {
+  //           const price = servicesOrder
+  //             .find((service) => service.id === "lifeEnsurance")
+  //             ?.tariffs.find((tariff) => tariff.tariff === "min")?.price;
+  //           setOrderPrice(orderPrice + price! * minDuration);
+  //         }
+  //         if (carEnsurance) {
+  //           const price = servicesOrder
+  //             .find((service) => service.id === "carEnsurance")
+  //             ?.tariffs.find((tariff) => tariff.tariff === "min")?.price;
+  //           setOrderPrice(orderPrice + price! * minDuration);
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     setOrderPrice(0);
+  //   }
+  // }, [location]);
 
   //переход на следующий уровень бронирования
   const handleContinueButton = () => {
@@ -276,16 +251,27 @@ export const OrderReview = ({
           />
         )}
       </div>
-
-      <div className='orderReview__dateTime'>
-        {currentTariff && (
-          <OrderTime
-            tariffs={tariffs}
-            variants={variants}
-            currentTariff={currentTariff}
-            currentVariant={currentVariant}
-          />
-        )}
+      <div className='orderReview__duration'>
+        {currentTariff &&
+          startsAt &&
+          endsAt &&
+          currentTariff.type === "MINUTE" && <span>{`${daysNaming()}`}</span>}
+        {currentTariff &&
+          startsAt &&
+          endsAt &&
+          currentTariff.type === "DAY" && (
+            <div className='orderReview__helpContainer'>
+              <div className='orderReview__help'>
+                <span>{`${daysNaming()}`}</span>{" "}
+                <HelpModal
+                  fontSize='13px'
+                  descrintion={
+                    'В тарифе "Суточный" одна минута считается за полные сутки, тем самым вы бронируете авто на все сутки'
+                  }
+                />
+              </div>
+            </div>
+          )}
       </div>
       <div className='orderReview__pickPoint'>
         {selectedAddress && (
@@ -297,11 +283,7 @@ export const OrderReview = ({
       </div>
       <AppButton
         isDisabled={isDisabled}
-        text={
-          location.pathname === "/order/order-full"
-            ? `${orderPrice} руб`
-            : navPoint
-        }
+        text={navPoint}
         onClick={handleContinueButton}
       />
     </div>

@@ -1,0 +1,29 @@
+@import "../../../../../../default-variables.scss";
+.timepicker__container {
+  width: 100%;
+  display: flex;
+  @media screen and (max-width: 1200px) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  @media screen and (min-width: 1200px) {
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: row;
+  }
+}
+.timepicker {
+  @media screen and (max-width: 1350px) {
+    font-size: 13px;
+  }
+  @media screen and (min-width: 1351px) {
+    font-size: 20px;
+  }
+
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  input {
+    color: $pimary-color;
+  }
+}

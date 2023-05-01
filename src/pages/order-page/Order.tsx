@@ -4,8 +4,8 @@ import { OrderNavigation } from "./components/order-navigation/OrderNavigation";
 import { AppIcon } from "../../components/app-icon/AppIcon";
 import { COLORS } from "./../../constants/colors";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { Dispatch } from "./../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { Dispatch, RootState } from "./../../store/store";
 import { OrderLocation } from "./order-location/OrderLocation";
 import { OrderModel } from "./order-model/OrderModel";
 import { OrderAdditionally } from "./order-additionally/OrderAdditionally";
@@ -63,6 +63,7 @@ export const Order = ({
 
   const [paddingHeader, setPaddingHeader] = useState("20px 0px 50px 0px");
   const [address, setAddress] = useState("");
+  const [duration, setDuration] = useState(0);
   const [status, setStatus] = useState<IState["status"]>(["order-location"]);
   const [cars, setCars] = useState<ICar[]>([]);
   const [tariffs, setTariffs] = useState<ITariff[]>([]);
@@ -71,7 +72,9 @@ export const Order = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
   const location = useLocation();
-
+  useEffect(() => {
+    console.log("dddddddddddd", duration);
+  }, [duration]);
   const servicesOrder = [
     {
       id: "childChair",
@@ -157,6 +160,47 @@ export const Order = ({
     setAddress(address.name);
     dispatch.order.setAddressId(address.id);
   };
+  const handleDuration = (time: number) => {
+    setDuration(time);
+  };
+  function daysNaming() {
+    if (currentTariff?.type === "DAY") {
+      const time = Math.ceil(duration / (1000 * 3600 * 24));
+      return time + " " + days[timeName(time)];
+    } else {
+      const time = duration / 60000;
+      return time + " " + mins[timeName(time)];
+    }
+  }
+  const timeName = (count: number): "1" | "2" | "5" => {
+    let key: "1" | "2" | "5" = "1";
+    if (count === 0) {
+      key = "5";
+    } else if (count === 1 || (count > 20 && count % 10 === 1)) {
+      key = "1";
+    } else if (
+      (count > 1 && count < 5) ||
+      (count > 20 && count % 10 > 1 && count % 10 < 5)
+    ) {
+      key = "2";
+    } else {
+      key = "5";
+    }
+
+    return key;
+  };
+  const days = {
+    1: "день",
+    2: "дня",
+    5: "дней",
+  };
+  const mins = {
+    1: "минута",
+    2: "минуты",
+    5: "минут",
+  };
+  const tariffId = useSelector((state: RootState) => state.order.tariffId);
+  const currentTariff = tariffs?.find((tariff) => tariff.id === tariffId);
   return (
     <div className='order__container'>
       <Header
@@ -204,24 +248,29 @@ export const Order = ({
               }
             />
             <Route path='order-model' element={<OrderModel cars={cars} />} />
+
             <Route
               path='order-additionally'
               element={
                 <OrderAdditionally
+                  handleDuration={handleDuration}
+                  currentTariff={currentTariff!}
                   cars={cars}
                   tariffs={tariffs}
                   services={servicesOrder}
                 />
               }
             />
+
             <Route path='order-full' element={<OrderFull />} />
           </Routes>
         </div>
         <OrderReview
+          duration={duration}
+          daysNaming={daysNaming}
+          currentTariff={currentTariff!}
           servicesOrder={servicesOrder}
           cars={cars}
-          tariffs={tariffs}
-          variants={variants}
           addresses={addresses}
           handleStatusNavigation={handleStatusNavigation}
           handleStatus={handleStatusOrder}

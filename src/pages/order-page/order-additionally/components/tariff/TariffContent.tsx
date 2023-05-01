@@ -5,7 +5,6 @@ interface IProps {
   price: number;
   tariffParams: ITariffParams[];
   textParams: IText;
-  duration: number;
 }
 
 interface IText {
@@ -27,16 +26,10 @@ export const TariffContent = ({
   price,
   tariffParams,
   textParams,
-  duration,
 }: IProps) => {
   return (
     <div style={{ userSelect: "none" }}>
-      <div
-        className={`price price${
-          duration >= 1440 && tariff === "MINUTE" && "--unactive"
-        }`}
-        style={{ fontSize: textParams.priceSize }}
-      >
+      <div className={`price`} style={{ fontSize: textParams.priceSize }}>
         <span>{tariff === "DAY" ? "Аренда" : "В пути"}</span>
         <span>
           {tariff === "DAY" ? `${price} руб/сут` : `${price} руб/мин`}
@@ -49,7 +42,7 @@ export const TariffContent = ({
             {tariff.carWaiting && (
               <div
                 key={tariff.carWaiting}
-                className="description"
+                className='description'
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -62,7 +55,7 @@ export const TariffContent = ({
             {tariff.fuel && (
               <div
                 key={tariff.fuel}
-                className="description"
+                className='description'
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -75,7 +68,7 @@ export const TariffContent = ({
             {tariff.mileage && (
               <div
                 key={tariff.mileage}
-                className="description"
+                className='description'
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -88,7 +81,7 @@ export const TariffContent = ({
             {tariff.overMileage && (
               <div
                 key={tariff.overMileage}
-                className="description"
+                className='description'
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -101,7 +94,7 @@ export const TariffContent = ({
             {tariff.standbyMode && (
               <div
                 key={tariff.standbyMode}
-                className="description"
+                className='description'
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
