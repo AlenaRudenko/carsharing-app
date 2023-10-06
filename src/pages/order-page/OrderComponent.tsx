@@ -138,7 +138,7 @@ class Order extends React.Component<IProps, IState> {
   };
 
   currentTariff = this.state.tariffs?.find(
-    (tariff) => tariff.id === this.props.tariffId!,
+    (tariff) => tariff.id === '1',
   );
   render() {
     const {
