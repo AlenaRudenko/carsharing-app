@@ -23,7 +23,7 @@ export const Colors = ({
         currentVariantId === variant ? "currentCar__reviewColors--selected" : ""
       }`}
     >
-      <img alt="" src={`https://api.need-car.online/${imageUrl}`} />
+      <img alt="" src={`https://api.need-for-drive.ru/${imageUrl}`} />
     </div>
   );
 };

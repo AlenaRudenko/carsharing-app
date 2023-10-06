@@ -31,17 +31,17 @@ export const CarCard = ({ cars }: IProps) => {
   }, [cars]);
 
   return (
-    <div className='carCards__container'>
-      <div className='carCards__wrapper'>
+    <div className="carCards__container">
+      <div className="carCards__wrapper">
         {cars.map((item, index) => (
           <div key={index}>
             {index === currentIndex && (
-              <div className='carCards__item'>
+              <div className="carCards__item">
                 <div className={"carCards__img"}>
                   <img
                     key={item.variants[0].imageUrl}
                     alt={""}
-                    src={`https://api.need-car.online/${item.variants[0].imageUrl}`}
+                    src={`https://api.need-for-drive.ru/${item.variants[0].imageUrl}`}
                   />
                 </div>
               </div>

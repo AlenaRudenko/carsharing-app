@@ -1,13 +1,13 @@
-import { AppButton } from "../app-button/AppButton";
+import { AppButton } from "../../../../components/app-button/AppButton";
 import "./styles.scss";
-import "./../../constants/colors";
-import { COLORS } from "./../../constants/colors";
+import "../../../../constants/colors";
+import { COLORS } from "../../../../constants/colors";
 import { useState } from "react";
-import { TEvent } from "../../interfaces/event";
-import { LocalStore } from "../../services/localStorage.service";
-import { Dispatch } from "../../store/store";
+import { TEvent } from "../../../../interfaces/event";
+import { LocalStore } from "../../../../services/localStorage.service";
+import { Dispatch } from "../../../../store/store";
 import { useDispatch } from "react-redux";
-import { ICity } from "../../interfaces/city";
+import { ICity } from "../../../../interfaces/city";
 import { OneKkTwoTone } from "@mui/icons-material";
 
 interface IProps {
@@ -15,19 +15,19 @@ interface IProps {
   handleGeoModalTitle: () => void;
   cities: ICity[];
   localCity: string;
-  handleCityId: (city: ICity) => void;
+  handleChangeCityName: (city: string) => void;
 }
 
 interface IState {
   isActive: boolean;
   currentCity: string;
 }
-export const GeoModal = ({
+export const LocationModal = ({
   toggleIsGeoVisible,
   handleGeoModalTitle,
   cities,
   localCity,
-  handleCityId,
+  handleChangeCityName,
 }: IProps) => {
   const [isActive, setIsActive] = useState<IState["isActive"]>(false);
   const [currentCity, setCurrentCity] = useState<IState["currentCity"]>("");
@@ -42,7 +42,7 @@ export const GeoModal = ({
   //обработчик города при наличии совпадения с городами из сервера
   const handleCity = () => {
     if (cityH) {
-      handleCityId(cityH);
+      handleChangeCityName(cityH.name);
     }
   };
   return (
@@ -100,7 +100,7 @@ export const GeoModal = ({
                 toggleIsGeoVisible();
                 setCurrentCity(localCity);
                 LocalStore.setCurrentCity(localCity);
-                handleCity();
+                handleChangeCityName(localCity);
               }}
               size={"regular"}
             />

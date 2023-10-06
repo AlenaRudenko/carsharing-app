@@ -10,22 +10,21 @@ import { OrderField } from "./components/OrderField";
 import { EquipmentComponent } from "./components/equipment/EquipmentComponent";
 import { ITariff } from "../../../interfaces/tariffs";
 import { IVariant } from "../../../interfaces/variant";
-
+import { servicesOrder } from "../data/orderData";
 import { TariffOptions } from "./components/tariff-options/TariffOptions";
 
 import { OrderAddition } from "./components/order-addition/OrderAddition";
 import { AppTable } from "../../../components/app-table/AppTable";
 import { HelpModal } from "../../../components/help-modal/HelpModal";
-
+import { TPath } from "../../main-page/MainContent";
+import { daysNaming } from "../../../functions/getTimeNaming";
 interface IProps {
   currentTariff: ITariff;
   duration: number;
-  servicesOrder: IService[];
   cars: ICar[];
   addresses: IAddresses[];
-  handleStatusNavigation: () => void;
-  handleStatus: (status: string) => void;
-  daysNaming: () => void;
+  handleNavigation: () => void;
+  handleConfirmedOrderPaths: (path: TPath) => void;
 }
 interface IService {
   id: string;
@@ -53,12 +52,10 @@ interface IAddresses {
 export const OrderReview = ({
   duration,
   currentTariff,
-  servicesOrder,
   cars,
-  daysNaming,
   addresses,
-  handleStatusNavigation,
-  handleStatus,
+  handleNavigation,
+  handleConfirmedOrderPaths,
 }: IProps) => {
   const [isDisabled, setIsDisabled] = useState<IState["isDisabled"]>(false);
   const [navPoint, setNavPoint] = useState<IState["navPoint"]>("");
@@ -67,16 +64,16 @@ export const OrderReview = ({
   const carId = useSelector((state: RootState) => state.order.carId);
   const addressId = useSelector((state: RootState) => state.order.addressId);
   const carVariantId = useSelector(
-    (state: RootState) => state.order.carVariantId
+    (state: RootState) => state.order.carVariantId,
   );
 
   const childChair = useSelector((state: RootState) => state.order.childChair);
   const carEnsurance = useSelector(
-    (state: RootState) => state.order.carEnsurance
+    (state: RootState) => state.order.carEnsurance,
   );
 
   const lifeEnsurance = useSelector(
-    (state: RootState) => state.order.lifeEnsurance
+    (state: RootState) => state.order.lifeEnsurance,
   );
   const startsAt = useSelector((state: RootState) => state.order.startsAt);
   const endsAt = useSelector((state: RootState) => state.order.endsAt);
@@ -92,17 +89,22 @@ export const OrderReview = ({
 
   const selectedAddress = addresses?.find((item) => item.id === addressId);
   const selectedCarVariant = selectedCar?.variants.find(
-    (item) => item.id === carVariantId
+    (item) => item.id === carVariantId,
   );
 
   //смена статуса кнопки и статусов навигации сверху
   useEffect(() => {
-    if (location.pathname === "/order/order-location" && addressId) {
-      handleStatus("order-location");
-      setIsDisabled(false);
+    if (location.pathname === "/order/order-location") {
+      handleConfirmedOrderPaths({ name: "order-location", index: 1 });
+      if (addressId) {
+        handleConfirmedOrderPaths({ name: "order-model", index: 2 });
+        setIsDisabled(false);
+      } else setIsDisabled(true);
     } else if (location.pathname === "/order/order-model" && carId) {
-      handleStatus("order-model");
-      setIsDisabled(false);
+      if (carId) {
+        handleConfirmedOrderPaths({ name: "order-additionally", index: 3 });
+        setIsDisabled(false);
+      } else setIsDisabled(true);
     } else if (
       location.pathname === "/order/order-additionally" &&
       carVariantId &&
@@ -110,7 +112,7 @@ export const OrderReview = ({
       startsAt &&
       endsAt
     ) {
-      handleStatus("order-additionally");
+      handleConfirmedOrderPaths({ name: "order-full", index: 4 });
       setIsDisabled(false);
     } else setIsDisabled(true);
   }, [
@@ -196,11 +198,6 @@ export const OrderReview = ({
   //   }
   // }, [location]);
 
-  //переход на следующий уровень бронирования
-  const handleContinueButton = () => {
-    handleStatusNavigation();
-  };
-
   return (
     <div
       className={`orderReview__container orderReview__container${
@@ -208,7 +205,7 @@ export const OrderReview = ({
       }`}
     >
       <h2>Ваш заказ</h2>
-      <div className='orderReview__car'>
+      <div className="orderReview__car">
         {selectedCar && (
           <>
             <OrderField
@@ -217,21 +214,21 @@ export const OrderReview = ({
             />
           </>
         )}
-        <div className='orderReview__colorContainer'>
+        <div className="orderReview__colorContainer">
           {selectedCarVariant && (
             <>
               <span>цвет</span>
               <div
                 style={{ backgroundColor: "#" + selectedCarVariant.color }}
-                className='orderReview__color'
+                className="orderReview__color"
               ></div>
             </>
           )}{" "}
         </div>
       </div>
-      <div className='orderReview__additional'>
+      <div className="orderReview__additional">
         {selectedCar && (
-          <div className='equipment'>
+          <div className="equipment">
             {equipments.map((item) => (
               <EquipmentComponent key={item} text={item} />
             ))}
@@ -251,20 +248,22 @@ export const OrderReview = ({
           />
         )}
       </div>
-      <div className='orderReview__duration'>
+      <div className="orderReview__duration">
         {currentTariff &&
           startsAt &&
           endsAt &&
-          currentTariff.type === "MINUTE" && <span>{`${daysNaming()}`}</span>}
+          currentTariff.type === "MINUTE" && (
+            <span>{`${daysNaming(currentTariff.type, duration)}`}</span>
+          )}
         {currentTariff &&
           startsAt &&
           endsAt &&
           currentTariff.type === "DAY" && (
-            <div className='orderReview__helpContainer'>
-              <div className='orderReview__help'>
-                <span>{`${daysNaming()}`}</span>{" "}
+            <div className="orderReview__helpContainer">
+              <div className="orderReview__help">
+                <span>{`${daysNaming(currentTariff.type, duration)}`}</span>{" "}
                 <HelpModal
-                  fontSize='13px'
+                  fontSize="13px"
                   descrintion={
                     'В тарифе "Суточный" одна минута считается за полные сутки, тем самым вы бронируете авто на все сутки'
                   }
@@ -273,7 +272,7 @@ export const OrderReview = ({
             </div>
           )}
       </div>
-      <div className='orderReview__pickPoint'>
+      <div className="orderReview__pickPoint">
         {selectedAddress && (
           <AppTable
             title={"пункт выдачи автомобиля:"}
@@ -284,7 +283,7 @@ export const OrderReview = ({
       <AppButton
         isDisabled={isDisabled}
         text={navPoint}
-        onClick={handleContinueButton}
+        onClick={handleNavigation}
       />
     </div>
   );

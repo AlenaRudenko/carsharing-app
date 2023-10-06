@@ -14,7 +14,7 @@ export const Navigation = ({
   toggleIsOpenProfile,
 }: IProps) => {
   return (
-    <div className='sidebar'>
+    <div className="sidebar">
       <NavButton toggleIsOpenMenu={toggleIsOpenMenu} isOpenMenu={isOpenMenu} />
       <UserButton toggleIsOpenProfile={toggleIsOpenProfile} />
     </div>

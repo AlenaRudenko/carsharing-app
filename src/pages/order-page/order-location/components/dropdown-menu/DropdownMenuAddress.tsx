@@ -38,7 +38,6 @@ export const DropdownMenuAddress = ({
   const handleAddress = () => {
     if (addressCheck) {
       handleSetCurrentAddress(addressCheck!);
-      dispatch.order.setCityId(currCity!.id);
     }
   };
   const handleCurrentAddress = (e: TEvent) => {

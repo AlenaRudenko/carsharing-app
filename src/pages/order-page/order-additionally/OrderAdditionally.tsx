@@ -9,15 +9,22 @@ import "./styles.scss";
 import { Colors } from "./components/Colors";
 import { ITariff } from "../../../interfaces/tariffs";
 import { Tariff } from "./components/tariff/Tariff";
+import { TEvent } from "../../../interfaces/event";
 import { Service } from "./components/service/Service";
-import { OrderTime } from "./components/order-time/OrderTime";
+import { servicesOrder } from "../data/orderData";
+import { TimePickerDay } from "./components/time-picker/TimePickerDay";
 
 interface IProps {
   handleDuration: (time: number) => void;
   currentTariff: ITariff;
-  services: IService[];
   tariffs: ITariff[];
   cars: ICar[];
+  handleChangeStartPicker: (time: TEvent) => void;
+  handleChangeEndPicker: (time: TEvent) => void;
+  handleResetStartPicker: () => void;
+  handleResetEndPicker: () => void;
+  startsAt: string;
+  endsAt: string;
 }
 
 interface IService {
@@ -34,25 +41,30 @@ interface ITariffOptions {
 export const OrderAdditionally = ({
   cars,
   tariffs,
-  services,
   currentTariff,
   handleDuration,
+  handleChangeStartPicker,
+  handleChangeEndPicker,
+  handleResetStartPicker,
+  handleResetEndPicker,
+  startsAt,
+  endsAt,
 }: IProps) => {
   const dispatch = useDispatch<Dispatch>();
 
   const currentCarId = useSelector((state: RootState) => state.order.carId);
   const currentVariantId = useSelector(
-    (state: RootState) => state.order.carVariantId
+    (state: RootState) => state.order.carVariantId,
   );
   const currentTariffId = useSelector(
-    (state: RootState) => state.order.tariffId
+    (state: RootState) => state.order.tariffId,
   );
   const childChair = useSelector((state: RootState) => state.order.childChair);
   const carEnsurance = useSelector(
-    (state: RootState) => state.order.carEnsurance
+    (state: RootState) => state.order.carEnsurance,
   );
   const lifeEnsurance = useSelector(
-    (state: RootState) => state.order.lifeEnsurance
+    (state: RootState) => state.order.lifeEnsurance,
   );
 
   const selectedCar = useMemo(() => {
@@ -79,13 +91,21 @@ export const OrderAdditionally = ({
 
   return (
     <>
-      <div className='orderAdd__container'>
-        <div className='orderReview__dateTime'>
-          <OrderTime handleDuration={handleDuration} />
+      <div className="orderAdd__container">
+        <div className="orderReview__dateTime">
+          <TimePickerDay
+            handleChangeStartPicker={handleChangeStartPicker}
+            handleChangeEndPicker={handleChangeEndPicker}
+            handleResetStartPicker={handleResetStartPicker}
+            handleResetEndPicker={handleResetEndPicker}
+            startsAt={startsAt}
+            endsAt={endsAt}
+            handleTimeDuration={handleDuration}
+          />
         </div>
         <h3>Выберите цвет автомобиля</h3>
-        <div className='colors__block'>
-          <div className='currentCar__reviewColorsContainer'>
+        <div className="colors__block">
+          <div className="currentCar__reviewColorsContainer">
             {selectedCar?.variants.map((variant) => (
               <Colors
                 key={variant.id}
@@ -99,7 +119,7 @@ export const OrderAdditionally = ({
           </div>
         </div>
         <h3>Выберите тариф</h3>
-        <div className='orderAdd__tariffs'>
+        <div className="orderAdd__tariffs">
           {tariffs.map((tariff) => (
             <Tariff
               key={tariff.id}
@@ -110,9 +130,9 @@ export const OrderAdditionally = ({
           ))}
         </div>
         <h3>Выберите дополнительные услуги</h3>
-        <div className='orderAdd__services'>
+        <div className="orderAdd__services">
           {currentTariffId &&
-            services.map((service) => (
+            servicesOrder.map((service) => (
               <Service
                 allTariffs={tariffs}
                 carEnsurance={carEnsurance}

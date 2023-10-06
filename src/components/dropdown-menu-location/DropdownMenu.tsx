@@ -31,7 +31,6 @@ export const DropdownMenu = ({ localCity, handleLocalStoreCity }: IProps) => {
   const handleSetCurrentLocation = (city: ICity) => {
     LocalStore.setCurrentCity(city.name);
     setIsVisible(false);
-    dispatch.order.setCityId(city.id);
     handleLocalStoreCity(city!.name);
   };
   const handleIsVisible = () => {
@@ -52,13 +51,17 @@ export const DropdownMenu = ({ localCity, handleLocalStoreCity }: IProps) => {
 
   return (
     <div className="dropdown">
-      <div className="dropdown__current">
+      <div
+        className={`dropdown__current dropdown__current${
+          !isVisible && "--unactive"
+        }`}
+      >
         <span
           onMouseOver={handleIsVisible}
           onMouseOut={() => {
             setIsVisible(false);
           }}
-          style={{ color: COLORS.BLACK, cursor: "pointer" }}
+          style={{ color: COLORS.BLACK }}
         >
           {localCity}
         </span>

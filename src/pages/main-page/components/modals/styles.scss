@@ -1,0 +1,67 @@
+@import "../../../../default-variables.scss";
+
+.login-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+}
+.test {
+  position: absolute;
+  top: 100px;
+  left: 400px;
+  width: 100px;
+  height: 100px;
+  background-color: red;
+}
+//Link to registration page
+.login-container__footer {
+  flex-direction: column;
+  height: 20%;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  font-size: 15px;
+  :last-child {
+    margin-top: 7px;
+    text-decoration: none;
+    color: $grey-color;
+    cursor: pointer;
+  }
+  :last-child:hover {
+    color: $pimary-color;
+  }
+}
+//нотифай если чтото неправильно ввел
+.login-container__notification {
+  width: 80%;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  span {
+    color: red;
+    font-size: 13px;
+  }
+}
+//regpage container
+.signup-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.signup-container__notification {
+  margin: 5px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  width: 100%;
+  height: 15px;
+  font-weight: 500;
+  color: red;
+}

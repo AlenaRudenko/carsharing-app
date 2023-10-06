@@ -39,7 +39,7 @@ export const OrderModel = ({ cars }: IProps) => {
               <span>{car.model}</span>
               <div className="car__pic">
                 <img
-                  src={`https://api.need-car.online/${car.variants[1].imageUrl}`}
+                  src={`https://api.need-for-drive.ru/${car.variants[1].imageUrl}`}
                   alt=""
                 />
               </div>
