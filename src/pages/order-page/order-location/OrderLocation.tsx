@@ -11,7 +11,6 @@ interface IProps {
   cities: ICity[];
   addresses: IAddress[];
   localCity: string;
-  coordsLocation: ICoords;
   handleSetCurrentAddress: (address: IAddress) => void;
 }
 
@@ -27,9 +26,8 @@ interface IAddress {
 export const OrderLocation = ({
   handleSetCurrentAddress,
   localCity,
-  coordsLocation,
   addresses,
-  cities
+  cities,
 }: IProps) => {
   const [value, setValue] = useState<IState["value"]>("");
 
@@ -44,13 +42,13 @@ export const OrderLocation = ({
     <>
       <div className="orderLocation__container">
         <DropdownMenuAddress
-        cities={cities}
+          cities={cities}
           handleSetCurrentAddress={handleSetCurrentAddress}
           addresses={addresses}
         />
 
         <div id="map" className="orderLocation__map">
-          <YandexMap coordsLocation={coordsLocation} />
+          <YandexMap />
         </div>
       </div>
     </>

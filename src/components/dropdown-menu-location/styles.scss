@@ -11,6 +11,14 @@
   margin-right: 2px;
   text-align: end;
   width: 90px;
+  span {
+    cursor: pointer;
+  }
+  &--unactive {
+    span {
+      cursor: not-allowed;
+    }
+  }
 }
 .dropdown__content {
   position: absolute;

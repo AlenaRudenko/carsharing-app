@@ -7,7 +7,7 @@
   margin-bottom: 4px;
   user-select: none;
 }
-.mainpage--container {
+.startpage-container {
   box-sizing: border-box;
   padding: 20px;
   width: 50%;
@@ -17,7 +17,7 @@
   flex-direction: column;
   justify-content: space-between;
 }
-.mainpage--content {
+.startpage-container__content {
   display: flex;
   flex-direction: column;
   :first-child {
@@ -35,7 +35,7 @@
     user-select: none;
   }
 }
-.mainpage--footer {
+.startpage-container__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;

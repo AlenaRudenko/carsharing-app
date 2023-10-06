@@ -1,29 +1,39 @@
 import { useNavigate } from "react-router-dom";
+import { TPath } from "../../../main-page/MainContent";
 import "./styles.scss";
 
-interface IProps {
-  navigationItem: string;
+type TNavigationItem = {
+  name: string;
+  index: number;
   path: string;
-  status: string[];
+};
+interface IProps {
+  navigationItem: TNavigationItem;
+  confirmedOrderPaths: TPath[];
 }
 
-export const OrderNavigation = ({ navigationItem, path, status }: IProps) => {
+export const OrderNavigation = ({
+  navigationItem,
+  confirmedOrderPaths,
+}: IProps) => {
   const navigate = useNavigate();
-
+  const successPath = confirmedOrderPaths!.find(
+    (item) => item!.name === navigationItem.path,
+  );
   //обработчик перемещения по меню сверху
   const handleOnClick = () => {
-    if (status.includes(path)) {
-      return navigate(path);
+    if (successPath) {
+      return navigate(navigationItem.path);
     } else return () => {};
   };
   return (
     <div
       className={`navigationItem__container navigationItem__container${
-        status.includes(path) ? "--active" : "--unactive"
+        successPath ? "--active" : "--unactive"
       }`}
       onClick={handleOnClick}
     >
-      <span>{navigationItem}</span>
+      <span>{navigationItem.name}</span>
     </div>
   );
 };

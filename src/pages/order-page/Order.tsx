@@ -20,28 +20,50 @@ import { ICar } from "../../interfaces/car";
 import { ICity } from "../../interfaces/city";
 import { IVariant } from "../../interfaces/variant";
 import { ITariff } from "../../interfaces/tariffs";
+import { TEvent } from "../../interfaces/event";
+import { TPath } from "../../pages/main-page/MainContent";
 import { Api } from "../../services/api.service";
 
 interface IState {
-  status: string[];
   address: string;
 }
 
 interface IProps {
   localCity: string;
   handleLocalStoreCity?: (city: string | undefined) => void;
-  coordsLocation: ICoords;
+  confirmedOrderPaths: TPath[];
+  handleConfirmedOrderPaths: (path: TPath) => void;
+  handleChangeStartPicker: (time: TEvent) => void;
+  handleChangeEndPicker: (time: TEvent) => void;
+  handleResetStartPicker: () => void;
+  handleResetEndPicker: () => void;
+  startsAt: string;
+  endsAt: string;
 }
+
 interface IAddress {
   id: string;
   name: string;
 }
+
 export const Order = ({
   localCity,
   handleLocalStoreCity,
-  coordsLocation,
+  confirmedOrderPaths,
+  handleConfirmedOrderPaths,
+  handleChangeStartPicker,
+  handleChangeEndPicker,
+  handleResetStartPicker,
+  handleResetEndPicker,
+  startsAt,
+  endsAt,
 }: IProps) => {
-  const navArray = ["Местоположение", "Модель", "Дополнительно", "Итого"];
+  const navArray = [
+    { name: "Местоположение", index: 1, path: "order-location" },
+    { name: "Модель", index: 2, path: "order-model" },
+    { name: "Дополнительно", index: 3, path: "order-additionally" },
+    { name: "Итого", index: 4, path: "order-full" },
+  ];
 
   const addresses = [
     { name: "ул. Гагарина 88", id: "1" },
@@ -64,72 +86,25 @@ export const Order = ({
   const [paddingHeader, setPaddingHeader] = useState("20px 0px 50px 0px");
   const [address, setAddress] = useState("");
   const [duration, setDuration] = useState(0);
-  const [status, setStatus] = useState<IState["status"]>(["order-location"]);
   const [cars, setCars] = useState<ICar[]>([]);
   const [tariffs, setTariffs] = useState<ITariff[]>([]);
   const [variants, setVariants] = useState<IVariant[]>([]);
   const [cities, setCities] = useState<ICity[]>([]);
+
   const navigate = useNavigate();
   const dispatch = useDispatch<Dispatch>();
   const location = useLocation();
-  useEffect(() => {
-    console.log("dddddddddddd", duration);
-  }, [duration]);
-  const servicesOrder = [
-    {
-      id: "childChair",
-      title: "Детское кресло",
-      descrintion: "Кресло подходит для перевозки детей весом от 9 до 36 кг",
-      tariffs: [
-        {
-          price: 50,
-          tariff: "min",
-        },
-        {
-          price: 200,
-          tariff: "day",
-        },
-      ],
-    },
-    {
-      id: "carEnsurance",
-      title: "Страхование жизни и здоровья",
-      descrintion:
-        "Действует в случае травм, инвалидности или смерти застрахованного. Застрахованными считаются все пассажиры (если их количество не превышает вместимость транспорта)",
-      tariffs: [
-        {
-          price: 0.5,
-          tariff: "min",
-        },
-        {
-          price: 999,
-          tariff: "day",
-        },
-      ],
-    },
-    {
-      id: "lifeEnsurance",
-      title: "КАСКО",
-      descrintion:
-        "КАСКО помогает сократить размер выплаты, если водитель виновен в аварии. Если авария произошла по вине пользователя или виновное лицо не установлено, то пользователь возмещает реальный ущерб, но не более 30 000 ₽",
-      tariffs: [
-        {
-          price: 2,
-          tariff: "min",
-        },
-        {
-          price: 1500,
-          tariff: "day",
-        },
-      ],
-    },
-  ];
 
+  const isAuthToken = AuthService.getAccessToken();
+
+  //возврат к главной странице если токена нет
   useEffect(() => {
-    if (!AuthService.getAccessToken()) {
+    if (!isAuthToken) {
       navigate("/");
     }
-  });
+  }, [isAuthToken]);
+
+  //сет всех данных в стейт
   useEffect(() => {
     Api.getCars().then((response) => setCars(response.data));
     Api.getTariffs().then((response) => setTariffs(response.data));
@@ -138,6 +113,7 @@ export const Order = ({
     });
     Api.getCities().then((response) => setCities(response.data));
   }, []);
+
   //смена отступов
   useEffect(() => {
     document.documentElement.clientWidth < 992
@@ -146,15 +122,12 @@ export const Order = ({
   }, []);
 
   //переход по кнопке на следующий уровень заказа
-  const handleStatusNavigation = () => {
+  const handleNavigation = () => {
     navigate(fullPathNames[fullPathNames.indexOf(location.pathname) + 1]);
   };
-
-  //добавка нового статуса если все условия выполнены и загорание навигации сверху разрешения перехода на следующий уровень
-  const handleStatusOrder = (point: string) => {
-    setStatus([...status, paths[paths.indexOf(point) + 1]]);
-  };
-
+  useEffect(() => {
+    console.log("RE RENDER");
+  });
   //сет адреса в редакс
   const handleSetCurrentAddress = (address: IAddress) => {
     setAddress(address.name);
@@ -162,64 +135,29 @@ export const Order = ({
   };
   const handleDuration = (time: number) => {
     setDuration(time);
+    console.log("ОПАОПАОПАПА");
   };
-  function daysNaming() {
-    if (currentTariff?.type === "DAY") {
-      const time = Math.ceil(duration / (1000 * 3600 * 24));
-      return time + " " + days[timeName(time)];
-    } else {
-      const time = duration / 60000;
-      return time + " " + mins[timeName(time)];
-    }
-  }
-  const timeName = (count: number): "1" | "2" | "5" => {
-    let key: "1" | "2" | "5" = "1";
-    if (count === 0) {
-      key = "5";
-    } else if (count === 1 || (count > 20 && count % 10 === 1)) {
-      key = "1";
-    } else if (
-      (count > 1 && count < 5) ||
-      (count > 20 && count % 10 > 1 && count % 10 < 5)
-    ) {
-      key = "2";
-    } else {
-      key = "5";
-    }
 
-    return key;
-  };
-  const days = {
-    1: "день",
-    2: "дня",
-    5: "дней",
-  };
-  const mins = {
-    1: "минута",
-    2: "минуты",
-    5: "минут",
-  };
   const tariffId = useSelector((state: RootState) => state.order.tariffId);
   const currentTariff = tariffs?.find((tariff) => tariff.id === tariffId);
   return (
-    <div className='order__container'>
+    <div className="order__container">
       <Header
         key={"2"}
         handleLocalStoreCity={handleLocalStoreCity}
         localCity={localCity}
         padding={paddingHeader}
-        size='35px'
+        size="35px"
       />
-      <div className='order__navigation'>
-        {navArray.map((item, index) => (
-          <Fragment key={item}>
+      <div className="order__navigation">
+        {navArray.map((item) => (
+          <Fragment key={item.index}>
             <OrderNavigation
-              path={paths[index]}
+              confirmedOrderPaths={confirmedOrderPaths}
               navigationItem={item}
-              status={status}
             />
-            {index < navArray.length - 1 && (
-              <AppIcon icon='ArrowRight' color={COLORS.GREY} size={14} />
+            {item.index < navArray.length && (
+              <AppIcon icon="ArrowRight" color={COLORS.GREY} size={14} />
             )}
           </Fragment>
         ))}
@@ -236,44 +174,46 @@ export const Order = ({
         >
           <Routes>
             <Route
-              path='order-location'
+              path="order-location"
               element={
                 <OrderLocation
                   cities={cities}
                   handleSetCurrentAddress={handleSetCurrentAddress}
                   addresses={addresses}
                   localCity={localCity}
-                  coordsLocation={coordsLocation}
                 />
               }
             />
-            <Route path='order-model' element={<OrderModel cars={cars} />} />
+            <Route path="order-model" element={<OrderModel cars={cars} />} />
 
             <Route
-              path='order-additionally'
+              path="order-additionally"
               element={
                 <OrderAdditionally
                   handleDuration={handleDuration}
                   currentTariff={currentTariff!}
                   cars={cars}
                   tariffs={tariffs}
-                  services={servicesOrder}
+                  handleChangeStartPicker={handleChangeStartPicker}
+                  handleChangeEndPicker={handleChangeEndPicker}
+                  handleResetStartPicker={handleResetStartPicker}
+                  handleResetEndPicker={handleResetEndPicker}
+                  startsAt={startsAt}
+                  endsAt={endsAt}
                 />
               }
             />
 
-            <Route path='order-full' element={<OrderFull />} />
+            <Route path="order-full" element={<OrderFull />} />
           </Routes>
         </div>
         <OrderReview
           duration={duration}
-          daysNaming={daysNaming}
           currentTariff={currentTariff!}
-          servicesOrder={servicesOrder}
           cars={cars}
           addresses={addresses}
-          handleStatusNavigation={handleStatusNavigation}
-          handleStatus={handleStatusOrder}
+          handleNavigation={handleNavigation}
+          handleConfirmedOrderPaths={handleConfirmedOrderPaths}
         ></OrderReview>
       </div>
     </div>

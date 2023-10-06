@@ -1,29 +1,25 @@
 import "./styles.scss";
 import { useEffect } from "react";
-import { TEvent } from "../../../../../../interfaces/event";
+import { TEvent } from "../../../../../interfaces/event";
 
 interface IProps {
-  isDisabledEndInput: boolean;
-  isDisabledStartInput: boolean;
   handleTimeDuration: (min: number) => void;
+  handleChangeStartPicker: (time: TEvent) => void;
+  handleChangeEndPicker: (time: TEvent) => void;
+  handleResetStartPicker: () => void;
+  handleResetEndPicker: () => void;
   startsAt: string;
   endsAt: string;
-  handleChangeStartPicker: (e: TEvent) => void;
-  handleChangeStartTime: (time: string) => void;
-  handleChangeEndPicker: (e: TEvent) => void;
-  handleChangeEndTime: (time: string) => void;
 }
 
 export const TimePickerDay = ({
-  startsAt,
-  isDisabledEndInput,
-  isDisabledStartInput,
-  endsAt,
   handleTimeDuration,
   handleChangeStartPicker,
-  handleChangeStartTime,
   handleChangeEndPicker,
-  handleChangeEndTime,
+  handleResetStartPicker,
+  handleResetEndPicker,
+  startsAt,
+  endsAt,
 }: IProps) => {
   useEffect(() => {
     let year = new Date(startsAt).getFullYear();
@@ -37,22 +33,22 @@ export const TimePickerDay = ({
     let endHour = new Date(endsAt).getHours();
     let endMin = new Date(endsAt).getMinutes();
     if (year > endYear) {
-      handleChangeEndTime("");
+      handleResetEndPicker();
     } else {
       if (month > endMonth) {
-        handleChangeEndTime("");
+        handleResetEndPicker();
       } else {
         if (day > endDay && month === endMonth) {
-          handleChangeEndTime("");
+          handleResetEndPicker();
         } else {
           if (day === endDay && hour > endHour) {
-            handleChangeEndTime("");
+            handleResetEndPicker();
           } else if (
             day === endDay &&
             hour === endHour &&
             (min > endMin || min === endMin)
           ) {
-            handleChangeEndTime("");
+            handleResetEndPicker();
           }
         }
       }
@@ -76,10 +72,10 @@ export const TimePickerDay = ({
         day === currentDay
       ) {
         if (hour > newHours) {
-          handleChangeStartTime("");
+          handleResetStartPicker();
         } else {
           if (hour === newHours && minutes > newMinutes) {
-            handleChangeStartTime("");
+            handleResetStartPicker();
           }
         }
       }
@@ -98,10 +94,9 @@ export const TimePickerDay = ({
         {" "}
         <span>Начало бронирования</span>
         <input
-          disabled={isDisabledStartInput}
           key={"start"}
           value={startsAt}
-          onChange={handleChangeStartPicker}
+          onChange={(e) => handleChangeStartPicker(e)}
           type='datetime-local'
           min={new Date().toJSON().slice(0, 16)}
         />
@@ -109,10 +104,9 @@ export const TimePickerDay = ({
       <div className='timepicker'>
         <span>Окончание бронирования</span>
         <input
-          disabled={isDisabledEndInput}
           key={"end"}
           value={endsAt}
-          onChange={handleChangeEndPicker}
+          onChange={(e) => handleChangeEndPicker(e)}
           type='datetime-local'
           min={
             startsAt
