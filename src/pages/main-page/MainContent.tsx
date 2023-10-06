@@ -71,6 +71,9 @@ export class MainContentContainer extends React.Component<Props, IState> {
   toggleIsGeoVisible = () => {
     this.setState({ isGeoVisible: !this.state.isGeoVisible });
   };
+  sayHello = () => {
+    console.log("sss");
+  };
   //смена заголовка модального окна выбора города
   handleGeoModalTitle = () => {
     this.setState({ isTitleChanged: !this.state.isTitleChanged });
