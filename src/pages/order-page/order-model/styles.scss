@@ -1,17 +1,17 @@
 @import "./../../../default-variables";
 
-.orderModel__container {
+.orderModel-container {
   width: 100%;
   height: 100%;
 }
-.orderModel__car {
+.orderModel-container__content {
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
 }
-.car__item {
+.orderModel-container__item {
   width: 30%;
   display: flex;
   align-items: center;
@@ -25,15 +25,10 @@
     color: $grey-color;
   }
 }
-.car__item--active {
+.orderModel-container__item--active {
   border: 2px solid $pimary-color;
 }
-.car__color {
-  width: 10px;
-  height: 10px;
-  border-radius: 10px;
-}
-.car__pic {
+.orderModel-container__carPic {
   @media screen and (min-width: 992px) {
     width: 70%;
   }

@@ -1,6 +1,6 @@
 @import "../../../../default-variables";
 
-.navigationItem__container {
+.orderNavigation-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -21,10 +21,10 @@
   }
 }
 
-.navigationItem__container--active span {
+.orderNavigation-container--active span {
   color: $pimary-color;
 }
-.navigationItem__container--unactive span {
+.orderNavigation-container--unactive span {
   cursor: default;
   &:hover {
     color: $grey-color;

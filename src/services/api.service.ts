@@ -47,7 +47,7 @@ class ApiService {
         }
 
         return Promise.reject(error);
-      },
+      }
     );
   }
 
@@ -55,7 +55,7 @@ class ApiService {
     try {
       const response = await this.instance.post<TokenPack>(
         "/auth/update-token",
-        { refreshToken },
+        { refreshToken }
       );
       const newTokens = response.data;
       return newTokens;
@@ -92,14 +92,14 @@ class ApiService {
   login(email: string, password: string) {
     return this.instance.post<{ tokens: TokenPack; user: IUser }>(
       "/auth/login",
-      { email, password },
+      { email, password }
     );
   }
 
   register(credentials: any) {
     return this.instance.post<{ tokens: TokenPack; user: IUser }>(
       "/auth/register",
-      credentials,
+      credentials
     );
   }
 }

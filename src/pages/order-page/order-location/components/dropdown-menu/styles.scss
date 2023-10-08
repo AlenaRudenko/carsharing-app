@@ -1,7 +1,7 @@
 @import "../../../../../default-variables";
 
 //full container dropdown
-.dropDownAddress__container {
+.dropdown-container {
   display: flex;
   width: 85%;
   align-items: center;
@@ -9,14 +9,13 @@
   margin-bottom: 20px;
 }
 //addresses input
-.orderLocation__input {
+.dropdown-container__input {
   width: 50%;
-
   border-bottom: 0.3px solid rgba(191, 187, 187, 1);
   input {
     width: 100%;
   }
 }
-.dropDown__button {
+.dropdown-container__button {
   width: 20%;
 }

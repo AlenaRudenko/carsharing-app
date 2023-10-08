@@ -20,11 +20,20 @@ export const Menu = ({
   handleUserLogOut,
 }: IProps) => {
   const [id, setId] = useState<IState["id"]>(0);
+  const [matches, setMatches] = useState(null);
   //перемещение по меню
   const handleOnClickMenuItem = (id: number) => {
     setId(id);
   };
-
+  useEffect(() => {
+    const handler = (e: any) => setMatches(e.matches);
+    window.matchMedia("(max-width:1200px)").addEventListener("change", handler);
+    return () => {
+      window
+        .matchMedia("(max-width:1200px")
+        .removeEventListener("change", handler);
+    };
+  }, []);
   //очистка меню после закрытия
   useEffect(() => {
     if (!isOpenMenu || isOpenProfile) {
@@ -34,7 +43,7 @@ export const Menu = ({
 
   return (
     <div className={`menu menu${!isOpenMenu && !isOpenProfile && "--hidden"}`}>
-      <div className="menu__list">
+      <div className='menu__list'>
         {isOpenMenu && (
           <MenuPage
             menu={MenuArray}
@@ -44,16 +53,20 @@ export const Menu = ({
         )}
         {isOpenProfile && <ProfilePage handleUserLogOut={handleUserLogOut} />}
       </div>
-      <div className="menu__transparent">
-        {isOpenMenu &&
-          MenuArray.filter((item) => item.id === id).map((value) => (
-            <Description
-              key={value.id}
-              text={value.description}
-              fullDescription={value.fullDescription}
-            />
-          ))}
-      </div>
+      {matches ? (
+        <div></div>
+      ) : (
+        <div className='menu__transparent'>
+          {isOpenMenu &&
+            MenuArray.filter((item) => item.id === id).map((value) => (
+              <Description
+                key={value.id}
+                text={value.description}
+                fullDescription={value.fullDescription}
+              />
+            ))}
+        </div>
+      )}
     </div>
   );
 };

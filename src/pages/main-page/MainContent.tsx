@@ -8,16 +8,18 @@ import { Api } from "./../../services/api.service";
 import { Modal } from "../../components/modals/Modal";
 import { LocationModal } from "./components/location-modal/LocationModal";
 import { Start } from "./components/start-page/Start";
-import { Order } from "../order-page/Order";
 import { Route, Routes } from "react-router";
 import { connect } from "react-redux";
 import { RootState, Dispatch } from "../../store/store";
 import { LocalStore } from "../../services/localStorage.service";
 import { TEvent } from "./../../interfaces/event";
+import { WithRouter } from "../order-page/OrderComponent";
+
 export type TPath = {
   name: string;
   index: number;
 };
+
 interface IState {
   cities: ICity[];
   isGeoVisible: boolean;
@@ -51,36 +53,45 @@ export class MainContentContainer extends React.Component<Props, IState> {
     startsAt: "",
     endsAt: "",
   };
+
   handleChangeStartPicker = (e: TEvent) => {
     this.setState((prevState) => ({ ...prevState, startsAt: e.target.value }));
     this.props.setStartsAt(e.target.value);
   };
+
   handleResetStartPicker = () => {
     this.setState((prevState) => ({ ...prevState, startsAt: "" }));
     this.props.setStartsAt("");
   };
+
   handleChangeEndPicker = (e: TEvent) => {
     this.setState((prevState) => ({ ...prevState, endsAt: e.target.value }));
     this.props.setEndsAt(e.target.value);
   };
+
   handleResetEndPicker = () => {
     this.setState((prevState) => ({ ...prevState, endsAt: "" }));
     this.props.setEndsAt("");
   };
+
   //переключение модального окна выбора города вначале
   toggleIsGeoVisible = () => {
     this.setState({ isGeoVisible: !this.state.isGeoVisible });
   };
+
   sayHello = () => {
     console.log("sss");
   };
+
   //смена заголовка модального окна выбора города
   handleGeoModalTitle = () => {
     this.setState({ isTitleChanged: !this.state.isTitleChanged });
   };
+
   handleAuthIndex = (value: number | null) => {
     this.setState((prevState) => ({ ...prevState, authIndex: value }));
   };
+
   //обработчик открытия меню
   toggleIsOpenMenu = () => {
     if (!this.state.isOpenMenu && this.state.isOpenProfile) {
@@ -141,7 +152,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
 
   handleConfirmedOrderPaths = (path: TPath) => {
     let simpleArray = this.state.confirmedOrderPaths.map(
-      (item: TPath) => item.name,
+      (item: TPath) => item.name
     );
     let newSet = new Set(simpleArray);
     if (newSet.has(path.name)) {
@@ -155,13 +166,15 @@ export class MainContentContainer extends React.Component<Props, IState> {
 
     console.log("ПОМЕНЯЛОСЬ", this.state.confirmedOrderPaths);
   };
+
   componentDidUpdate(prevProps: OwnProps, prevState: IState) {
     console.log(
       "RERENDER MAIN COMPONENT",
       prevState,
-      this.state.confirmedOrderPaths,
+      this.state.confirmedOrderPaths
     );
   }
+
   //получаем города и сетаем локальный город в модалку
   componentDidMount() {
     Api.getCities().then((response) => {
@@ -238,11 +251,9 @@ export class MainContentContainer extends React.Component<Props, IState> {
         )}
 
         <Navigation
-          isOpenMenu={isOpenMenu}
-          toggleIsOpenMenu={toggleIsOpenMenu}
-          toggleIsOpenProfile={toggleIsOpenProfile}
+          {...{ isOpenMenu, toggleIsOpenMenu, toggleIsOpenProfile }}
         />
-        <div className="mainpage">
+        <div className='mainpage'>
           <Menu
             handleUserLogOut={handleUserLogOut}
             isOpenProfile={isOpenProfile}
@@ -254,10 +265,12 @@ export class MainContentContainer extends React.Component<Props, IState> {
               path={"/"}
               element={
                 <Start
-                  handleAuthIndex={handleAuthIndex}
-                  handleLocalStoreCity={handleCity}
-                  localCity={localCity}
-                  confirmedOrderPaths={confirmedOrderPaths}
+                  {...{
+                    handleAuthIndex,
+                    handleCity,
+                    localCity,
+                    confirmedOrderPaths,
+                  }}
                 />
               }
             />
@@ -265,17 +278,19 @@ export class MainContentContainer extends React.Component<Props, IState> {
               key={"/order/*"}
               path={"/order/*"}
               element={
-                <Order
-                  handleLocalStoreCity={handleCity}
-                  localCity={localCity}
-                  confirmedOrderPaths={confirmedOrderPaths}
-                  handleConfirmedOrderPaths={handleConfirmedOrderPaths}
-                  handleChangeStartPicker={handleChangeStartPicker}
-                  handleChangeEndPicker={handleChangeEndPicker}
-                  handleResetStartPicker={handleResetStartPicker}
-                  handleResetEndPicker={handleResetEndPicker}
-                  startsAt={startsAt}
-                  endsAt={endsAt}
+                <WithRouter
+                  {...{
+                    handleCity,
+                    localCity,
+                    confirmedOrderPaths,
+                    handleConfirmedOrderPaths,
+                    handleChangeStartPicker,
+                    handleChangeEndPicker,
+                    handleResetStartPicker,
+                    handleResetEndPicker,
+                    startsAt,
+                    endsAt,
+                  }}
                 />
               }
             />

@@ -3,20 +3,18 @@ import { Header } from "../../components/header/Header";
 import { OrderNavigation } from "./components/order-navigation/OrderNavigation";
 import { AppIcon } from "../../components/app-icon/AppIcon";
 import { COLORS } from "./../../constants/colors";
-import React, { useEffect, useState, Component } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import { Dispatch, RootState } from "./../../store/store";
 import { OrderLocation } from "./order-location/OrderLocation";
 import { OrderModel } from "./order-model/OrderModel";
 import { OrderAdditionally } from "./order-additionally/OrderAdditionally";
 import { OrderFull } from "./order-full/OrderFull";
-import { Route, Routes, useLocation } from "react-router";
+import { Path, Route, Routes, To, useLocation } from "react-router";
 import { OrderReview } from "./order-review-component/OrderReview";
 import { AuthService } from "./../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { Fragment } from "react";
-import { ICoords } from "../../interfaces/coords";
 import { ICar } from "../../interfaces/car";
 import { ICity } from "../../interfaces/city";
 import { IVariant } from "../../interfaces/variant";
@@ -27,17 +25,18 @@ import { Api } from "../../services/api.service";
 
 interface IState {
   paddingHeader: string;
-  address: string;
   duration: number;
   cars: ICar[];
   tariffs: ITariff[];
   variants: IVariant[];
-  cities: ICity[];
 }
-
-interface IProps {
+interface IAddress {
+  id: string;
+  name: string;
+}
+interface OwnProps {
   localCity: string;
-  handleLocalStoreCity?: (city: string | undefined) => void;
+  handleCity?: (city: string | undefined) => void;
   confirmedOrderPaths: TPath[];
   handleConfirmedOrderPaths: (path: TPath) => void;
   handleChangeStartPicker: (time: TEvent) => void;
@@ -48,21 +47,37 @@ interface IProps {
   endsAt: string;
 }
 
-interface IAddress {
-  id: string;
-  name: string;
+interface RouterProps {
+  navigate: NavigateFunction;
+  location: Location;
 }
+interface Location extends Path {
+  state: any;
+}
+interface NavigateFunction {
+  (to: To, options?: NavigateOptions): void;
+  (delta: number): void;
+}
+
+interface NavigateOptions {
+  replace?: boolean;
+  state?: any;
+  preventScrollReset?: boolean;
+  relative?: RelativeRoutingType;
+}
+
+type RelativeRoutingType = "route" | "path";
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = ReturnType<typeof mapDispatchToProps>;
+type Props = StateProps & DispatchProps & OwnProps & RouterProps;
+
 const addresses = [
   { name: "ул. Гагарина 88", id: "1" },
   { name: "ул. Васенко 15", id: "2" },
   { name: "ул. Ленина 55", id: "3" },
 ];
-const paths = [
-  "order-location",
-  "order-model",
-  "order-additionally",
-  "order-full",
-];
+
 const fullPathNames = [
   "/order/order-location",
   "/order/order-model",
@@ -75,43 +90,45 @@ const navArray = [
   { name: "Дополнительно", index: 3, path: "order-additionally" },
   { name: "Итого", index: 4, path: "order-full" },
 ];
-class Order extends React.Component<IProps, IState> {
+class Order extends React.Component<Props, IState> {
   state = {
     paddingHeader: "20px 0px 50px 0px",
-    address: "",
     duration: 0,
     cars: [],
     tariffs: [],
     variants: [],
-    cities: [],
   };
-  navigate = useNavigate();
-  dispatch = useDispatch<Dispatch>();
-  location = useLocation();
 
   isAuthToken = AuthService.getAccessToken();
 
   //возврат к главной странице если токена нет
-  componentDidUpdate() {
-    if (this.isAuthToken) {
-      this.navigate("/");
+  componentDidUpdate(prevProps: Props, prevState: IState) {
+    if (!this.isAuthToken) {
+      this.props.navigate("/");
     }
+    console.log("ORDER RERENDER  prevProps", prevProps);
   }
 
   //сет всех данных в стейт
   componentDidMount() {
-    Api.getCars().then((response) =>
-      this.setState((prevState) => ({ ...prevState, cars: response.data })),
-    );
-    Api.getTariffs().then((response) =>
-      this.setState((prevState) => ({ ...prevState, tariffs: response.data })),
-    );
-    Api.getVariants().then((response) => {
-      this.setState((prevState) => ({ ...prevState, cariants: response.data }));
-    });
-    Api.getCities().then((response) =>
-      this.setState((prevState) => ({ ...prevState, cities: response.data })),
-    );
+    if (!this.isAuthToken) {
+      this.props.navigate("/");
+    }
+    if (this.isAuthToken) {
+      Api.getCars().then((response) =>
+        this.setState((prevState) => ({ ...prevState, cars: response.data }))
+      );
+      Api.getTariffs().then((response) =>
+        this.setState((prevState) => ({ ...prevState, tariffs: response.data }))
+      );
+      Api.getVariants().then((response) => {
+        this.setState((prevState) => ({
+          ...prevState,
+          cariants: response.data,
+        }));
+      });
+    }
+
     document.documentElement.clientWidth < 992
       ? this.setState((prevState) => ({
           ...prevState,
@@ -125,31 +142,25 @@ class Order extends React.Component<IProps, IState> {
 
   //переход по кнопке на следующий уровень заказа
   handleNavigation = () => {
-    this.navigate(fullPathNames[fullPathNames.indexOf(location.pathname) + 1]);
+    this.props.navigate(
+      fullPathNames[fullPathNames.indexOf(this.props.location.pathname) + 1]
+    );
   };
 
   //сет адреса в редакс
   handleSetCurrentAddress = (address: IAddress) => {
     this.setState((prevState) => ({ ...prevState, address: address.name }));
-    // dispatch.order.setAddressId(address.id);
+    this.props.setAddressId(address.id);
   };
   handleDuration = (time: number) => {
     this.setState((prevState) => ({ ...prevState, duration: time }));
   };
 
   currentTariff = this.state.tariffs?.find(
-    (tariff) => tariff.id === '1',
+    (tariff: ITariff) => tariff.id === this.props.tariffId
   );
   render() {
-    const {
-      paddingHeader,
-      address,
-      duration,
-      cars,
-      tariffs,
-      variants,
-      cities,
-    } = this.state;
+    const { paddingHeader, duration, cars, tariffs } = this.state;
     const {
       handleNavigation,
       handleSetCurrentAddress,
@@ -158,7 +169,7 @@ class Order extends React.Component<IProps, IState> {
     } = this;
     const {
       localCity,
-      handleLocalStoreCity,
+      handleCity,
       confirmedOrderPaths,
       handleConfirmedOrderPaths,
       handleChangeStartPicker,
@@ -167,17 +178,18 @@ class Order extends React.Component<IProps, IState> {
       handleResetEndPicker,
       startsAt,
       endsAt,
+      location,
     } = this.props;
     return (
-      <div className="order__container">
+      <div className='order-container'>
         <Header
-          key={"2"}
-          handleLocalStoreCity={handleLocalStoreCity}
+          key='2'
+          handleLocalStoreCity={handleCity}
           localCity={localCity}
           padding={paddingHeader}
-          size="35px"
+          size='35px'
         />
-        <div className="order__navigation">
+        <div className='order-container__navigation'>
           {navArray.map((item) => (
             <Fragment key={item.index}>
               <OrderNavigation
@@ -185,37 +197,36 @@ class Order extends React.Component<IProps, IState> {
                 navigationItem={item}
               />
               {item.index < navArray.length && (
-                <AppIcon icon="ArrowRight" color={COLORS.GREY} size={14} />
+                <AppIcon icon='ArrowRight' color={COLORS.GREY} size={14} />
               )}
             </Fragment>
           ))}
         </div>
         <div
-          className={`order__content order__content${
+          className={`order-container__content order-container__content${
             location.pathname === "/order/order-full" ? "--fullPage" : ""
           }`}
         >
           <div
-            className={`order__routes order__routes${
+            className={`order-container__routes order-container__routes${
               location.pathname === "/order/order-full" ? "--fullPage" : ""
             }`}
           >
             <Routes>
               <Route
-                path="order-location"
+                path='order-location'
                 element={
                   <OrderLocation
-                    cities={cities}
-                    handleSetCurrentAddress={handleSetCurrentAddress}
-                    addresses={addresses}
-                    localCity={localCity}
+                    {...{
+                      handleSetCurrentAddress,
+                      addresses,
+                    }}
                   />
                 }
               />
-              <Route path="order-model" element={<OrderModel cars={cars} />} />
-
+              <Route path='order-model' element={<OrderModel />} />
               <Route
-                path="order-additionally"
+                path='order-additionally'
                 element={
                   <OrderAdditionally
                     handleDuration={handleDuration}
@@ -232,7 +243,7 @@ class Order extends React.Component<IProps, IState> {
                 }
               />
 
-              <Route path="order-full" element={<OrderFull />} />
+              <Route path='order-full' element={<OrderFull />} />
             </Routes>
           </div>
           <OrderReview
@@ -251,4 +262,18 @@ class Order extends React.Component<IProps, IState> {
 export const mapStateToProps = (state: RootState) => ({
   tariffId: state.order.tariffId,
 });
-export const OrderComponent = connect(mapStateToProps)(order);
+
+export const mapDispatchToProps = (dispatch: Dispatch) => ({
+  setAddressId: (id: string) => dispatch.order.setAddressId(id),
+});
+export const OrderComponent = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Order);
+
+export const WithRouter = (props: OwnProps) => {
+  let location = useLocation();
+  let navigate: NavigateFunction = useNavigate();
+
+  return <OrderComponent {...props} location={location} navigate={navigate} />;
+};
