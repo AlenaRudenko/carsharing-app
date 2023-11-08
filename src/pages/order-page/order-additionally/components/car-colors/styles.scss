@@ -1,0 +1,29 @@
+@import "../../../../../default-variables.scss";
+
+.carColors {
+  height: 30%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.carColors-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  span {
+    margin: 10px;
+    color: $pimary-color;
+    font-weight: 700;
+  }
+}
+.carColors-container__content {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-around;
+}

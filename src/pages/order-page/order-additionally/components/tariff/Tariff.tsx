@@ -1,50 +1,31 @@
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import "./styles.scss";
-import { TariffContent } from "./TariffContent";
+import { TariffItem } from "./tariff-item/TariffItem";
 import { ITariff } from "../../../../../interfaces/tariffs";
+import { Api } from "../../../../../services/api.service";
+import { RootState, Dispatch } from "../../../../../store/store";
 
-interface IProps {
-  tariff: ITariff;
-  currentTariffId: string;
-  handleTariff: (tariff: ITariff) => void;
-}
 interface IState {
   textParams: IText;
 }
-interface IText {
+export interface IText {
   fontSize: string;
   marginBottom: string;
   priceSize: string;
   headlingSize: string;
 }
-export const Tariff = ({ tariff, handleTariff, currentTariffId }: IProps) => {
+export const Tariff = () => {
   const [textParams, setTextParams] = useState<IState["textParams"]>({
     fontSize: "small",
     marginBottom: "10px",
     priceSize: "xx-small",
     headlingSize: "10px",
   });
-  const tariffParams = [
-    {
-      type: "DAY",
-      fuel: "не включено",
-      mileage: "70км бесплатно",
-      overMileage: "10 руб/км",
-      standbyMode: "10 минут бесплатного ожидания",
-      carWaiting: "",
-    },
-    {
-      type: "MINUTE",
-      carWaiting: "1,75 руб/мин",
-      standbyMode: "10 минут бесплатного ожидания",
-      fuel: "",
-      mileage: "",
-      overMileage: "",
-    },
-  ];
-  const handleOnClick = () => {
-    handleTariff(tariff);
-  };
+  const [tariffs, setTariffs] = useState<ITariff[]>([]);
+  useEffect(() => {
+    Api.getTariffs().then((response) => setTariffs(response.data));
+  }, []);
   useEffect(() => {
     document.documentElement.clientWidth < 992
       ? setTextParams((prevState) => ({
@@ -67,27 +48,17 @@ export const Tariff = ({ tariff, handleTariff, currentTariffId }: IProps) => {
           fontSize: "small",
           marginBottom: "6px",
           priceSize: "large",
-          headlingSize: "25px",
+          headlingSize: "20px",
         }));
   }, []);
   return (
-    <div
-      className={`tariff__container tariff__container${
-        currentTariffId === tariff.id && "--active"
-      } `}
-      onClick={handleOnClick}
-    >
-      {" "}
-      <h1 style={{ fontSize: textParams.headlingSize, marginBottom: "10px" }}>
-        {tariff.type === "DAY" ? "Суточный" : "Поминутный"}
-      </h1>
-      <div className='tariff__container__price'>
-        <TariffContent
-          textParams={textParams}
-          tariffParams={tariffParams}
-          price={tariff.price}
-          tariff={tariff.type}
-        />
+    <div className="tariff-container">
+      <h3>Выберите тариф</h3>
+      <h2></h2>
+      <div className="tariff-container__list">
+        {tariffs.map((tariff) => (
+          <TariffItem key={tariff.id} {...{ tariff, textParams }} />
+        ))}
       </div>
     </div>
   );

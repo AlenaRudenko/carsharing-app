@@ -1,3 +1,14 @@
+export interface IService {
+  id: string;
+  title: string;
+  descrintion: string;
+  tariffs: ITariffOptions[];
+}
+interface ITariffOptions {
+  price: number;
+  tariff: string;
+}
+
 export const servicesOrder = [
   {
     id: "childChair",

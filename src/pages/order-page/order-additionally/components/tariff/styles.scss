@@ -1,55 +1,17 @@
 @import "../../../../../default-variables.scss";
 
-.tariff__container {
-  padding: 5px;
-  cursor: pointer;
+.tariff-container {
   display: flex;
+  height: 45%;
   flex-direction: column;
+  justify-content: space-around;
   align-items: center;
-  justify-content: space-between;
-  width: 40%;
-  height: 90%;
-  border-radius: 10px;
-  border: 2px solid rgba(191, 187, 187, 0.2);
-  &--active {
-    border: 2px solid $pimary-color;
-    box-shadow: 9px 13px 14px -17px rgba(34, 60, 80, 0.7);
-  }
-  &--unactive {
-    pointer-events: none;
-
-    color: rgba(191, 187, 187, 0.2);
-  }
-  h1 {
-    font-weight: 700;
-    font-size: x-large;
+  h3 {
+    margin-bottom: 5px;
   }
 }
-
-.tariff__container__price {
-  width: 90%;
-  height: 80%;
-}
-.price {
-  margin-bottom: 10px;
+.tariff-container__list {
+  width: 100%;
   display: flex;
-  align-items: center;
-  font-weight: 700;
-  justify-content: space-between;
-  :first-child {
-    font-weight: 400;
-  }
-  :last-child {
-    font-weight: 700;
-    color: $pimary-color;
-  }
-  &--unactive :last-child {
-    color: rgba(191, 187, 187, 0.2);
-  }
-}
-.description {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  justify-content: space-around;
 }

@@ -1,104 +1,58 @@
-import "./styles.scss";
-import { AppIcon } from "../../../../../components/app-icon/AppIcon";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, Dispatch } from "../../../../../store/store";
+import { useEffect, useState, useCallback } from "react";
+import { servicesOrder } from "../../../data/orderData";
+import { ServiceItem } from "./service-item/ServiceItem";
 import { Api } from "../../../../../services/api.service";
 import { ITariff } from "../../../../../interfaces/tariffs";
-import { RootState } from "../../../../../store/store";
-import { HelpModal } from "../../../../../components/help-modal/HelpModal";
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-interface IProps {
-  id: string;
-  title: string;
-  descrintion: string;
-  tariffs: ITariffsOptions[];
-  allTariffs: ITariff[];
-  handleService: (id: string) => void;
-  carEnsurance: boolean;
-  lifeEnsurance: boolean;
-  childChair: boolean;
-}
+import "./styles.scss";
 
-interface ITariffsOptions {
-  price: number;
-  tariff: string;
-}
-export const Service = ({
-  id,
-  title,
-  descrintion,
-  tariffs,
-  allTariffs,
-  handleService,
-  carEnsurance,
-  lifeEnsurance,
-  childChair,
-}: IProps) => {
-  const [fontSize, setFontSize] = useState("small");
-  const handleSetIsVisible = () => {};
+export const Service = () => {
+  const [tariffs, setTariffs] = useState<ITariff[]>([]);
+
+  const dispatch = useDispatch<Dispatch>();
+  console.log(tariffs, "TARIFF");
+  const childChair = useSelector((state: RootState) => state.order.childChair);
+  const carEnsurance = useSelector(
+    (state: RootState) => state.order.carEnsurance,
+  );
+  const lifeEnsurance = useSelector(
+    (state: RootState) => state.order.lifeEnsurance,
+  );
+  const currentTariffId = useSelector(
+    (state: RootState) => state.order.tariffId,
+  );
+
   useEffect(() => {
-    document.documentElement.clientWidth < 992
-      ? setFontSize("xx-small")
-      : document.documentElement.clientWidth < 1200
-      ? setFontSize("small")
-      : setFontSize("11px");
+    Api.getTariffs().then((res) => setTariffs((prevState) => res.data));
   }, []);
 
-  const currentTariffId = useSelector(
-    (state: RootState) => state.order.tariffId
-  );
+  const currentTariff = tariffs.find((item) => item.id === currentTariffId);
 
-  const currentTariff = allTariffs?.find(
-    (tariff) => tariff.id === currentTariffId
-  );
-
+  //toggle доп сервисов
+  const handleService = useCallback((title: string) => {
+    return title === "childChair"
+      ? dispatch.order.toggleChildChair()
+      : title === "lifeEnsurance"
+      ? dispatch.order.toggleLifeEnsurance()
+      : dispatch.order.toggleCarEnsurance();
+  }, []);
   return (
-    <div
-      onClick={() => handleService(title)}
-      className={`service__container service__container${
-        ((childChair && title === "Детское кресло") ||
-          (carEnsurance && title === "КАСКО") ||
-          (lifeEnsurance && title === "Страхование жизни и здоровья")) &&
-        "--active"
-      }`}
-    >
-      <div className="service__title">
-        <p>{title}</p>
-        <HelpModal
-          key={descrintion}
-          descrintion={descrintion}
-          fontSize={fontSize}
-        />
+    <div className="service-container">
+      <h3>Выберите дополнительные услуги</h3>
+      <div className="service-container__services">
+        {servicesOrder.map((service) => (
+          <ServiceItem
+            key={service.id}
+            currentTariff={currentTariff}
+            carEnsurance={carEnsurance}
+            lifeEnsurance={lifeEnsurance}
+            childChair={childChair}
+            handleService={handleService}
+            service={service}
+          />
+        ))}
       </div>
-
-      <AppIcon
-        icon={
-          title === "Детское кресло"
-            ? "Smile"
-            : title === "КАСКО"
-            ? "Tool"
-            : "Heart"
-        }
-      />
-      {currentTariff && currentTariff.type === "DAY" && (
-        <>
-          {tariffs
-            .filter((e) => e.tariff === "day")
-            .map((value: ITariffsOptions) => (
-              <span key={value.tariff}>{value.price}</span>
-            ))}
-          <span>руб/сутки</span>
-        </>
-      )}
-      {currentTariff && currentTariff.type === "MINUTE" && (
-        <>
-          {tariffs
-            .filter((e) => e.tariff === "min")
-            .map((value: ITariffsOptions) => (
-              <span key={value.tariff}>{value.price}</span>
-            ))}
-          {title === "Детское кресло" ? <span>руб</span> : <span>руб/мин</span>}
-        </>
-      )}
     </div>
   );
 };

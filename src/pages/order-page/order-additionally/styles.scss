@@ -1,49 +1,17 @@
 @import "./../../../default-variables";
 
-.orderAdd__container {
+.orderParams-container {
   width: 100%;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   h3 {
-    margin-bottom: 16px;
-  }
-}
-.colors__block {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin-bottom: 32px;
-  span {
-    margin-bottom: 10px;
+    font-weight: 700;
+    color: $pimary-color;
   }
 }
 
-.currentCar__reviewColorsContainer {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-.currentCar__reviewColors {
-  padding: 3px;
-  cursor: pointer;
-  width: 150px;
-  border: 2px solid transparent;
-  border-radius: 10px;
-  box-shadow: -1px -1px 16px 1px rgba(142, 142, 142, 0.01);
-  img {
-    width: 100%;
-  }
-}
-.currentCar__reviewColors--selected {
-  border: 2px solid $pimary-color;
-  box-shadow: -1px -1px 16px 1px rgba(142, 142, 142, 0.07);
-}
-.orderAdd__tariffs {
+.orderParams-container__tariffs {
   margin: 0 auto;
   height: 40%;
   width: 100%;
@@ -52,7 +20,7 @@
   justify-content: flex-start;
   flex-direction: row;
 }
-.orderAdd__services {
+.orderParams-container__services {
   display: flex;
   align-items: center;
   justify-content: flex-start;

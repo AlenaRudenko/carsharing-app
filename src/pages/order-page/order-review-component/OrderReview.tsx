@@ -4,25 +4,21 @@ import "./styles.scss";
 import { useState, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
-
 import { ICar } from "../../../interfaces/car";
 import { OrderField } from "./components/OrderField";
 import { EquipmentComponent } from "./components/equipment/EquipmentComponent";
 import { ITariff } from "../../../interfaces/tariffs";
-import { IVariant } from "../../../interfaces/variant";
 import { servicesOrder } from "../data/orderData";
 import { TariffOptions } from "./components/tariff-options/TariffOptions";
-
 import { OrderAddition } from "./components/order-addition/OrderAddition";
 import { AppTable } from "../../../components/app-table/AppTable";
 import { HelpModal } from "../../../components/help-modal/HelpModal";
 import { TPath } from "../../main-page/MainContent";
 import { daysNaming } from "../../../functions/getTimeNaming";
+import { addresses, IAddress } from "../data/orderAddresses";
+import { Api } from "../../../services/api.service";
+
 interface IProps {
-  currentTariff: ITariff;
-  duration: number;
-  cars: ICar[];
-  addresses: IAddresses[];
   handleNavigation: () => void;
   handleConfirmedOrderPaths: (path: TPath) => void;
 }
@@ -44,29 +40,24 @@ interface IState {
   endsAtDate: string;
   startsAtTime: string;
   endsAtTime: string;
+  duration: number;
 }
-interface IAddresses {
-  name: string;
-  id: string;
-}
+
 export const OrderReview = ({
-  duration,
-  currentTariff,
-  cars,
-  addresses,
   handleNavigation,
   handleConfirmedOrderPaths,
 }: IProps) => {
   const [isDisabled, setIsDisabled] = useState<IState["isDisabled"]>(false);
   const [navPoint, setNavPoint] = useState<IState["navPoint"]>("");
+  const [cars, setCars] = useState<ICar[]>([]);
+  const [tariffs, setTariffs] = useState<ITariff[]>([]);
   const [orderPrice, setOrderPrice] = useState(0);
-
+  const [duration, setDuration] = useState(0);
   const carId = useSelector((state: RootState) => state.order.carId);
   const addressId = useSelector((state: RootState) => state.order.addressId);
   const carVariantId = useSelector(
     (state: RootState) => state.order.carVariantId,
   );
-
   const childChair = useSelector((state: RootState) => state.order.childChair);
   const carEnsurance = useSelector(
     (state: RootState) => state.order.carEnsurance,
@@ -77,12 +68,22 @@ export const OrderReview = ({
   );
   const startsAt = useSelector((state: RootState) => state.order.startsAt);
   const endsAt = useSelector((state: RootState) => state.order.endsAt);
-
+  const currentTariffId = useSelector(
+    (state: RootState) => state.order.tariffId,
+  );
+  const currentTariff = tariffs.find((item) => item.id === currentTariffId);
   const location = useLocation();
   const navigate = useNavigate();
-
+  useEffect(() => {
+    console.log("startsat", startsAt);
+    console.log("endsat", endsAt);
+  }, [startsAt, endsAt]);
   const equipments = ["Удаленный прогрев", "Бортовой компьютер", "Полный бак"];
 
+  useEffect(() => {
+    Api.getCars().then((response) => setCars(response.data));
+    Api.getTariffs().then((response) => setTariffs(response.data));
+  }, []);
   const selectedCar = useMemo(() => {
     return cars?.find((car) => car.id === carId);
   }, [cars, carId]);
@@ -124,7 +125,13 @@ export const OrderReview = ({
     startsAt,
     endsAt,
   ]);
-
+  useEffect(() => {
+    let day2 = new Date(endsAt);
+    let day1 = new Date(startsAt);
+    let diff = day2.getTime() - day1.getTime();
+    setDuration((prevState) => diff);
+    console.log("разница", Math.ceil(diff / 86400000));
+  }, [endsAt, startsAt]);
   //смена текста кнопки
   useEffect(() => {
     if (location.pathname === "/order/order-location") {

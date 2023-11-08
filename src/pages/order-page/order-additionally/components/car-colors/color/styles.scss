@@ -1,0 +1,17 @@
+@import "../../../../../../default-variables";
+
+.color-container {
+  padding: 3px;
+  cursor: pointer;
+  width: 150px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  box-shadow: -1px -1px 16px 1px rgba(142, 142, 142, 0.01);
+  img {
+    width: 100%;
+  }
+  &--selected {
+    border: 2px solid $pimary-color;
+    box-shadow: -1px -1px 16px 1px rgba(142, 142, 142, 0.07);
+  }
+}
