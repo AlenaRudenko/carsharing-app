@@ -54,6 +54,7 @@ export const Tariff = () => {
   return (
     <div className="tariff-container">
       <h3>Выберите тариф</h3>
+      <h2></h2>
       <div className="tariff-container__list">
         {tariffs.map((tariff) => (
           <TariffItem key={tariff.id} {...{ tariff, textParams }} />
