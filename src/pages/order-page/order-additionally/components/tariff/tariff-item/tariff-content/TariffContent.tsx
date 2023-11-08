@@ -1,9 +1,9 @@
 import "./styles.scss";
+import { tariffParams } from "../../../../../data/tariffParams";
 
 interface IProps {
   tariff: string;
   price: number;
-  tariffParams: ITariffParams[];
   textParams: IText;
 }
 
@@ -12,6 +12,7 @@ interface IText {
   marginBottom: string;
   priceSize: string;
 }
+
 interface ITariffParams {
   type: string;
   carWaiting: string;
@@ -21,12 +22,7 @@ interface ITariffParams {
   overMileage: string;
 }
 
-export const TariffContent = ({
-  tariff,
-  price,
-  tariffParams,
-  textParams,
-}: IProps) => {
+export const TariffContent = ({ tariff, price, textParams }: IProps) => {
   return (
     <div style={{ userSelect: "none" }}>
       <div className={`price`} style={{ fontSize: textParams.priceSize }}>
@@ -42,7 +38,7 @@ export const TariffContent = ({
             {tariff.carWaiting && (
               <div
                 key={tariff.carWaiting}
-                className='description'
+                className="description"
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -55,7 +51,7 @@ export const TariffContent = ({
             {tariff.fuel && (
               <div
                 key={tariff.fuel}
-                className='description'
+                className="description"
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -68,7 +64,7 @@ export const TariffContent = ({
             {tariff.mileage && (
               <div
                 key={tariff.mileage}
-                className='description'
+                className="description"
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -81,7 +77,7 @@ export const TariffContent = ({
             {tariff.overMileage && (
               <div
                 key={tariff.overMileage}
-                className='description'
+                className="description"
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,
@@ -94,7 +90,7 @@ export const TariffContent = ({
             {tariff.standbyMode && (
               <div
                 key={tariff.standbyMode}
-                className='description'
+                className="description"
                 style={{
                   fontSize: textParams.fontSize,
                   marginBottom: textParams.marginBottom,

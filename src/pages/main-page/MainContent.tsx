@@ -28,8 +28,6 @@ interface IState {
   isOpenProfile: boolean;
   authIndex: number | null;
   confirmedOrderPaths: TPath[];
-  startsAt: string;
-  endsAt: string;
 }
 
 interface OwnProps {
@@ -50,28 +48,6 @@ export class MainContentContainer extends React.Component<Props, IState> {
     isOpenProfile: false,
     authIndex: null,
     confirmedOrderPaths: [],
-    startsAt: "",
-    endsAt: "",
-  };
-
-  handleChangeStartPicker = (e: TEvent) => {
-    this.setState((prevState) => ({ ...prevState, startsAt: e.target.value }));
-    this.props.setStartsAt(e.target.value);
-  };
-
-  handleResetStartPicker = () => {
-    this.setState((prevState) => ({ ...prevState, startsAt: "" }));
-    this.props.setStartsAt("");
-  };
-
-  handleChangeEndPicker = (e: TEvent) => {
-    this.setState((prevState) => ({ ...prevState, endsAt: e.target.value }));
-    this.props.setEndsAt(e.target.value);
-  };
-
-  handleResetEndPicker = () => {
-    this.setState((prevState) => ({ ...prevState, endsAt: "" }));
-    this.props.setEndsAt("");
   };
 
   //переключение модального окна выбора города вначале
@@ -152,7 +128,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
 
   handleConfirmedOrderPaths = (path: TPath) => {
     let simpleArray = this.state.confirmedOrderPaths.map(
-      (item: TPath) => item.name
+      (item: TPath) => item.name,
     );
     let newSet = new Set(simpleArray);
     if (newSet.has(path.name)) {
@@ -168,11 +144,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
   };
 
   componentDidUpdate(prevProps: OwnProps, prevState: IState) {
-    console.log(
-      "RERENDER MAIN COMPONENT",
-      prevState,
-      this.state.confirmedOrderPaths
-    );
+    console.log("RE-RENDER MAIN COMPONENT", prevState);
   }
 
   //получаем города и сетаем локальный город в модалку
@@ -195,8 +167,6 @@ export class MainContentContainer extends React.Component<Props, IState> {
       isOpenProfile,
       authIndex,
       confirmedOrderPaths,
-      startsAt,
-      endsAt,
     } = this.state;
     const { user, localCity, handleChangeCityName } = this.props;
     const {
@@ -208,29 +178,27 @@ export class MainContentContainer extends React.Component<Props, IState> {
       handleUserLogOut,
       handleAuthIndex,
       handleConfirmedOrderPaths,
-      handleChangeStartPicker,
-      handleChangeEndPicker,
-      handleResetStartPicker,
-      handleResetEndPicker,
     } = this;
     return (
       <>
-        <Modal
-          isVisible={isGeoVisible ? true : false}
-          title={
-            isTitleChanged ? "Выберите из списка" : `Ваш город ${localCity}?`
-          }
-        >
-          <LocationModal
-            {...{
-              cities,
-              localCity,
-              toggleIsGeoVisible,
-              handleGeoModalTitle,
-              handleChangeCityName,
-            }}
-          />
-        </Modal>
+        {isGeoVisible && (
+          <Modal
+            isVisible={isGeoVisible ? true : false}
+            title={
+              isTitleChanged ? "Выберите из списка" : `Ваш город ${localCity}?`
+            }
+          >
+            <LocationModal
+              {...{
+                cities,
+                localCity,
+                toggleIsGeoVisible,
+                handleGeoModalTitle,
+                handleChangeCityName,
+              }}
+            />
+          </Modal>
+        )}
 
         {!user && authIndex && (
           <Modal
@@ -253,7 +221,7 @@ export class MainContentContainer extends React.Component<Props, IState> {
         <Navigation
           {...{ isOpenMenu, toggleIsOpenMenu, toggleIsOpenProfile }}
         />
-        <div className='mainpage'>
+        <div className="mainpage">
           <Menu
             handleUserLogOut={handleUserLogOut}
             isOpenProfile={isOpenProfile}
@@ -284,12 +252,6 @@ export class MainContentContainer extends React.Component<Props, IState> {
                     localCity,
                     confirmedOrderPaths,
                     handleConfirmedOrderPaths,
-                    handleChangeStartPicker,
-                    handleChangeEndPicker,
-                    handleResetStartPicker,
-                    handleResetEndPicker,
-                    startsAt,
-                    endsAt,
                   }}
                 />
               }
@@ -306,7 +268,5 @@ const mapState = (state: RootState) => ({
 });
 const mapDispatch = (dispatch: Dispatch) => ({
   setCityId: (id: string) => dispatch.order.setCityId(id),
-  setStartsAt: (time: string) => dispatch.order.setStartsAt(time),
-  setEndsAt: (time: string) => dispatch.order.setEndsAt(time),
 });
 export const MainContent = connect(mapState, mapDispatch)(MainContentContainer);

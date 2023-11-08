@@ -1,26 +1,54 @@
 import "./styles.scss";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { TEvent } from "../../../../../interfaces/event";
+import { useDispatch, useSelector } from "react-redux";
+import { Dispatch, RootState } from "../../../../../store/store";
 
-interface IProps {
-  handleTimeDuration: (min: number) => void;
-  handleChangeStartPicker: (time: TEvent) => void;
-  handleChangeEndPicker: (time: TEvent) => void;
-  handleResetStartPicker: () => void;
-  handleResetEndPicker: () => void;
+interface IState {
   startsAt: string;
   endsAt: string;
 }
 
-export const TimePickerDay = ({
-  handleTimeDuration,
-  handleChangeStartPicker,
-  handleChangeEndPicker,
-  handleResetStartPicker,
-  handleResetEndPicker,
-  startsAt,
-  endsAt,
-}: IProps) => {
+export const TimePickerDay = () => {
+  const [startsAt, setStartsAt] = useState<IState["startsAt"]>("");
+  const [endsAt, setEndsAt] = useState<IState["endsAt"]>("");
+
+  const startsAtCurrent = useSelector(
+    (state: RootState) => state.order.startsAt,
+  );
+  const endssAtCurrent = useSelector((state: RootState) => state.order.endsAt);
+
+  const dispatch = useDispatch<Dispatch>();
+
+  useEffect(() => {
+    if (startsAtCurrent && endssAtCurrent) {
+      let dayStart = new Date(startsAtCurrent).toJSON().slice(0, 16);
+      let dayEnd = new Date(endssAtCurrent).toJSON().slice(0, 16);
+      setStartsAt(dayStart);
+      setEndsAt(dayEnd);
+    } else return;
+  }, []);
+
+  const handleChangeStartPicker = (e: TEvent) => {
+    setStartsAt((prevState) => e.target.value);
+    dispatch.order.setStartsAt(e.target.value);
+  };
+
+  const handleResetStartPicker = () => {
+    setStartsAt((prevState) => "");
+    dispatch.order.setStartsAt("");
+  };
+
+  const handleChangeEndPicker = (e: TEvent) => {
+    setEndsAt((prevState) => e.target.value);
+    dispatch.order.setEndsAt(e.target.value);
+  };
+
+  const handleResetEndPicker = () => {
+    setEndsAt((prevState) => "");
+    dispatch.order.setEndsAt("");
+  };
+
   useEffect(() => {
     let year = new Date(startsAt).getFullYear();
     let month = new Date(startsAt).getMonth();
@@ -54,6 +82,7 @@ export const TimePickerDay = ({
       }
     }
   }, [startsAt, endsAt]);
+
   useEffect(() => {
     let year = new Date().getFullYear();
     let month = new Date().getMonth();
@@ -81,33 +110,28 @@ export const TimePickerDay = ({
       }
     }
   }, [startsAt]);
-  //отправка продолжительности в мс
   useEffect(() => {
-    let day2 = new Date(endsAt);
-    let day1 = new Date(startsAt);
-    let diff = day2.getTime() - day1.getTime();
-    handleTimeDuration(diff);
-  }, [endsAt, startsAt]);
+    console.log("rerender timepicker");
+  });
   return (
-    <div className='timepicker__container'>
-      <div className='timepicker'>
-        {" "}
+    <div className="timepicker-container">
+      <div className="timepicker-container__content">
         <span>Начало бронирования</span>
         <input
           key={"start"}
           value={startsAt}
           onChange={(e) => handleChangeStartPicker(e)}
-          type='datetime-local'
+          type="datetime-local"
           min={new Date().toJSON().slice(0, 16)}
         />
       </div>
-      <div className='timepicker'>
+      <div className="timepicker-container__content">
         <span>Окончание бронирования</span>
         <input
           key={"end"}
           value={endsAt}
           onChange={(e) => handleChangeEndPicker(e)}
-          type='datetime-local'
+          type="datetime-local"
           min={
             startsAt
               ? new Date(
@@ -116,8 +140,8 @@ export const TimePickerDay = ({
                     new Date(startsAt).getMonth(),
                     new Date(startsAt).getDate(),
                     new Date(startsAt).getHours(),
-                    new Date(startsAt).getMinutes() + 1
-                  )
+                    new Date(startsAt).getMinutes() + 1,
+                  ),
                 )
                   .toJSON()
                   .slice(0, 16)

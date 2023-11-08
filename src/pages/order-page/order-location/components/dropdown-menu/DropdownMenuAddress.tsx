@@ -2,65 +2,55 @@ import { useState } from "react";
 import { AppButton } from "../../../../../components/app-button/AppButton";
 import "./styles.scss";
 import { TEvent } from "../../../../../interfaces/event";
+import { addresses, IAddress } from "../../../data/orderAddresses";
 
 interface IProps {
-  addresses: IAddress[];
   handleSetCurrentAddress: (address: IAddress) => void;
-}
-
-interface IAddress {
-  name: string;
-  id: string;
 }
 
 interface IState {
   address: string;
 }
 
-export const DropdownMenuAddress = ({
-  addresses,
-  handleSetCurrentAddress,
-}: IProps) => {
-  const [currentAddress, setCurrentInputAddress] =
-    useState<IState["address"]>("");
+export const DropdownMenuAddress = ({ handleSetCurrentAddress }: IProps) => {
+  const [address, setAddress] = useState<IState["address"]>("");
 
-  const addressCheck = addresses.find(
-    (address) => address.name === currentAddress
-  );
+  const currentAddress = addresses.find((ad) => ad.name === address);
 
   const handleAddress = () => {
-    if (addressCheck) {
-      handleSetCurrentAddress(addressCheck!);
+    if (currentAddress) {
+      handleSetCurrentAddress(currentAddress!);
     }
   };
-  const handleCurrentAddress = (e: TEvent) => {
-    setCurrentInputAddress(e.target.value);
+
+  const handleChange = (e: TEvent) => {
+    setAddress(e.target.value);
   };
 
   return (
-    <div className='dropdown-container'>
-      <div className='dropdown-container__input'>
+    <div className="dropdown-container">
+      <div className="dropdown-container__input">
         <input
-          id='suggest'
-          list='address'
-          value={currentAddress}
+          id="suggest"
+          list="address"
+          value={address}
           onChange={(e) => {
-            handleCurrentAddress(e);
+            handleChange(e);
           }}
         />
       </div>
-      <datalist id='address'>
+      <datalist id="address">
         {addresses.map((address) => {
           return (
             <option
               key={address.id}
-              className='my-option'
+              className="my-option"
               value={address.name}
             />
           );
         })}
       </datalist>
-      <div className='dropdown-container__button'>
+      <div className="dropdown-container__button">
         <AppButton text={"Выбрать"} onClick={handleAddress} />
       </div>
     </div>

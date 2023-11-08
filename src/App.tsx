@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import "./App.scss";
 import { MainContent } from "./pages/main-page/MainContent";
 import jwt_decode from "jwt-decode";
@@ -38,7 +38,6 @@ export const App = () => {
 
   //переменная города из массива которая равна локальному городу
   const cityName = cities?.find((res) => res.name === city);
-
   //город из localstorage
   const result = LocalStore.getCurrentCity();
 
@@ -97,9 +96,9 @@ export const App = () => {
   }, [latitude]);
 
   //обработчик сета города для всех child компонентов
-  const handleChangeCityName = (city: string) => {
+  const handleChangeCityName = useCallback((city: string) => {
     setCity(city);
-  };
+  }, []);
 
   return (
     <div className="main">

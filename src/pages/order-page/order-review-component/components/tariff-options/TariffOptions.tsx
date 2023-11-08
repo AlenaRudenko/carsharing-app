@@ -1,6 +1,7 @@
 import { ITariff } from "../../../../../interfaces/tariffs";
 import "./styles.scss";
 import { AppTable } from "../../../../../components/app-table/AppTable";
+import { RootState } from "../../../../../store/store";
 
 interface IProps {
   duration: number;

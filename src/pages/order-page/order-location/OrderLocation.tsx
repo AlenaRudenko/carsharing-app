@@ -1,25 +1,22 @@
 import "./styles.scss";
 import { YandexMap } from "../../../YandexMap/YandexMap";
 import { DropdownMenuAddress } from "./components/dropdown-menu/DropdownMenuAddress";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "../../../store/store";
+import { IAddress } from "../data/orderAddresses";
 
-interface IProps {
-  addresses: IAddress[];
-  handleSetCurrentAddress: (address: IAddress) => void;
-}
+export const OrderLocation = () => {
 
-interface IAddress {
-  name: string;
-  id: string;
-}
+  const dispatch = useDispatch<Dispatch>();
+  
+  const handleSetCurrentAddress = (address: IAddress) => {
+    dispatch.order.setAddressId(address.id);
+  };
 
-export const OrderLocation = ({
-  handleSetCurrentAddress,
-  addresses,
-}: IProps) => {
   return (
-    <div className='orderLocation-container'>
-      <DropdownMenuAddress {...{ handleSetCurrentAddress, addresses }} />
-      <div id='map' className='orderLocation-container__map'>
+    <div className="orderLocation-container">
+      <DropdownMenuAddress {...{ handleSetCurrentAddress }} />
+      <div id="map" className="orderLocation-container__map">
         <YandexMap />
       </div>
     </div>
